@@ -1,10 +1,12 @@
 # Bragg's Room
 
+![The (0 1 0) spot lit on the wall at 2θ = 22.2°, captured from the Lens running in Lens Studio's Interactive Preview](devpost/media/poster.jpg)
+
 **X-ray diffraction at room scale, for SPECS.** A crystal sits on your desk in the path of an X-ray beam. Turn it with your hand, and when a set of lattice planes meets the Bragg condition, a diffraction spot lights up on your wall at its true scattering angle, with a chime that comes from the spot. Then take on the mission: identify a mystery crystal as simple cubic or face-centred cubic from which reflections appear and which stay dark.
 
 Built for [Learn AR with SPECS](https://learn-specs.devpost.com/). It runs in Lens Studio's Interactive Preview; no SPECS device is needed.
 
-> **Who it's for:** undergraduate physics, chemistry and materials students, and their teachers. Flat textbook diagrams of diffraction don't convey the 3D geometry: how the crystal's orientation, the beam and the spot on the detector are linked.
+> **Who it's for:** undergraduate physics, chemistry and materials students, and their teachers. Flat textbook diagrams of diffraction don't convey the 3D geometry: how the crystal's orientation, the beam and the spot on the detector are linked. For teachers there's a 25-minute class activity with an answer key: [`devpost/lesson-plan.md`](devpost/lesson-plan.md).
 
 ## What you can do
 
@@ -95,7 +97,7 @@ Assets/GeneratedSFX/ chimes, flourish and "not yet" tone, synthesised locally (s
 Packages/            SIK 2.0, UIKit 2.0, LEAF 2.0.2, Bitmoji 3D
 tests/               command-line unit tests (node:test + TypeScript)
 tools/               the scripts that generated the sounds
-devpost/             design brief, build report, submission text, video script, CLAD handoffs
+devpost/             design brief, build report, submission text, video script, lesson plan, CLAD handoffs
 ```
 
 ## Licence
