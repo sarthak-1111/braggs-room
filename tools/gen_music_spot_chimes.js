@@ -1,14 +1,14 @@
 // gen_music_spot_chimes.js: the two Bragg's Room spot chimes (pitched, bell-like, ~0.6 s).
 // Provenance: written by CLAD's /build-music skill during the build. It needs the CLAD plugin installed
-// (the require path below is machine-specific) and writes to Assets/GeneratedSFX.
+// (set CLAD_PLUGIN_DIR if it isn't in the default Claude Code plugin cache) and writes to Assets/GeneratedSFX.
 //   SpotChimeFirst  - first sighting of a reflection: bright two-note rising bell (root + fifth).
 //   SpotChimeRepeat - repeat sighting: one softer, darker bell note.
 // Loudness difference is applied in the Lens (BraggsRoomSpotPool volume inputs); both files are peak-normalised.
 const path = require('path');
 const fs = require('fs');
-const m = require('C:/Users/NEDO-WS4/.claude/plugins/cache/ls-extensions/ls-clad/1.0.0/skills/build-music/tools');
+const m = require(path.join(process.env.CLAD_PLUGIN_DIR || path.join(require('os').homedir(), '.claude/plugins/cache/ls-extensions/ls-clad/1.0.0'), 'skills/build-music/tools'));
 
-const PROJECT_ASSETS_SFX = 'D:/SPECS-hn/braggs-room/Assets/GeneratedSFX';
+const PROJECT_ASSETS_SFX = path.join(__dirname, '..', 'Assets', 'GeneratedSFX');
 fs.mkdirSync(PROJECT_ASSETS_SFX, { recursive: true });
 const SR = 44100;
 

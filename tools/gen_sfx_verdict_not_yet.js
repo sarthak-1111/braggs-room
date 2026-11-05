@@ -1,13 +1,13 @@
 // gen_sfx_verdict_not_yet.js: the soft, low "not yet" tone for a wrong or insufficient verdict.
 // Provenance: written by CLAD's /build-sfx skill during the stage-2 build. It needs the CLAD plugin
-// installed (the require path below is machine-specific) and writes to Assets/GeneratedSFX.
+// installed (set CLAD_PLUGIN_DIR if it isn't in the default Claude Code plugin cache) and writes to Assets/GeneratedSFX.
 //   VerdictNotYet - two gentle low mallet tones stepping down (~0.5 s). Deliberately not the
 //   uiError buzz: a wrong verdict is part of learning, so the cue says "look again", not "error".
 const path = require('path');
 const fs = require('fs');
-const audio = require('C:/Users/NEDO-WS4/.claude/plugins/cache/ls-extensions/ls-clad/1.0.0/skills/build-sfx/tools');
+const audio = require(path.join(process.env.CLAD_PLUGIN_DIR || path.join(require('os').homedir(), '.claude/plugins/cache/ls-extensions/ls-clad/1.0.0'), 'skills/build-sfx/tools'));
 
-const PROJECT_ASSETS_SFX = 'D:/SPECS-hn/braggs-room/Assets/GeneratedSFX';
+const PROJECT_ASSETS_SFX = path.join(__dirname, '..', 'Assets', 'GeneratedSFX');
 fs.mkdirSync(PROJECT_ASSETS_SFX, { recursive: true });
 const SR = audio.SAMPLE_RATE;
 

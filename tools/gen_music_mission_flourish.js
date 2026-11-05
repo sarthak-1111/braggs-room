@@ -1,14 +1,14 @@
 // gen_music_mission_flourish.js: the "identified" flourish for a correct mission verdict.
 // Provenance: written by CLAD's /build-music skill during the stage-2 build. It needs the CLAD plugin
-// installed (the require path below is machine-specific) and writes to Assets/GeneratedSFX.
+// installed (set CLAD_PLUGIN_DIR if it isn't in the default Claude Code plugin cache) and writes to Assets/GeneratedSFX.
 //   MissionFlourish - a rising three-note chime phrase (~1.5 s), the same bell family as the spot
 //   chimes so it reads as "the instrument" celebrating, not a game jingle. Each run picks a fresh
 //   key and voicing (variety mandate); the choice is logged so a liked take can be pinned.
 const path = require('path');
 const fs = require('fs');
-const m = require('C:/Users/NEDO-WS4/.claude/plugins/cache/ls-extensions/ls-clad/1.0.0/skills/build-music/tools');
+const m = require(path.join(process.env.CLAD_PLUGIN_DIR || path.join(require('os').homedir(), '.claude/plugins/cache/ls-extensions/ls-clad/1.0.0'), 'skills/build-music/tools'));
 
-const PROJECT_ASSETS_SFX = 'D:/SPECS-hn/braggs-room/Assets/GeneratedSFX';
+const PROJECT_ASSETS_SFX = path.join(__dirname, '..', 'Assets', 'GeneratedSFX');
 fs.mkdirSync(PROJECT_ASSETS_SFX, { recursive: true });
 const SR = 44100;
 
