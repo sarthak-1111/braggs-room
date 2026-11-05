@@ -47,3 +47,16 @@ This script follows the approved brief's demo notes, which win where they differ
 - **Mission footage:** if you want a predictable round for the narrated section, start a few missions until you get one you like. The tag shows a before you start turning.
 - **Permission:** keep a written note (a message is fine) from the student or colleague agreeing to appear in a public YouTube video.
 - **Upload:** YouTube, visibility **Public**, under 3:00. Paste the link into the Devpost form and into `devpost/submission.md`.
+
+## How the first cut was made (Nov 5–6 2026)
+
+The first cut (2:37) follows this timeline with these differences. The on-screen text and the closing credits say the same.
+
+- **Footage is captured frame by frame, not screen-recorded.** The Windows session running Lens Studio had no display to record from, so the Preview panel was captured as stills through the Lens Studio MCP (`CapturePanelScreenshotTool`) while the `video-director` LEAF scenario (`Assets/Tests/Leaf/BraggsVideoDirectorScenario.ts`) stepped the Lens: real pinch-drag gestures and button presses, the λ slider set through its value setter. The stills are played back at their captured pace (motion steps of about 0.13 s, holds of 1–2 s). Nothing in a frame is drawn over or edited; the readouts beside the preview come from the Lens's own state at each capture.
+- **The Lens's sounds are placed, not recorded.** Panel captures carry no audio, so the Lens's own files (`Assets/GeneratedSFX`: first-sighting chime, repeat chime, verdict chord) are mixed in on the frame where the Lens logged playing them, at most one chime per 0.25 s as in the Lens.
+- **The mission round is fixed to FCC, a = 4.05 Å** with the `testStartMission` hook, after a real press of Start mission, so the narration matches the sample. The subtitle on screen says so.
+- **The solve at 2:19 is a scripted stand-in**, labelled as one on screen. Replace it with a student or colleague's run only with their written permission.
+- **The process section uses stills**, not a screen capture of the build: CLAD's own Lens Studio captures from the build, a count of the coordinating session's Lens Studio MCP calls, and the LEAF results in the Lens Studio Logger.
+- **Music:** a quiet synthesized bed (CC0, made from scratch with a script), low-passed and ducked under the voice, with one closing hit on the title card.
+- **Narration:** Bark, preset `v2/en_speaker_6`, one prompt per line, four takes each; the take that Whisper transcribed cleanest, before and after processing, was kept, trimmed and sped up 1.1×. The voice sits about 20 dB above the music on every line.
+- **Known issue on screen:** in the opening shots the hint "Spot is off the wall. Try a shorter wavelength." shows while (0 1 0) is lit, because nine high-angle reflections in condition at φ ≈ 11° land off the detector. The physics is right; the hint's wording is not. See the build report.
