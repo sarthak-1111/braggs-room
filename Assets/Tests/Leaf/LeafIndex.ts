@@ -1,8 +1,8 @@
 /**
  * LeafIndex: registers the Bragg's Room LEAF scenarios (one or more per done criterion of
  * devpost/design-brief.md). Attached to the "LeafIndex" SceneObject; it only registers, it
- * never runs anything on its own. Run them from Lens Studio's LEAF panel (Window > LEAF),
- * or through the Lens Studio MCP tools list_leaf_scenarios / run_leaf_scenario.
+ * never runs anything on its own. Run them from Lens Studio's LEAF panel, or through the
+ * Lens Studio MCP tools list_leaf_scenarios / run_leaf_scenario.
  */
 import {scenariosIndex} from "Leaf.lspkg/Scenarios/decorator/ScenarioIndexDecorator"
 import {ScenarioMetadata} from "Leaf.lspkg/Scenarios/scenario/ScenarioMetadata"
