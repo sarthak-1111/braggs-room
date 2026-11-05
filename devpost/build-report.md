@@ -370,7 +370,7 @@ Nothing runs on Lens start, so the Lens behaves normally in Interactive Preview.
 ### What's left for me (by hand)
 1. **Look at it and listen to it.** Open the preview (README, "Open and run it in Lens Studio") and check the sounds, which nobody heard during the build.
 2. **Answer the open questions below**, or leave the build's choices as they are.
-3. **Review the video.** The coding agent made a first cut from `devpost/video-script.md` (see "How the first cut was made" there). Replace its scripted solve with a student or colleague's run only with their written permission. Upload it to YouTube as **Public**, under 3 minutes.
+3. **Review the video.** The coding agent made a cut from `devpost/video-script.md` (see "How the video was made" there). Replace its scripted solve with a student or colleague's run only with their written permission. Upload it to YouTube as **Public**, under 3 minutes.
 4. **Personalise `devpost/submission.md`** (the ✏️ PERSONALISE sections), add the video link, and paste it into the Devpost form.
 5. **Fill in the Devpost form and press Submit.**
 6. **The GitHub repo** was created and pushed by the relay session after its review; the build itself didn't create or push anything.
@@ -395,4 +395,4 @@ Nothing runs on Lens start, so the Lens behaves normally in Interactive Preview.
    - **My decision:** show the hint only when no lit spot lands on the wall. The brief now says so ("When things show", "The mission" and "Risks").
    - **What the coding agent changed:** in `Assets/Scripts/BraggSim.ts`, `step()` now sets `offWallHint` only when a lit reflection misses the detector and no lit reflection lands on it. The physics didn't change.
    - **The test that covers it:** unit test 121, "off-wall hint: shows only when a lit reflection misses the detector and no lit spot lands on it". With (0 2 0) the only reflection in condition at λ 2.29 Å, off the wall, the hint shows. At φ = +11.0987°, χ = 0 with Cu Kα, (0 1 0) is lit on the wall while other reflections in condition miss it, and the hint is hidden. The test's first case used to sit at χ = 0, where (0 1 1) is also lit on the wall, so the coding agent moved it to χ = 5°. In the preview, the video-director scenario at φ 11.1° logged (0 1 0) lit and `"offWallHint":false`, and the hint text was gone. The LEAF re-run is under "LEAF scenarios".
-   - The first video cut was made before this change, so its opening shots still show the hint.
+   - The first video cut was made before this change and showed the hint next to the lit spot. The coding agent re-shot the four opening shots after the change, and the current cut no longer shows it there (see "How the video was made" in `devpost/video-script.md`).
