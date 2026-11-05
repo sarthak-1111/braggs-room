@@ -4,6 +4,8 @@
     - !<own> 00000000-0000-0065-0000-000000000064
     - !<own> 0005641c-028d-459a-0000-000000014b4d
     - !<own> f5d74682-203a-4970-81ea-9fa7b88c96bb
+    - !<own> f9827d73-7cb6-4e73-af5e-08c15a35d7e6
+    - !<own> c71f552a-d598-40c1-8351-9afb29714642
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -33,6 +35,7 @@
   Components:
     - !<own> 00000000-0000-0065-0000-000000000065
     - !<own> e5553c8a-0b7e-4ef4-92d9-3e1318fb82c1
+    - !<own> 610174ff-cfce-4f1b-a427-07e61cb4f3a3
 - !<Camera/00000000-0000-0065-0000-000000000065>
   PrefabRemaps:
     []
@@ -426,6 +429,22 @@
     - !<own> 9e373d68-993f-4c8f-83a0-6644f1d9fefd
   Components:
     []
+- !<ScriptComponent/10e0f3d0-c5ad-4dc7-991b-ebc7f44ce01d>
+  PrefabRemaps:
+    []
+  Name: AgentInspectScript
+  Enabled: true
+  ScriptAsset: !<reference> 0b25079c-f5bf-4c6d-96c4-f43b89dfa213
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/10f60da2-2196-40ad-9e72-8a6bc7e86f35>
   PrefabRemaps:
     []
@@ -498,6 +517,21 @@
     - !<own> a6af4948-9adc-4052-ae22-db902dd2764e
   Components:
     []
+- !<SceneObject/17b335d9-008f-42a7-a79c-c9259f3e7f9a>
+  PrefabRemaps:
+    []
+  Name: PhiReadout
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -3.600000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    []
 - !<SceneObject/181c239f-175e-4912-94fc-d37a2599b2d6>
   PrefabRemaps:
     []
@@ -513,6 +547,53 @@
     []
   Components:
     []
+- !<ScriptComponent/1865a5ae-7bde-4ffe-8eae-84f14b5f335d>
+  PrefabRemaps:
+    []
+  Name: BraggsRoomEvidenceBoardUI
+  Enabled: true
+  ScriptAsset: !<reference> 4fee5688-db96-47f5-9ead-a520b7f35b5d
+  ScriptInputsDefault:
+    boardWidthCm: true
+    boardHeightCm: true
+    textScale: true
+    textColor: true
+    highlightColor: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      boardWidthCm: !<float> 60.000000
+      boardHeightCm: !<float> 40.000000
+      textScale: !<float> 1.000000
+      textColor: !<Vec4> {x: 0.950000, y: 0.960000, z: 1.000000, w: 1.000000}
+      highlightColor: !<Vec4> {x: 1.000000, y: 0.800000, z: 0.450000, w: 1.000000}
+  ScriptTypes:
+    "":
+      {}
+- !<ScriptComponent/18cecbcc-a909-4104-995b-07f9f7be7a25>
+  PrefabRemaps:
+    []
+  Name: BeamMesh
+  Enabled: true
+  ScriptAsset: !<reference> 6347584e-f29d-47d3-a599-9ec0162b5d40
+  ScriptInputsDefault:
+    lengthCm: true
+    pulseLengthCm: true
+    pulsePeriodSec: true
+    pulseEnabled: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      material: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
+      lengthCm: !<float> 170.000000
+      pulseLengthCm: !<float> 10.000000
+      pulsePeriodSec: 1.500000
+      pulseEnabled: true
+  ScriptTypes:
+    "":
+      {}
 - !<RenderMeshVisual/1f969daa-5809-4500-b314-98d91ccba131>
   PrefabRemaps:
     []
@@ -593,6 +674,32 @@
     []
   Components:
     []
+- !<ScriptComponent/24f2abd3-07b6-4d1d-aa5f-62f02e7d0719>
+  PrefabRemaps:
+    []
+  Name: BraggsRoomConsoleUI
+  Enabled: true
+  ScriptAsset: !<reference> 17b6606e-69a1-4608-81bf-29639598cbef
+  ScriptInputsDefault:
+    panelWidthCm: true
+    textScale: true
+    textColor: true
+    accentColor: true
+    sourceSnapAngstrom: true
+    playClickSounds: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      panelWidthCm: !<float> 36.000000
+      textScale: !<float> 1.000000
+      textColor: !<Vec4> {x: 0.940000, y: 0.960000, z: 1.000000, w: 1.000000}
+      accentColor: !<Vec4> {x: 0.620000, y: 0.930000, z: 1.000000, w: 1.000000}
+      sourceSnapAngstrom: 0.030000
+      playClickSounds: true
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/264571d0-f879-411b-8deb-ff6d9921317f>
   PrefabRemaps:
     []
@@ -608,6 +715,21 @@
     - !<own> d9071294-12e8-425f-98f1-bf308a02639e
   Components:
     []
+- !<SceneObject/26e3638f-2a72-4db6-bc67-83c8d2d42b5f>
+  PrefabRemaps:
+    []
+  Name: Beam
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -25.000000, z: -35.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 18cecbcc-a909-4104-995b-07f9f7be7a25
 - !<ScriptComponent/275aeb4d-77ac-4b1b-811e-907652542110>
   PrefabRemaps:
     []
@@ -796,6 +918,23 @@
     - !<own> 4051028a-c608-4a97-b3d5-1a3912a7c007
   Components:
     []
+- !<ScriptComponent/38aba644-9ff8-481d-871f-960d50f7ddfb>
+  PrefabRemaps:
+    []
+  Name: BraggPartMesh
+  Enabled: true
+  ScriptAsset: !<reference> 3d582d92-c675-4190-9d49-eeab3c5fa182
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      part: VirtualWall
+      material: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/3a794764-c758-4d72-9d89-bf3ed978113f>
   PrefabRemaps:
     []
@@ -871,6 +1010,23 @@
     []
   Components:
     - !<own> 1f969daa-5809-4500-b314-98d91ccba131
+- !<ScriptComponent/42cd2fcb-2d08-465c-8af5-5570bfbc3e3f>
+  PrefabRemaps:
+    []
+  Name: BraggPartMesh
+  Enabled: true
+  ScriptAsset: !<reference> 3d582d92-c675-4190-9d49-eeab3c5fa182
+  ScriptInputsDefault:
+    part: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      part: VirtualDesk
+      material: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/44097eaf-01da-45fb-8973-3bd8172618de>
   PrefabRemaps:
     []
@@ -901,6 +1057,23 @@
     - !<own> 9eeb9f24-5cbc-47c2-83e9-12feb9eb69a6
   Components:
     []
+- !<SceneObject/46cfd344-fa60-4b4f-aa6d-7af924810014>
+  PrefabRemaps:
+    []
+  Name: GoniometerLabels
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -40.000000, z: -49.000000}
+    Rotation: {x: -37.000000, y: 22.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> 17b335d9-008f-42a7-a79c-c9259f3e7f9a
+    - !<own> dd9d860b-8575-4de7-a6f1-9a3b1c645d64
+    - !<own> 9e87191e-97ee-4f90-bff3-323edf292cb4
+  Components:
+    - !<own> da167f75-99f4-49ee-93c7-699167fbfeff
 - !<SceneObject/46ea93d6-d161-4453-9064-6ac11e1d6523>
   PrefabRemaps:
     []
@@ -976,6 +1149,21 @@
     - !<own> 46b79537-a269-46f1-9483-500d7a4170d6
   Components:
     []
+- !<SceneObject/57d248be-607a-4e50-b807-4b1b1404373c>
+  PrefabRemaps:
+    []
+  Name: CrystalVisual
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> e48520db-c1e3-437d-bd0e-2e716eae8416
 - !<SceneObject/58ef319f-850e-40dd-8295-e6dc36ab4854>
   PrefabRemaps:
     []
@@ -991,6 +1179,23 @@
     - !<own> bf2095b6-c6f8-48c8-b840-e0a6cec0dc99
   Components:
     []
+- !<ScriptComponent/5c626645-9827-4c18-9390-e1793db86ec5>
+  PrefabRemaps:
+    []
+  Name: BraggPartMesh
+  Enabled: true
+  ScriptAsset: !<reference> 3d582d92-c675-4190-9d49-eeab3c5fa182
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      part: Goniometer
+      material: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
+  ScriptTypes:
+    "":
+      {}
 - !<ScriptComponent/5f153ad7-2baa-4fd9-a298-0dcfad86da3b>
   PrefabRemaps:
     []
@@ -1015,6 +1220,26 @@
   ScriptTypes:
     "":
       {}
+- !<AudioListenerComponent/610174ff-cfce-4f1b-a427-07e61cb4f3a3>
+  PrefabRemaps:
+    []
+  Name: Audio Listener
+  Enabled: true
+- !<SceneObject/618b17c6-0b92-42d0-87ff-b878fa72a206>
+  PrefabRemaps:
+    []
+  Name: WallLabels
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -25.000000, z: -204.399994}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> f48b3807-c93e-48d2-b589-66ccfb094a25
 - !<ScriptComponent/62967490-d66e-4479-8829-e5c9da5b5b57>
   PrefabRemaps:
     []
@@ -1141,6 +1366,57 @@
     - !<own> 80574bd1-697b-4bb5-b9ce-13b340146d82
   Components:
     - !<own> ccf4d3bc-d3c2-4580-b9c5-62f164ef7eef
+- !<SceneObject/67a2286d-091d-4b14-af58-222d43de2a0e>
+  PrefabRemaps:
+    []
+  Name: Goniometer
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -45.000000, z: -55.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 5c626645-9827-4c18-9390-e1793db86ec5
+- !<ScriptComponent/67ca98b4-c3ac-4a18-9e44-c68b79385900>
+  PrefabRemaps:
+    []
+  Name: BraggsRoomCrystalController
+  Enabled: true
+  ScriptAsset: !<reference> 38edc696-7a04-4bfd-bfb7-518e5c6acc6f
+  ScriptInputsDefault:
+    colliderSizeCm: true
+    hoverScale: true
+    debugColliders: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      crystalVisual: !<reference.SceneObject> 57d248be-607a-4e50-b807-4b1b1404373c
+      colliderSizeCm: !<float> 14.000000
+      hoverScale: 1.080000
+      debugColliders: false
+  ScriptTypes:
+    "":
+      {}
+- !<SceneObject/68d9bcb8-6c4a-445f-90e0-9720d1e5069b>
+  PrefabRemaps:
+    []
+  Name: BeamStop
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -25.000000, z: -205.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> f49d9693-044e-4ea3-97b0-085fe297dbf3
 - !<SceneObject/6a7a67db-5675-49bb-8f31-ba0588e3cffc>
   PrefabRemaps:
     []
@@ -1340,6 +1616,21 @@
     - !<own> 3b4f5057-b516-4d3b-9c8d-14c81af2f505
   Components:
     []
+- !<SceneObject/7c30c4ee-907d-4d0c-8646-0be48a6eb537>
+  PrefabRemaps:
+    []
+  Name: EvidenceBoard
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 42.000000, y: 15.000000, z: -203.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 1865a5ae-7bde-4ffe-8eae-84f14b5f335d
 - !<SceneObject/7e2075c6-0882-4275-8365-16a03da73298>
   PrefabRemaps:
     []
@@ -1430,6 +1721,31 @@
     - !<own> dcc36a33-e23d-48f3-8e96-f9c9fd3cd030
   Components:
     []
+- !<ScriptComponent/83c9c284-5ace-41ac-8573-707aa978c2e1>
+  PrefabRemaps:
+    []
+  Name: BraggsRoomSpotPool
+  Enabled: true
+  ScriptAsset: !<reference> a4efcce8-3633-44ee-b9b4-7d9e2f7996db
+  ScriptInputsDefault:
+    firstChimeVolume: true
+    repeatChimeVolume: true
+    labelGapCm: true
+    showRays: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      material: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
+      chimeFirst: !<reference.AudioTrackAsset> 209b626b-9315-4d4b-aa35-687df9098d8a
+      chimeRepeat: !<reference.AudioTrackAsset> 5319d88a-16e7-4b12-8147-49f0e388f5ef
+      firstChimeVolume: !<float> 1.000000
+      repeatChimeVolume: 0.500000
+      labelGapCm: 4.500000
+      showRays: true
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/83ef588c-5040-4344-b15f-0554c739da0b>
   PrefabRemaps:
     []
@@ -1478,6 +1794,21 @@
     - !<own> 1fc7fa3e-6910-4741-b8a7-1b6660a39a9d
   Components:
     - !<own> 28e05826-1521-46fa-a54c-80f2957ec80c
+- !<SceneObject/8a604bf5-3dc9-4bba-ba93-331117c95c3d>
+  PrefabRemaps:
+    []
+  Name: VirtualWall (preview stand-in)
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -25.000000, z: -205.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 38aba644-9ff8-481d-871f-960d50f7ddfb
 - !<SceneObject/8b877074-7eee-4be1-b669-714f8d5a1da3>
   PrefabRemaps:
     []
@@ -1608,6 +1939,31 @@
   ScriptTypes:
     "":
       {}
+- !<ScriptComponent/9d63fd4d-163b-4703-b89c-5d2450ffcfb1>
+  PrefabRemaps:
+    []
+  Name: BraggsRoomMain
+  Enabled: true
+  ScriptAsset: !<reference> dd99f7f6-b725-4d87-9dcf-8b0538985943
+  ScriptInputsDefault:
+    dragGainDegPerCm: true
+    chimeMinIntervalSec: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      crystal: !<MappingBased.AssignableType_1> 67ca98b4-c3ac-4a18-9e44-c68b79385900
+      crystalCell: !<MappingBased.AssignableType_2> e48520db-c1e3-437d-bd0e-2e716eae8416
+      spotPool: !<MappingBased.AssignableType_3> 83c9c284-5ace-41ac-8573-707aa978c2e1
+      wallLabels: !<MappingBased.AssignableType_4> f48b3807-c93e-48d2-b589-66ccfb094a25
+      evidenceBoard: !<MappingBased.AssignableType_5> 1865a5ae-7bde-4ffe-8eae-84f14b5f335d
+      controlConsole: !<MappingBased.AssignableType_6> 24f2abd3-07b6-4d1d-aa5f-62f02e7d0719
+      goniometerLabels: !<MappingBased.AssignableType_7> da167f75-99f4-49ee-93c7-699167fbfeff
+      dragGainDegPerCm: !<float> 3.000000
+      chimeMinIntervalSec: 0.250000
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/9e373d68-993f-4c8f-83a0-6644f1d9fefd>
   PrefabRemaps:
     []
@@ -1621,6 +1977,21 @@
     HasSegmentScaleCompensation: false
   Children:
     - !<own> 23861703-e5d4-4885-be1b-c3358c1877a4
+  Components:
+    []
+- !<SceneObject/9e87191e-97ee-4f90-bff3-323edf292cb4>
+  PrefabRemaps:
+    []
+  Name: AtomsNotToScale
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: -2.400000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
   Components:
     []
 - !<SceneObject/9eeb9f24-5cbc-47c2-83e9-12feb9eb69a6>
@@ -1717,6 +2088,21 @@
     - !<own> b22d97e6-4c06-4135-af29-d26adb2b9d86
   Components:
     []
+- !<SceneObject/a7bfbe04-a1e2-4b92-9c08-b8a513379249>
+  PrefabRemaps:
+    []
+  Name: Crystal
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -25.000000, z: -55.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> 57d248be-607a-4e50-b807-4b1b1404373c
+  Components:
+    - !<own> 67ca98b4-c3ac-4a18-9e44-c68b79385900
 - !<SceneObject/a7da4af4-3d84-4acd-a31e-920a56b4c5c8>
   PrefabRemaps:
     []
@@ -1852,6 +2238,21 @@
     []
   Components:
     []
+- !<SceneObject/b8203220-b668-437a-bb4f-ad538270dbfd>
+  PrefabRemaps:
+    []
+  Name: VirtualDesk (preview stand-in)
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: -46.500000, z: -50.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 42cd2fcb-2d08-465c-8af5-5570bfbc3e3f
 - !<SceneObject/b859e31c-4c76-46bd-bd6a-042228e52728>
   PrefabRemaps:
     []
@@ -1957,6 +2358,21 @@
     []
   Components:
     []
+- !<SceneObject/c71f552a-d598-40c1-8351-9afb29714642>
+  PrefabRemaps:
+    []
+  Name: AiPreviewAgent Handler
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 10e0f3d0-c5ad-4dc7-991b-ebc7f44ce01d
 - !<ScriptComponent/c8e031d3-a8a1-468a-a419-427f8556de4c>
   PrefabRemaps:
     []
@@ -2000,6 +2416,23 @@
     - !<own> 0a0e1d78-8246-4f5b-ab1a-fdc51837956d
   Components:
     []
+- !<ScriptComponent/cbfa049f-ca20-45c4-9240-7a4d1064893c>
+  PrefabRemaps:
+    []
+  Name: BraggPartMesh
+  Enabled: true
+  ScriptAsset: !<reference> 3d582d92-c675-4190-9d49-eeab3c5fa182
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      part: XRayTube
+      material: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
+  ScriptTypes:
+    "":
+      {}
 - !<Skin/ccf4d3bc-d3c2-4580-b9c5-62f164ef7eef>
   PrefabRemaps:
     []
@@ -2180,6 +2613,29 @@
     - !<own> 74d13517-1dbf-42e6-b536-27afc4909c65
   Components:
     []
+- !<ScriptComponent/da167f75-99f4-49ee-93c7-699167fbfeff>
+  PrefabRemaps:
+    []
+  Name: BraggsRoomGoniometerUI
+  Enabled: true
+  ScriptAsset: !<reference> 9d1867bc-b5f1-4043-8c3c-6a20908055fa
+  ScriptInputsDefault:
+    readoutHeightCm: true
+    noteHeightCm: true
+    textColor: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      phiReadout: !<reference.SceneObject> 17b335d9-008f-42a7-a79c-c9259f3e7f9a
+      chiReadout: !<reference.SceneObject> dd9d860b-8575-4de7-a6f1-9a3b1c645d64
+      scaleNote: !<reference.SceneObject> 9e87191e-97ee-4f90-bff3-323edf292cb4
+      readoutHeightCm: 1.700000
+      noteHeightCm: 1.300000
+      textColor: !<Vec4> {x: 0.940000, y: 0.970000, z: 1.000000, w: 1.000000}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/da214b27-43a7-4db4-90fd-993798e859d9>
   PrefabRemaps:
     []
@@ -2210,6 +2666,21 @@
     - !<own> f74a6bbb-4fba-4d8b-9b4e-64dd1c3e9ac3
   Components:
     []
+- !<SceneObject/dc77c786-5397-4927-82c5-6f55299c6e1e>
+  PrefabRemaps:
+    []
+  Name: XRayTube
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -25.000000, z: -27.500000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> cbfa049f-ca20-45c4-9240-7a4d1064893c
 - !<SceneObject/dcc36a33-e23d-48f3-8e96-f9c9fd3cd030>
   PrefabRemaps:
     []
@@ -2238,6 +2709,21 @@
     HasSegmentScaleCompensation: false
   Children:
     - !<own> d4a9c5e3-fe96-4824-9b20-59f5ad39eabd
+  Components:
+    []
+- !<SceneObject/dd9d860b-8575-4de7-a6f1-9a3b1c645d64>
+  PrefabRemaps:
+    []
+  Name: ChiReadout
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 3.600000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
   Components:
     []
 - !<RenderMeshVisual/e1031f7e-3474-489f-a529-282f7192f812>
@@ -2290,6 +2776,27 @@
     - !<own> 6a7a67db-5675-49bb-8f31-ba0588e3cffc
   Components:
     []
+- !<ScriptComponent/e48520db-c1e3-437d-bd0e-2e716eae8416>
+  PrefabRemaps:
+    []
+  Name: CrystalCellMesh
+  Enabled: true
+  ScriptAsset: !<reference> 9ecb452a-a429-45d7-8186-032f4c7a7a4f
+  ScriptInputsDefault:
+    cellSizeCm: true
+    atomDiameterCm: true
+    startLattice: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      material: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
+      cellSizeCm: !<float> 8.000000
+      atomDiameterCm: 1.400000
+      startLattice: SC
+  ScriptTypes:
+    "":
+      {}
 - !<DeviceTracking/e5553c8a-0b7e-4ef4-92d9-3e1318fb82c1>
   PrefabRemaps:
     []
@@ -2353,6 +2860,36 @@
     Fingers_length: 0.000000
     Thumb_inflate: 0.000000
     Thumb_length: 0.000000
+- !<SceneObject/ec3c2f8f-aff5-4fbb-a177-f3f59ea241d2>
+  PrefabRemaps:
+    []
+  Name: Console
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 24.000000, y: -36.000000, z: -40.000000}
+    Rotation: {x: -45.000000, y: -31.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 24f2abd3-07b6-4d1d-aa5f-62f02e7d0719
+- !<SceneObject/ed2515ea-cff5-4fcb-9802-5cf8ce802a9b>
+  PrefabRemaps:
+    []
+  Name: SpotPool
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -20.000000, y: -25.000000, z: -205.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 83c9c284-5ace-41ac-8573-707aa978c2e1
 - !<SceneObject/f0394c5d-4c44-4c65-a77c-e1c7e05ca905>
   PrefabRemaps:
     []
@@ -2384,6 +2921,49 @@
   Components:
     - !<own> d3e2fbc5-8795-4913-9af6-c8626f8e6d9c
     - !<own> 275aeb4d-77ac-4b1b-811e-907652542110
+- !<ScriptComponent/f48b3807-c93e-48d2-b589-66ccfb094a25>
+  PrefabRemaps:
+    []
+  Name: BraggsRoomWallLabelsUI
+  Enabled: true
+  ScriptAsset: !<reference> 9da9f3ab-5b1e-40f8-be8f-9ec1026bd161
+  ScriptInputsDefault:
+    spotLabelHeightCm: true
+    smallLabelHeightCm: true
+    labelColor: true
+    faintAlpha: true
+    hintColor: true
+    tickLabelDropCm: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      spotLabelHeightCm: 4.500000
+      smallLabelHeightCm: !<float> 4.000000
+      labelColor: !<Vec4> {x: 0.980000, y: 0.960000, z: 0.900000, w: 1.000000}
+      faintAlpha: 0.450000
+      hintColor: !<Vec4> {x: 1.000000, y: 0.840000, z: 0.550000, w: 1.000000}
+      tickLabelDropCm: !<float> 6.000000
+  ScriptTypes:
+    "":
+      {}
+- !<ScriptComponent/f49d9693-044e-4ea3-97b0-085fe297dbf3>
+  PrefabRemaps:
+    []
+  Name: BraggPartMesh
+  Enabled: true
+  ScriptAsset: !<reference> 3d582d92-c675-4190-9d49-eeab3c5fa182
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      part: BeamStop
+      material: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/f5d74682-203a-4970-81ea-9fa7b88c96bb>
   PrefabRemaps:
     - 012a3973-9507-4230-a6ff-2b8dfd2154fe: e3ec5982-f5aa-45f3-4551-4d3a92a1f432
@@ -2575,6 +3155,32 @@
     - !<own> a7526b33-fca3-4f28-8e32-b0e9aa13c4b4
   Components:
     []
+- !<SceneObject/f9827d73-7cb6-4e73-af5e-08c15a35d7e6>
+  PrefabRemaps:
+    []
+  Name: BraggsRoom
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> b8203220-b668-437a-bb4f-ad538270dbfd
+    - !<own> 67a2286d-091d-4b14-af58-222d43de2a0e
+    - !<own> a7bfbe04-a1e2-4b92-9c08-b8a513379249
+    - !<own> dc77c786-5397-4927-82c5-6f55299c6e1e
+    - !<own> 26e3638f-2a72-4db6-bc67-83c8d2d42b5f
+    - !<own> 68d9bcb8-6c4a-445f-90e0-9720d1e5069b
+    - !<own> 8a604bf5-3dc9-4bba-ba93-331117c95c3d
+    - !<own> ed2515ea-cff5-4fcb-9802-5cf8ce802a9b
+    - !<own> 618b17c6-0b92-42d0-87ff-b878fa72a206
+    - !<own> 7c30c4ee-907d-4d0c-8646-0be48a6eb537
+    - !<own> ec3c2f8f-aff5-4fbb-a177-f3f59ea241d2
+    - !<own> 46cfd344-fa60-4b4f-aa6d-7af924810014
+  Components:
+    - !<own> 9d63fd4d-163b-4703-b89c-5d2450ffcfb1
 - !<SceneObject/fcc185fc-4e88-4e9e-9c71-40bd83b1b0ed>
   PrefabRemaps:
     []

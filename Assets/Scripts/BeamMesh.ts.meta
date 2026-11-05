@@ -1,0 +1,58 @@
+- !<AssetImportMetadata/e7e3f36f-a795-4679-9eb5-9bc73c1fd5f9>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 6347584e-f29d-47d3-a599-9ec0162b5d40
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 6347584e-f29d-47d3-a599-9ec0162b5d40
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> b441eb71-c9e1-4255-9d30-7525f4cfd9b3
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/b441eb71-c9e1-4255-9d30-7525f4cfd9b3>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 07cabb93-4c23-4397-839c-b89c510a3d12
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    lengthCm: false
+    material: false
+    pulseEnabled: false
+    pulseLengthCm: false
+    pulsePeriodSec: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - material: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      lengthCm: !<float> 170.000000
+      pulseLengthCm: !<float> 10.000000
+      pulsePeriodSec: 1.500000
+      pulseEnabled: true
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @input Asset.Material material {"hint":"vertexBaseColorMaterial (SimpleVertexBaseColor.lspkg); the beam draws with an additive clone"}'
+    - '// @input float lengthCm = 170 {"hint":"Collimator tip to beam stop, cm (z = −35 to −205)"}'
+    - '// @input float pulseLengthCm = 10 {"hint":"Length of the travelling pulse, cm"}'
+    - '// @input float pulsePeriodSec = 1.5 {"hint":"Seconds between pulses"}'
+    - // @input bool pulseEnabled = true

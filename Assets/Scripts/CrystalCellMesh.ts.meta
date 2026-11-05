@@ -1,0 +1,55 @@
+- !<AssetImportMetadata/06597dac-55a2-4275-9439-07700067ae41>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 9ecb452a-a429-45d7-8186-032f4c7a7a4f
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 9ecb452a-a429-45d7-8186-032f4c7a7a4f
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> d437f8a9-ccd2-4361-8b12-3bbcbecccdec
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/d437f8a9-ccd2-4361-8b12-3bbcbecccdec>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 07369817-c7d4-4e45-94e3-0ad4ce2acd38
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    atomDiameterCm: false
+    cellSizeCm: false
+    material: false
+    startLattice: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - material: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      cellSizeCm: !<float> 8.000000
+      atomDiameterCm: 1.400000
+      startLattice: SC
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @input Asset.Material material {"hint":"vertexBaseColorMaterial (SimpleVertexBaseColor.lspkg). The mystery cube uses an additive clone of it."}'
+    - '// @input float cellSizeCm = 8 {"hint":"Edge of the drawn cell, cm (enlarged: atoms not to scale)"}'
+    - '// @input float atomDiameterCm = 1.4 {"hint":"Atom sphere diameter, cm"}'
+    - '// @input string startLattice = "SC" {"hint":"Lattice shown before the main script calls setLattice", "widget":"combobox", "values":[{"label":"Simple cubic", "value":"SC"}, {"label":"FCC", "value":"FCC"}, {"label":"Mystery", "value":"Mystery"}]}'

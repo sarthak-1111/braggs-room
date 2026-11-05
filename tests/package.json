@@ -1,11 +1,11 @@
 {
   "name": "braggs-room-physics-tests",
   "private": true,
-  "description": "Command-line unit tests for Bragg's Room physics and game logic (Assets/Scripts/BraggPhysics.ts, BraggSim.ts, BraggText.ts).",
+  "description": "Command-line unit tests for Bragg's Room physics and game logic (Assets/Scripts/BraggPhysics.ts, BraggSim.ts, BraggText.ts) and the room geometry (BraggGeometry.ts).",
   "license": "MIT",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "tsc -p tsconfig.json && node --test .build/tests/physics.test.js .build/tests/sim.test.js",
+    "test": "tsc -p tsconfig.json && node --test .build/tests/physics.test.js .build/tests/sim.test.js .build/tests/geometry.test.js",
     "table": "tsc -p tsconfig.json && node .build/tests/reference-table.js"
   },
   "devDependencies": {

@@ -1,0 +1,66 @@
+- !<AssetImportMetadata/a90f19e1-3c34-4040-bb6e-393606f77381>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 9da9f3ab-5b1e-40f8-be8f-9ec1026bd161
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 9da9f3ab-5b1e-40f8-be8f-9ec1026bd161
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 93bfbe12-6366-4775-ab96-51dee887c8a9
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/93bfbe12-6366-4775-ab96-51dee887c8a9>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 0a6cb137-f3f3-4989-a5d8-6740ccd76d04
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    faintAlpha: false
+    hintColor: false
+    labelColor: false
+    smallLabelHeightCm: false
+    spotLabelHeightCm: false
+    tickLabelDropCm: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - spotLabelHeightCm: 4.500000
+      smallLabelHeightCm: !<float> 4.000000
+      labelColor: !<Vec4> {x: 0.980000, y: 0.960000, z: 0.900000, w: 1.000000}
+      faintAlpha: 0.450000
+      hintColor: !<Vec4> {x: 1.000000, y: 0.840000, z: 0.550000, w: 1.000000}
+      tickLabelDropCm: !<float> 6.000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">BraggsRoomWallLabelsUI – spot, ghost and 2θ labels on the wall</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input float spotLabelHeightCm = 4.5 {"hint":"Line height of the lit-spot labels, cm (the handoff floor for wall text is 4 cm)", "widget":"slider", "min":4, "max":8, "step":0.1}'
+    - '// @input float smallLabelHeightCm = 4 {"hint":"Line height of ghost labels, 2θ tick labels and the off-wall hint, cm (at least 4)", "widget":"slider", "min":4, "max":8, "step":0.1}'
+    - '// @input vec4 labelColor = "{0.98,0.96,0.9,1}" {"hint":"Lit-spot label colour (warm white). Keep it light: the display is additive.", "widget":"color"}'
+    - '// @input float faintAlpha = 0.45 {"hint":"Opacity of ghost labels and 2θ tick labels (they are deliberately faint)", "widget":"slider", "min":0.2, "max":1, "step":0.05}'
+    - '// @input vec4 hintColor = "{1,0.84,0.55,1}" {"hint":"Off-wall hint colour", "widget":"color"}'
+    - '// @input float tickLabelDropCm = 6 {"hint":"How far below the horizontal axis the 2θ tick labels sit, cm", "widget":"slider", "min":3, "max":12, "step":0.5}'
+    - '// @ui {"widget":"group_end"}'

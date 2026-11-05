@@ -1,0 +1,63 @@
+- !<AssetImportMetadata/69926bbc-6761-4f32-8582-1d06324f2b2f>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 4fee5688-db96-47f5-9ead-a520b7f35b5d
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 4fee5688-db96-47f5-9ead-a520b7f35b5d
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 4e534b5d-7576-4417-a9c5-455ede649741
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/4e534b5d-7576-4417-a9c5-455ede649741>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 14b3939e-149e-4e4d-848e-4ccd4e6dd1fd
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    boardHeightCm: false
+    boardWidthCm: false
+    highlightColor: false
+    textColor: false
+    textScale: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - boardWidthCm: !<float> 60.000000
+      boardHeightCm: !<float> 40.000000
+      textScale: !<float> 1.000000
+      textColor: !<Vec4> {x: 0.950000, y: 0.960000, z: 1.000000, w: 1.000000}
+      highlightColor: !<Vec4> {x: 1.000000, y: 0.800000, z: 0.450000, w: 1.000000}
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">BraggsRoomEvidenceBoardUI – found reflections / mission evidence on the wall</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input float boardWidthCm = 60 {"hint":"Board width in cm", "widget":"slider", "min":40, "max":100, "step":1}'
+    - '// @input float boardHeightCm = 40 {"hint":"Board height in cm", "widget":"slider", "min":30, "max":80, "step":1}'
+    - '// @input float textScale = 1 {"hint":"Multiplies every text size on the board", "widget":"slider", "min":0.8, "max":1.6, "step":0.05}'
+    - '// @input vec4 textColor = "{0.95,0.96,1,1}" {"hint":"Text colour. Keep it light: the Specs display is additive.", "widget":"color"}'
+    - '// @input vec4 highlightColor = "{1,0.8,0.45,1}" {"hint":"Colour of the line a verdict points at (stage 2)", "widget":"color"}'
+    - '// @ui {"widget":"group_end"}'

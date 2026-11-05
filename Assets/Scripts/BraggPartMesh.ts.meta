@@ -1,0 +1,49 @@
+- !<AssetImportMetadata/89f2092e-0415-446d-9722-60deb3accc6a>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 3d582d92-c675-4190-9d49-eeab3c5fa182
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 3d582d92-c675-4190-9d49-eeab3c5fa182
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 753c8e76-e996-48ac-87a1-c5aa5814a2ae
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/753c8e76-e996-48ac-87a1-c5aa5814a2ae>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 44f392cd-698e-40cc-8c96-0cfb267f53a9
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    material: false
+    part: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - part: VirtualDesk
+      material: !<reference.Material> 00000000-0000-0000-0000-000000000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @input string part = "VirtualDesk" {"widget":"combobox", "values":[{"label":"Virtual desk (preview stand-in)", "value":"VirtualDesk"}, {"label":"Goniometer", "value":"Goniometer"}, {"label":"X-ray tube", "value":"XRayTube"}, {"label":"Beam stop", "value":"BeamStop"}, {"label":"Virtual wall grid (preview stand-in)", "value":"VirtualWall"}, {"label":"Spot", "value":"Spot"}, {"label":"Ghost spot", "value":"GhostSpot"}, {"label":"Ray (unit, along -z)", "value":"Ray"}]}'
+    - '// @input Asset.Material material {"hint":"vertexBaseColorMaterial (SimpleVertexBaseColor.lspkg). Glow parts use an additive clone of it."}'

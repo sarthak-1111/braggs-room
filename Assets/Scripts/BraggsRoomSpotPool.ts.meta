@@ -1,0 +1,73 @@
+- !<AssetImportMetadata/2ac829c4-3545-47c5-a04b-b3693ed0c53a>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> a4efcce8-3633-44ee-b9b4-7d9e2f7996db
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> a4efcce8-3633-44ee-b9b4-7d9e2f7996db
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> ccdd7f35-5225-465c-9748-6704397b8b0f
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/ccdd7f35-5225-465c-9748-6704397b8b0f>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: f96c6da3-fc70-4549-a6c0-3607a661b337
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    chimeFirst: false
+    chimeRepeat: false
+    firstChimeVolume: false
+    labelGapCm: false
+    material: false
+    repeatChimeVolume: false
+    showRays: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - material: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      chimeFirst: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      chimeRepeat: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      firstChimeVolume: !<float> 1.000000
+      repeatChimeVolume: 0.500000
+      labelGapCm: 4.500000
+      showRays: true
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">BraggsRoomSpotPool – lit spots, ghosts, rays and spatial chimes</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">References</span>"}'
+    - '// @ui {"widget":"group_start", "label":"References"}'
+    - '// @input Asset.Material material {"hint":"vertexBaseColorMaterial (Assets/SimpleVertexBaseColor.lspkg). Spots, ghosts and rays use an additive clone."}'
+    - '// @input Asset.AudioTrackAsset chimeFirst {"hint":"Chime for the first sighting of a reflection (bright)"}'
+    - '// @input Asset.AudioTrackAsset chimeRepeat {"hint":"Chime for a repeat sighting (softer)"}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input float firstChimeVolume = 1 {"hint":"Volume of the first-sighting chime", "widget":"slider", "min":0, "max":1, "step":0.05}'
+    - '// @input float repeatChimeVolume = 0.5 {"hint":"Volume of the repeat-sighting chime", "widget":"slider", "min":0, "max":1, "step":0.05}'
+    - "// @input float labelGapCm = 4.5 {\"hint\":\"Distance from a spot's centre to its label (the label sits above-right of the spot), cm\", \"widget\":\"slider\", \"min\":2, \"max\":12, \"step\":0.5}"
+    - '// @input bool showRays = true {"hint":"Draw a faint ray from the crystal to each lit spot"}'
+    - '// @ui {"widget":"group_end"}'
