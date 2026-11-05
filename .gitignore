@@ -24,3 +24,8 @@ agent/
 .DS_Store
 Thumbs.db
 node_modules/
+
+# Generated during the build
+/tsconfig.json
+.virtual-scene*.json
+tests/.build/
