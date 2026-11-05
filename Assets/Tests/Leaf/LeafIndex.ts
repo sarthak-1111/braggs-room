@@ -3,6 +3,10 @@
  * devpost/design-brief.md). Attached to the "LeafIndex" SceneObject; it only registers, it
  * never runs anything on its own. Run them from Lens Studio's LEAF panel, or through the
  * Lens Studio MCP tools list_leaf_scenarios / run_leaf_scenario.
+ *
+ * "video-director" is not a test: it steps the Lens through the demo-video shots from a `plan`
+ * (see Assets/Tests/Video/BraggsVideoDirectorScenario.ts). With its defaults (no plan, cmd
+ * "status") it only prints the current state, so running every scenario stays harmless.
  */
 import {scenariosIndex} from "Leaf.lspkg/Scenarios/decorator/ScenarioIndexDecorator"
 import {ScenarioMetadata} from "Leaf.lspkg/Scenarios/scenario/ScenarioMetadata"
@@ -14,8 +18,10 @@ import {BraggsC4ScScenario} from "./BraggsC4ScScenario"
 import {BraggsC4FccScenario} from "./BraggsC4FccScenario"
 import {BraggsC4NoLeakScenario} from "./BraggsC4NoLeakScenario"
 import {BraggsC5LabelsScenario} from "./BraggsC5LabelsScenario"
+import {BraggsVideoDirectorScenario} from "../Video/BraggsVideoDirectorScenario"
 
 const T = {__leaf__timeout_secs: "240"}
+const VIDEO = {__leaf__timeout_secs: "120", __leaf__diagnostic_report_duration_ms: "0", cmd: "status", plan: "", tag: ""}
 
 @component
 export class LeafIndex extends BaseScriptComponent {
@@ -29,5 +35,6 @@ export class LeafIndex extends BaseScriptComponent {
     {id: "c4-mission-fcc-verdict", typename: BraggsC4FccScenario.getTypeName(), parameters: T},
     {id: "c4-no-leak-helpers", typename: BraggsC4NoLeakScenario.getTypeName(), parameters: T},
     {id: "c5-labels-content-size", typename: BraggsC5LabelsScenario.getTypeName(), parameters: T},
+    {id: "video-director", typename: BraggsVideoDirectorScenario.getTypeName(), parameters: VIDEO},
   ]
 }
