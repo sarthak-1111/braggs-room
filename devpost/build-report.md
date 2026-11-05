@@ -1,21 +1,21 @@
 # Build report: Bragg's Room
 
-How the Lens was built from `devpost/design-brief.md`: the decisions, the iterations, the test results, and who did what. Written by the coding agent (Claude Code with the CLAD plugin) during the build, on 2026-11-05.
+How the Lens was built from my design brief (`devpost/design-brief.md`): the decisions, the iterations, the test results, and who did what. The coding agent (Claude Code with the CLAD plugin) wrote this record during the build, on 2026-11-05. Where it describes what the agents did, that's their work, not mine.
 
 ## Who did what
 
 | | Who |
 |---|---|
-| The idea, the audience, every design decision in the brief | **Sarthak**, through the plan-lens interview. Values marked "(default)" in the brief were filled in by plan-lens for Sarthak to review. |
-| The physics specification (vector Laue/Ewald form, a = 4.0 Å, λ = 1.54 Å, FCC rule, unit tests against hand-computed values) | **Sarthak**, in the build prompt |
-| Physics module, game-logic state machine, text formatters, their 44 unit tests | **Coding agent** (main session), to Sarthak's specification |
+| The idea, the audience, every design decision in the brief | **Me**, through the plan-lens interview. Values marked "(default)" in the brief were filled in by plan-lens for me to review. |
+| The physics specification (vector Laue/Ewald form, a = 4.0 Å, λ = 1.54 Å, FCC rule, unit tests against hand-computed values) | **Me**, in the build prompt |
+| Physics module, game-logic state machine, text formatters, their 44 unit tests | **Coding agent** (main session), to my specification |
 | Turning the brief into scene contracts (layout table, names, test hooks): `clad-handoff-1.md`, `clad-handoff-2.md` | **Coding agent** (directed CLAD) |
 | Scene, code-authored meshes, sounds, UIKit console and board, wall labels, interaction wiring, 80 geometry unit tests (52 in stage 1, 28 in stage 2) | **CLAD `specs-experience-builder`** agent, in two passes |
 | LEAF scenarios and their first run | **CLAD `live-lens-tester`** agent |
 | The final LEAF run and its review | **Coding agent** (main session), through the LEAF panel's MCP tools |
 | Reviews, preview checks, fixes, commits, docs | **Coding agent** (main session) |
 
-Sarthak was away during the build; nobody answered questions. Where the brief left a build-level choice open, the choice is listed below under "Choices made during the build (not Sarthak's)".
+I was away during the build, so nobody answered the agents' questions. Where the brief left a build-level choice open, the choice is listed below under "Choices made during the build (not mine)".
 
 ## Timeline and iterations
 
@@ -37,10 +37,10 @@ Sarthak was away during the build; nobody answered questions. Where the brief le
      - the prediction ring for a reachable (hkl), an off-wall one and an unreachable one.
 
      It fixed two problems it found: a prediction ring larger than the wall was drawn past the wall's edges, and the evidence board's text ran out of its plate at seven or more lines. One of its probe checks failed, and the probe was wrong: at the (010) condition in that FCC round, two allowed (311)-type reflections are also in condition. That is correct physics, and the "(100) condition passed: no spot" line was still logged.
-   - **My checks in the preview.**
-     - I removed a leftover "AiPreviewAgent Handler" scene object whose script had disappeared with an auto-installed package (see "Problems").
-     - I pressed **Start mission** and **Predict (hkl)** with injected preview touches. The slider followed to Mo Kα, the crystal turned into the frosted cube, the tag read "Mystery sample · a = 4.20 Å", and the steppers unfolded to "Prediction (111)".
-     - I checked the (111) ring against a hand calculation. For a = 4.20 Å at Mo Kα, 2θ = 16.84° and r = 150 · tan 16.84° = 45.4 cm; the ring measures about 45 cm against the wall's 10° tick.
+   - **The coding agent's checks in the preview.**
+     - It removed a leftover "AiPreviewAgent Handler" scene object whose script had disappeared with an auto-installed package (see "Problems").
+     - It pressed **Start mission** and **Predict (hkl)** with injected preview touches. The slider followed to Mo Kα, the crystal turned into the frosted cube, the tag read "Mystery sample · a = 4.20 Å", and the steppers unfolded to "Prediction (111)".
+     - It checked the (111) ring against a hand calculation. For a = 4.20 Å at Mo Kα, 2θ = 16.84° and r = 150 · tan 16.84° = 45.4 cm; the ring measures about 45 cm against the wall's 10° tick.
 
      Committed.
 9. **LEAF** scenarios per done criterion: eight scenarios written by CLAD's `live-lens-tester`. In the final run all eight pass, 315 of 315 sub-checks. One test-setup mistake was fixed on the way. See "LEAF scenarios" below.
@@ -60,10 +60,10 @@ Sarthak was away during the build; nobody answered questions. Where the brief le
   | Mission, a = 3.3 Å, Mo Kα | 100% | 5% | 95% |
   | Mission, a = 5.7 Å, Mo Kα | 100% | 4% | 96% |
 
-  So at Mo Kα the "half speed near a reflection" rule means half speed almost everywhere, and the guide arrow rarely shows, because something is usually already lit. That's what a rotating crystal with a 1° mosaic and Mo radiation really does. Shrinking the candidate set to N ≤ 4 only brought the slowdown down to 64–74%, and N ≤ 4 can't give an FCC round the three distinct d-spacings it needs. I kept the brief's rule exactly and made the windows tunable (`SimConfig.slowWindowDeg`, `guideWindowDeg`, `slowFactor`). **This is a design call for Sarthak**; see "Open questions".
+  So at Mo Kα the "half speed near a reflection" rule means half speed almost everywhere, and the guide arrow rarely shows, because something is usually already lit. That's what a rotating crystal with a 1° mosaic and Mo radiation really does. Shrinking the candidate set to N ≤ 4 only brought the slowdown down to 64–74%, and N ≤ 4 can't give an FCC round the three distinct d-spacings it needs. The coding agent kept the brief's rule exactly and made the windows tunable (`SimConfig.slowWindowDeg`, `guideWindowDeg`, `slowFactor`). **This is a design call for me**; see "Open questions".
 - **Spot-chime density.** For the same reason chimes would come in bursts, so they're rate-limited (one per 0.25 s), and a reflection's *first* sighting gets a brighter two-note chime while repeats get a softer single note.
 
-## Choices made during the build (not Sarthak's)
+## Choices made during the build (not mine)
 
 1. **Sign conventions** for φ and χ, as above.
 2. **Candidate set** N ≤ 12, as above.
@@ -333,37 +333,37 @@ Nothing runs on Lens start, so the Lens behaves normally in Interactive Preview.
 2. **Clean orientations.** Mission rounds use a = 5.0 Å and the command-line tests' "clean orientation" search, so each step lights only the intended d-spacing.
 3. **Both kinds of test for criterion 2.** It has an exact-orientation test (hooks) and a by-hand test (real drags).
 
-## Problems met, and what still needs Sarthak
+## Problems met, and what's left for me
 
 ### Tool problems during the build
 - **Lens Studio was not signed in to a Snap account.** CLAD's sign-in check returned "not signed in", and nobody could sign in during the run, so the build went on without the sign-in-gated tools. The SPECS text-to-3D and FAST3D mesh generators refuse without a sign-in, so every mesh is code-authored (MeshBuilder). The brief's clean, diagrammatic look favours that anyway. Package installs from the Asset Library still worked. Nothing here needs a sign-in to run in the preview; publishing to SPECS would.
 - **LEAF 4.0.0 doesn't fit this project.** It imports `InteractionKit.lspkg`, the renamed SIK of a newer generation, and failed to compile against SIK 2.0 with about 90 errors. It was removed and replaced by LEAF 2.0.2.
-- **LEAF plugin permission prompt.** LEAF 4.0.0 brought its own project-local copy of the LEAF editor plugin. Lens Studio asked whether to trust it, and the prompt blocked the asset manager until answered. The build answered **Block**, because an agent shouldn't grant code-execution trust on Sarthak's behalf. That copy went with LEAF 4.0.0. The LEAF panel used for the final run is the one built into Lens Studio (LEAF Plugin 5.23.0), which needed no trust prompt, and no plugin was trusted during the build.
+- **LEAF plugin permission prompt.** LEAF 4.0.0 brought its own project-local copy of the LEAF editor plugin. Lens Studio asked whether to trust it, and the prompt blocked the asset manager until answered. The build answered **Block**, because an agent shouldn't grant code-execution trust on my behalf. That copy went with LEAF 4.0.0. The LEAF panel used for the final run is the one built into Lens Studio (LEAF Plugin 5.23.0), which needed no trust prompt, and no plugin was trusted during the build.
 - **The LEAF tester agent stopped before reporting.** CLAD's `live-lens-tester` wrote all eight scenarios and ran them once, but it ran in the background and was stopped when that turn ended. The main session ran the final LEAF run itself, in the foreground (see "LEAF scenarios").
-- **Three Lens Studio MCP inspection tools break this project.** `QueryRuntimeSceneTool`, `PreviewInteractTool` and `CaptureRuntimeViewTool` auto-install the `AiPreviewAgentInspect`, `Icons` and `Motion` packages. Their examples import `UIKit.lspkg`/`InteractionKit.lspkg`, which don't exist alongside SIK/UIKit 2.0, so the compile breaks. I removed the packages and avoided those tools for the rest of the build, using screenshots, logs, injected input and test hooks instead. A leftover "AiPreviewAgent Handler" scene object, with a script whose asset had gone, was deleted after stage 2.
-- **Lens Studio deletes `.agents/` when the project is saved.** The Agents-Docs plugin removes the folder on every save. It holds the plan-lens skill, which is tracked in git, so it was restored with `git checkout -- .agents` before every commit. Sarthak will see the same thing; restore it the same way before committing.
+- **Three Lens Studio MCP inspection tools break this project.** `QueryRuntimeSceneTool`, `PreviewInteractTool` and `CaptureRuntimeViewTool` auto-install the `AiPreviewAgentInspect`, `Icons` and `Motion` packages. Their examples import `UIKit.lspkg`/`InteractionKit.lspkg`, which don't exist alongside SIK/UIKit 2.0, so the compile breaks. The coding agent removed the packages and avoided those tools for the rest of the build, using screenshots, logs, injected input and test hooks instead. A leftover "AiPreviewAgent Handler" scene object, with a script whose asset had gone, was deleted after stage 2.
+- **Lens Studio deletes `.agents/` when the project is saved.** The Agents-Docs plugin removes the folder on every save. It holds the plan-lens skill, which is tracked in git, so it was restored with `git checkout -- .agents` before every commit. Anyone who saves the project sees the same thing; restore it the same way before committing.
 - **Lens Studio writes files of its own:**
   - a root `tsconfig.json` (now ignored);
   - `leaf_plugin_settings.json` (Lens Studio added it to `.gitignore` itself);
   - a `lensDescriptors: AI_MUTATED` tag in `braggs-room.esproj`, which marks a project edited through the MCP.
-- **No audio device output on the build machine.** Lens Studio logged `[AudioOutput] Can not create Audio Renderer` / `Can not Set Media Type for Sink Writer` from before the Lens's sounds were imported. The chimes, flourish and "not yet" tone were checked through counters (`chimeCount`, `flourishCount`, `notYetCount`) and the chime position, **not by ear**. Listen to them once before recording the video.
+- **No audio device output on the build machine.** Lens Studio logged `[AudioOutput] Can not create Audio Renderer` / `Can not Set Media Type for Sink Writer` from before the Lens's sounds were imported. The chimes, flourish and "not yet" tone were checked through counters (`chimeCount`, `flourishCount`, `notYetCount`) and the chime position, **not by ear**. I still need to listen to them.
 - **ffmpeg isn't installed**, so `/build-music`'s loudness check didn't run on the flourish. The sounds were generated at moderate levels, but nobody listened to them (see above).
 - **Injected button presses need a hover first.** In the preview, an injected touch presses a UIKit button only if the cursor is already over it; the first touch after moving the cursor just hovers. A person with a mouse never notices this. It only matters for automated presses.
 - **The Windows session was locked** for part of the run, so screen captures outside Lens Studio failed. Lens Studio's own panel captures kept working.
 
-### What still needs Sarthak (by hand)
+### What's left for me (by hand)
 1. **Look at it and listen to it.** Open the preview (README, "Open and run it in Lens Studio") and check the sounds, which nobody heard during the build.
 2. **Answer the open questions below**, or leave the build's choices as they are.
-3. **Record the video** from `devpost/video-script.md`, including the student or colleague solve (with their written permission). Upload it to YouTube as **Public**, under 3 minutes.
-4. **Personalise `devpost/submission.md`** (the ✏️ SARTHAK sections), add the video link, and paste it into the Devpost form.
+3. **Review the video.** The coding agent made a first cut from `devpost/video-script.md` (see "How the first cut was made" there). Replace its scripted solve with a student or colleague's run only with their written permission. Upload it to YouTube as **Public**, under 3 minutes.
+4. **Personalise `devpost/submission.md`** (the ✏️ PERSONALISE sections), add the video link, and paste it into the Devpost form.
 5. **Fill in the Devpost form and press Submit.**
-6. **The GitHub repo** is created and pushed by the relay session after its review. This build didn't create or push anything.
+6. **The GitHub repo** was created and pushed by the relay session after its review; the build itself didn't create or push anything.
 7. **Optional:**
-   - sign in to Lens Studio, which you'd need for publishing to SPECS;
+   - sign in to Lens Studio, which I'd need for publishing to SPECS;
    - try the project in Lens Studio 5.23.2 if that matters. It was built and tested only in 5.24.1, and an older Lens Studio may refuse a project saved by a newer one.
-8. **On real SPECS**, if you get the chance: the real-wall anchor, the hand-drag feel, the narrow view and sound localisation are all "feel unproven".
+8. **On real SPECS**, if I get the chance: the real-wall anchor, the hand-drag feel, the narrow view and sound localisation are all "feel unproven".
 
-## Open questions for Sarthak
+## Open questions (mine to decide)
 
 1. **Helper density at Mo Kα** (see "Physics decisions"). With the brief's rules, missions run at half speed on almost every orientation, and the guide arrow rarely shows because something is usually lit already. Options:
    - narrow the slowdown window to 0.5–1° (`slowWindowDeg`);
@@ -371,8 +371,8 @@ Nothing runs on Lens start, so the Lens behaves normally in Interactive Preview.
    - count only reflections that land on the visible part of the wall.
 
    All are one-line config changes and keep the no-leak rule.
-2. **The narrow view.** From the start position, the crystal is 20° left and 23° below the eye line, and the beam stop is 6° left and 7° below. The preview shows about ±16° horizontally and ±21° vertically, so both are in view only when you look down and to the left (about 13° left and 15° down). Looking straight ahead, the crystal is out of view. Is that the experience you want, or should the crystal sit closer to the beam line (higher on a taller post, or nearer the centre)?
+2. **The narrow view.** From the start position, the crystal is 20° left and 23° below the eye line, and the beam stop is 6° left and 7° below. The preview shows about ±16° horizontally and ±21° vertically, so both are in view only when you look down and to the left (about 13° left and 15° down). Looking straight ahead, the crystal is out of view. Is that the experience I want, or should the crystal sit closer to the beam line (higher on a taller post, or nearer the centre)?
 3. **The evidence board is partly out of view.** It spans 3°–20° to the right of straight ahead. While you look at the beam stop, the right half of the board is cut off. Options: move it closer to the beam stop, at the cost of overlapping the right-hand spots, or make it smaller.
 4. **The 1.0° mosaic window at Mo Kα** makes several reflections light at once at most orientations. That's honest rotation-photograph behaviour, but it makes the mission feel busy. Options: a narrower window in missions only, or a smaller candidate set. A narrower window makes spots harder to find by hand.
 5. **The "not yet" tone and the chime levels** were never heard (see "Problems"). Adjust them if they're too loud or too quiet.
-6. **The off-wall hint shows while a spot is lit on the wall.** At φ ≈ 11° with Cu Kα, (0 1 0) lands on the wall, and nine high-angle reflections are also in condition but land off the detector (physically right). The hint "Spot is off the wall. Try a shorter wavelength." fires for those, so it shows next to a lit spot in the opening shots, which reads as a contradiction. Suggested change: show the hint only when no lit spot lands on the wall. It changes the approved brief's wording, so it waits for Sarthak.
+6. **The off-wall hint shows while a spot is lit on the wall.** At φ ≈ 11° with Cu Kα, (0 1 0) lands on the wall, and nine high-angle reflections are also in condition but land off the detector (physically right). The hint "Spot is off the wall. Try a shorter wavelength." fires for those, so it shows next to a lit spot in the opening shots, which reads as a contradiction. Suggested change: show the hint only when no lit spot lands on the wall. It changes the approved brief's wording, so it waits for my decision.

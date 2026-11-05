@@ -1,6 +1,6 @@
 # Devpost submission text: Bragg's Room
 
-Paste the sections below into the Devpost form. Lines marked **✏️ SARTHAK: PERSONALISE** are drafts written by the coding agent. Rewrite them in your own words before submitting; the judges are reading for *your* voice and *your* experience. Everything else describes what the Lens actually does in the preview, and should only change if the Lens changes.
+I paste the sections below into the Devpost form. Lines marked **✏️ PERSONALISE** are drafts written by the coding agent, and I rewrite them in my own words before submitting: the judges are reading for my voice and my experience. Everything else describes what the Lens actually does in the preview, and only changes if the Lens changes.
 
 ---
 
@@ -24,7 +24,7 @@ In Lens Studio's preview the wall and desk are virtual stand-ins drawn at real s
 
 Undergraduate physics, chemistry and materials students, and the people who teach them. Diffraction is usually taught with a flat diagram: two lines for the planes, two arrows, and nλ = 2d sin θ. The equation is right, but the diagram hides the part students find hardest: how the crystal's orientation in 3D, the beam and the spot's position on the detector are linked. In Bragg's Room that link happens at room scale with real angles. Your hands turn the crystal while your eyes stay on the wall pattern.
 
-✏️ **SARTHAK: PERSONALISE.** One or two sentences in your own words on why this matters to you as a diffraction researcher, for example a moment when you saw students struggle with the textbook picture, or what you wish you'd had when you learned it.
+✏️ **PERSONALISE.** One or two sentences in my own words on why this matters to me as a diffraction researcher, for example a moment when I saw students struggle with the textbook picture, or what I wish I'd had when I learned it.
 
 ## How I built it
 
@@ -36,16 +36,16 @@ Pre-existing code: none, apart from the Lens Studio Specs Base Template, Snap's 
 
 ## What I learned
 
-✏️ **SARTHAK: PERSONALISE.** This section should be yours. Some prompts, taken from what came up while building:
+✏️ **PERSONALISE.** This section should be mine. Some prompts, taken from what came up while building:
 - *Shares your view, draws in the world, leaves your body free:* which of these turned out to matter most for diffraction, and which only a real SPECS device could prove (the brief marks the real-wall anchor as "feel unproven").
-- *Physics meets usability:* with a 1° mosaic window at Mo Kα, several reflections are often lit at once. That's real rotation-photograph behaviour, and it changed how the helpers (guide arrow, slowdown) feel. What did you decide about that trade-off?
-- *Positive controls:* turning "absence of a spot" into evidence needed a positive-control rule. Did writing that rule for a Lens change how you'd explain it to students?
-- *Working with plan-lens and CLAD:* what the interview made you decide up front, and what you had to correct after seeing the build.
+- *Physics meets usability:* with a 1° mosaic window at Mo Kα, several reflections are often lit at once. That's real rotation-photograph behaviour, and it changed how the helpers (guide arrow, slowdown) feel. What did I decide about that trade-off?
+- *Positive controls:* turning "absence of a spot" into evidence needed a positive-control rule. Did writing that rule for a Lens change how I'd explain it to students?
+- *Working with plan-lens and CLAD:* what the interview made me decide up front, and what I had to correct after seeing the build.
 
 ## Links
 
 - Code: https://github.com/sarthak-1111/braggs-room
-- Video: ✏️ **SARTHAK: paste the public YouTube link**
+- Video: ✏️ **paste the public YouTube link**
 
 ## Built with
 

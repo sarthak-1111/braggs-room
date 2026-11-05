@@ -6,7 +6,7 @@ status: approved
 
 <!-- Filled in by plan-lens from the learner's interview. Use the learner's words. Mark any value they didn't choose as (default). -->
 
-Everything here is Sarthak's decision except values marked (default), which plan-lens filled in for Sarthak to review.
+Everything here is my decision, except values marked (default), which plan-lens filled in for me to review.
 
 **Audience:** undergraduate physics, chemistry and materials students, and their teachers. Flat textbook diagrams of diffraction don't convey the 3D geometry.
 
@@ -100,7 +100,7 @@ Each one can be checked in Lens Studio's preview.
 - The Ewald sphere view, unless every done criterion already passes.
 
 ## Risks and open questions
-- Real wall: Sarthak asked for the detector to be anchored to a real wall the glasses detect. The preview can't detect walls, so the done criteria use the virtual wall, and snapping is attempted only if World Query returns hits in the preview. Feel unproven.
+- Real wall: I asked for the detector to be anchored to a real wall the glasses detect. The preview can't detect walls, so the done criteria use the virtual wall, and snapping is attempted only if World Query returns hits in the preview. Feel unproven.
 - "Shares your view" is claimed on the strength of the real-wall anchor, which the preview can only show as a stand-in. Judges may read "shares your view" as using what the camera sees, so the video and description should say plainly that the wall is a stand-in in the preview.
 - High angles land far out. On a flat wall 1.5 m away, a spot sits 1.5 m × tan 2θ from the beam stop, so 2θ = 45° is already 1.5 m out, and anything past about 60° misses the detector. Mission rounds start at Mo Kα, so for a = 3.3–5.7 Å, an FCC round's (111), (200) and (220) all land within about 1.1 m. The off-wall hint covers the rest. Out-of-view spots rely on the chime and the edge chevron.
 - The off-wall hint only fires for a reflection that exists. In a mission it tells the student a reflection happened at that orientation, even though they can't read its 2θ.
@@ -109,7 +109,7 @@ Each one can be checked in Lens Studio's preview.
 - The 1.0° mosaic tolerance is exaggerated so spots can be found by hand, and it's labelled "mosaic spread exaggerated" on screen.
 - The FCC absence check needs the Lens to test the forbidden (100) and (110) conditions with the same Bragg test as allowed ones. The guide arrow, the slowdown and the ghosts must not reveal which reflections exist (see done criterion 4).
 
-## Physics for CLAD (Sarthak's specification)
+## Physics for CLAD (my specification)
 - Use the vector (Laue/Ewald) form. |k| = 1/λ along the beam. The reciprocal lattice vectors G = (h, k, l)/a in the crystal frame rotate with the crystal.
 - A reflection lights when |k + G| ≈ |k| within the mosaic tolerance. Implement this as: the glancing angle between the beam and the planes is within 1.0° of θ_B, where sin θ_B = λ|G|/2 = λ/2d.
 - The diffracted direction is k' = k + G, intersected with the wall plane. Draw the spot at exactly 2θ_B from the beam, at the azimuth of k + G around the beam, so the 2θ on the wall is exact even inside the tolerance (default).
@@ -123,7 +123,7 @@ Each one can be checked in Lens Studio's preview.
 - Tests must be able to set the mystery crystal's type and a (default).
 - The crystal is drawn enlarged and labelled "atoms not to scale". All angles and directions are real.
 
-## Notes for the demo video (Sarthak's plan; not part of the build)
+## Notes for the demo video (my plan; not part of the build)
 - Open with a textbook diagram failing, then cut to a spot lighting up on the wall within 15 seconds.
 - End with a student or colleague solving the mission. Get their permission before including them.
 - Include a sentence on the positive-control rule.
@@ -139,9 +139,9 @@ Each one can be checked in Lens Studio's preview.
 - Don't record, identify, or follow people.
 
 ## After the build: judge it
-This part is for you, after CLAD finishes.
+This part is for me, after CLAD finishes.
 
-1. **Does it work?** Ask your agent which LEAF tests passed and which done criteria have no test.
+1. **Does it work?** Ask the agent which LEAF tests passed and which done criteria have no test.
 2. **Walk around it.** Open the preview in Interactive Preview. Use WASD to move, Q and E to go down and up, and right-drag (or hold Shift) to look around. Clicking acts as a pinch. Stand where a user would and look at the task.
 3. **Ask the three questions.**
    - Does it use what I'm looking at?
@@ -154,5 +154,5 @@ This part is for you, after CLAD finishes.
    - Text reads easily from where I stand. No dark UI disappearing.
    - Things show when needed and get out of the way.
 5. **Label what you know.** Write "logic proven" next to anything the tests and preview show working, and "feel unproven" next to anything only real glasses could tell you (comfort over time, real hand tracking, real recognition).
-6. **Fix with design notes, not code.** Tell your agent what to change in design terms, for example: "Move the step card 15 cm lower and next to the pan. Make the Next button twice as big. Re-run the tests." If a fix takes under a minute, like nudging a panel, do it yourself in the scene.
-7. **Submit.** Record a video under 3 minutes of your Lens in the preview, public on YouTube. Make your repo public with your Lens Studio project and this `devpost/` folder. Details are on the hackathon site: https://learn-specs.devpost.com/resources
+6. **Fix with design notes, not code.** Tell the agent what to change in design terms, for example: "Move the step card 15 cm lower and next to the pan. Make the Next button twice as big. Re-run the tests." If a fix takes under a minute, like nudging a panel, do it by hand in the scene.
+7. **Submit.** Record a video under 3 minutes of my Lens in the preview, public on YouTube. Make my repo public with my Lens Studio project and this `devpost/` folder. Details are on the hackathon site: https://learn-specs.devpost.com/resources

@@ -14,7 +14,7 @@ Checked against: [Official Rules](https://learn-specs.devpost.com/rules), [Overv
 | Judging period (repo must stay public) | Nov 10, 10:00 am – Nov 17, 5:00 pm | Nov 11, 00:00 – Nov 18, 07:00 |
 | Winners announced | about Nov 19, 2:00 pm | about Nov 20, 04:00 |
 
-After the deadline, the submission is locked (Rules §5). Save a Devpost draft early and update it as you go.
+After the deadline, the submission is locked (Rules §5). I save a Devpost draft early and update it as I go.
 
 ---
 
@@ -100,7 +100,7 @@ After the deadline, the submission is locked (Rules §5). Save a Devpost draft e
 ## Other rules to keep in mind
 
 - [ ] Registered on Devpost with "Join Hackathon" (Rules §4).
-- [x] Eligible: Japan isn't excluded, and I'm at or above the age of majority (Rules §3). Confirm this yourself.
+- [x] Eligible: Japan isn't excluded, and I'm at or above the age of majority (Rules §3).
 - [ ] Original work that I solely own, with no IP violations (Rules §4 and §7).
 - [ ] No financial or preferential support from Snap or Devpost (Rules §4).
 - [ ] Each submission is unique; more than one is allowed (Rules §4).
@@ -117,7 +117,7 @@ Stage 1 is pass/fail: the project reasonably applies the required tools and meet
 ## Setup notes (2026-11-05)
 
 - The project is in the `braggs-room/` subfolder. Claude Code has to be **started from inside `braggs-room`** for the `lens-studio` MCP tools to load. `plan-lens` also stops if it finds the `.esproj` in a subfolder.
-- `lens-studio` is pre-approved in `.claude/settings.local.json` (`enabledMcpjsonServers`). You still have to accept the folder-trust prompt when Claude Code starts there.
+- `lens-studio` is pre-approved in `.claude/settings.local.json` (`enabledMcpjsonServers`). The folder-trust prompt still has to be accepted when Claude Code starts there.
 - Node here is v20.12.1. The current `skills` CLI (1.7.6) needs Node 22.20 or later, so the pack was installed with `npx skills@1.5.18 add challengepost/learn-specs --all -y`. That's the same command on the last Node-20-compatible CLI. The installed files match the GitHub repo exactly.
 - `--all` installs to every agent: real files in `.agents/skills/plan-lens/`, a junction at `.claude/skills/plan-lens/`, and a copy in `agent/skills/plan-lens/`.
 - This is Lens Studio 5.24.1. If signing in to the developer platform with CLAD is blocked, the FAQ says to use **Lens Studio 5.23.2** instead.

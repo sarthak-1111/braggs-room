@@ -1,6 +1,6 @@
 # CLAD handoff 1: the basic flow (free mode)
 
-This is the build spec the coding agent gave CLAD's `specs-experience-builder` for the first build pass. It turns `devpost/design-brief.md` (Sarthak's approved brief) into scene contracts. The physics and game logic already exist and are unit-tested; this pass builds the room around them.
+This is the build spec the coding agent gave CLAD's `specs-experience-builder` for the first build pass. It turns `devpost/design-brief.md` (my approved brief) into scene contracts. The physics and game logic already exist and are unit-tested; this pass builds the room around them.
 
 Stage 1 (this handoff): free mode end to end, covering done criteria 1, 2, 3 and the free-mode half of 5.
 Stage 2 (a later handoff): mission mode, predictor, verdicts, guide arrow, edge chevron, intro and celebration.
