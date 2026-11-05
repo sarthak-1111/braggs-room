@@ -170,7 +170,7 @@ export interface SimFrame {
   chi: number
   /** Lit spots that land on the detector. */
   lit: SpotView[]
-  /** A lit reflection lands off the detector. */
+  /** A lit reflection lands off the detector and no lit reflection lands on it. */
   offWallHint: boolean
   ghosts: GhostView[]
   ring: RingView | null
@@ -479,7 +479,8 @@ export class BraggSim {
       phi: this.phi,
       chi: this.chi,
       lit,
-      offWallHint: offWall,
+      // Only when nothing lit is on the wall: next to a lit spot the hint reads as a contradiction.
+      offWallHint: offWall && lit.length === 0,
       ghosts,
       ring: this.ringView(),
       guide: h.guide,

@@ -393,13 +393,30 @@ test("rotation runs at half speed within 2° of a reflection", () => {
   near(sim.phi - before, 0.1, 1e-9, "half speed")
 })
 
-test("off-wall hint: a lit spot that misses the detector asks for a shorter wavelength", () => {
+test("off-wall hint: shows only when a lit reflection misses the detector and no lit spot lands on it", () => {
+  // Only spot off the wall: the hint asks for a shorter wavelength.
+  // χ = 5° keeps (0 1 1) out of condition; at χ = 0 it lights on the wall beside (0 2 0).
   const sim = new BraggSim()
   sim.setWavelength(2.29) // (020): 2θ = 69.8°, 4.1 m out
-  goTo(sim, {h: 0, k: 2, l: 0}, 0, 30)
+  goTo(sim, {h: 0, k: 2, l: 0}, 5, 30)
   const f = sim.step()
   assert.equal(f.offWallHint, true)
   assert.equal(f.lit.some((s) => s.key === "0,2,0"), false)
+  assert.equal(f.lit.length, 0, "nothing lit on the wall")
+
+  // Free mode, Cu Kα: (0 1 0) is lit on the wall while high-angle reflections in condition miss it.
+  const free = new BraggSim()
+  assert.equal(free.lambda, 1.54)
+  free.setOrientation(11.0987, 0)
+  const g = free.step()
+  assert.ok(g.lit.some((s) => s.key === "0,1,0"), "(0 1 0) lit on the wall")
+  const missed = free.candidates.filter((m) => {
+    if (!P.isAllowed(m, free.freeLattice)) return false
+    const r = P.evaluateReflection(m, free.a, free.lambda, free.phi, free.chi, free.cfg.toleranceDeg, free.cfg.detector)
+    return r.inCondition && !(r.onDetector && r.wall)
+  })
+  assert.ok(missed.length > 0, "another reflection in condition misses the detector")
+  assert.equal(g.offWallHint, false, "no hint next to a lit spot")
 })
 
 test("free mode FCC toggle: forbidden reflections stay dark", () => {

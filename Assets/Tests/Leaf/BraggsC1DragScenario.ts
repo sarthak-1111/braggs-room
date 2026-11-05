@@ -62,29 +62,34 @@ export class BraggsC1DragScenario extends Scenario {
 
     checkPose("start")
 
+    // LEAF moves the hand a set distance per frame, so how far a drag turns depends on the
+    // preview's frame rate (each 0.1 cm frame is 0.15°). The direction checks below need the
+    // right sign and at least one frame of turn (MIN_TURN), not a fixed size.
+    const MIN_TURN = 0.1
+
     // 1. Horizontal: right → φ increases, χ unchanged; the near side turns right.
     let d = await drag("right", new vec3(0.1, 0, 0), 400)
-    c.ok("drag right turns φ up", d.dPhi > 0.5, `Δφ ${f3(d.dPhi)}°`)
+    c.ok("drag right turns φ up", d.dPhi > MIN_TURN, `Δφ ${f3(d.dPhi)}°`)
     c.ok("drag right leaves χ unchanged", Math.abs(d.dChi) < 1e-6, `Δχ ${f3(d.dChi, 6)}°`)
     let pose = checkPose("after right")
     c.ok("drag right: near side (+z face) turned right (x > 0), stays level (y ≈ 0)", pose.fwd.x > 0.01 && Math.abs(pose.fwd.y) < 1e-3, `fwd ${v3s(pose.fwd, 4)}`)
 
     d = await drag("left", new vec3(-0.1, 0, 0), 250)
-    c.ok("drag left turns φ down", d.dPhi < -0.5, `Δφ ${f3(d.dPhi)}°`)
+    c.ok("drag left turns φ down", d.dPhi < -MIN_TURN, `Δφ ${f3(d.dPhi)}°`)
     c.ok("drag left leaves χ unchanged", Math.abs(d.dChi) < 1e-6, `Δχ ${f3(d.dChi, 6)}°`)
     checkPose("after left")
 
     // 2. Vertical: up → χ increases (top tilts away), φ unchanged.
     const phiBeforeUp = state().phi
     d = await drag("up", new vec3(0, 0.1, 0), 400)
-    c.ok("drag up tilts χ up", d.dChi > 0.5, `Δχ ${f3(d.dChi)}°`)
+    c.ok("drag up tilts χ up", d.dChi > MIN_TURN, `Δχ ${f3(d.dChi)}°`)
     c.ok("drag up leaves φ unchanged", Math.abs(d.dPhi) < 1e-6, `Δφ ${f3(d.dPhi, 6)}°`)
     pose = checkPose("after up")
     // With φ ≠ 0 the up axis is R_χ(+y) = (0, cos χ, −sin χ): the top leans away from the user.
     c.ok("drag up: top tilts away (up axis z < 0)", pose.up.z < -0.005, `up ${v3s(pose.up, 4)}, φ ${f3(phiBeforeUp, 2)}`)
 
     d = await drag("down", new vec3(0, -0.1, 0), 250)
-    c.ok("drag down tilts χ down", d.dChi < -0.5, `Δχ ${f3(d.dChi)}°`)
+    c.ok("drag down tilts χ down", d.dChi < -MIN_TURN, `Δχ ${f3(d.dChi)}°`)
     c.ok("drag down leaves φ unchanged", Math.abs(d.dPhi) < 1e-6, `Δφ ${f3(d.dPhi, 6)}°`)
     checkPose("after down")
 

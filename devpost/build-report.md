@@ -44,6 +44,7 @@ I was away during the build, so nobody answered the agents' questions. Where the
 
      Committed.
 9. **LEAF** scenarios per done criterion: eight scenarios written by CLAD's `live-lens-tester`. In the final run all eight pass, 315 of 315 sub-checks. One test-setup mistake was fixed on the way. See "LEAF scenarios" below.
+10. **Off-wall hint change**, after the first video cut: my decision on open question 6. The coding agent changed the hint rule, extended unit test 121 (still 124 of 124), checked it in the preview, made the drag-direction checks in `c1-drag-turn-tilt-reset` independent of the preview's frame rate, and re-ran all eight LEAF scenarios (315 of 315).
 
 ## Physics decisions
 
@@ -107,13 +108,13 @@ I was away during the build, so nobody answered the agents' questions. Where the
 
 ### Physics and logic unit tests (command line)
 
-Run with `cd tests && npm install && npm test` (Node v20.12.1, TypeScript 5.9.3) after stage 2. **124 of 124 pass.**
+Run with `cd tests && npm install && npm test` (Node v20.12.1, TypeScript 5.9.3) after stage 2, and again after the off-wall hint change (open question 6). **124 of 124 pass.**
 
 - Tests 1–80 are CLAD's geometry tests for the code-built meshes and the layout.
 - Tests 81–98 are the physics tests.
 - Tests 99–124 are the experiment-logic tests, including every done criterion checked as pure logic.
 
-This is the real output; only node's per-test timing blocks (`duration_ms`) are removed:
+This is the real output of the re-run after the off-wall hint change; only node's per-test timing blocks (`duration_ms`) are removed:
 
 ```text
 > test
@@ -238,7 +239,7 @@ ok 117 - criterion 4: no leak. The same drag path gives identical guide arrows a
 ok 118 - criterion 4: the prediction ring depends only on a and λ (identical in SC and FCC rounds)
 ok 119 - guide arrow: appears within 4° of a reflection, points the right way, hides in the window
 ok 120 - rotation runs at half speed within 2° of a reflection
-ok 121 - off-wall hint: a lit spot that misses the detector asks for a shorter wavelength
+ok 121 - off-wall hint: shows only when a lit reflection misses the detector and no lit spot lands on it
 ok 122 - free mode FCC toggle: forbidden reflections stay dark
 ok 123 - free-mode evidence board lists (hkl), 2θ and the sin²θ ratio to the lowest-angle reflection
 ok 124 - a fast drag cannot skip a condition: passing through still records it
@@ -249,7 +250,7 @@ ok 124 - a fast drag cannot skip a condition: passing through still records it
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 941.2809
+# duration_ms 979.9671
 ```
 
 `npm run table` prints the hand-computed reference values that the physics tests check against. Real output:
@@ -322,6 +323,21 @@ I 19:09:22.832 [BRAGG-LEAF] SUMMARY c5-labels-content-size :: 31/31 checks passe
 I 19:09:22.839 [LeafPlugin][PluginViewModel] ✅ Scenario c5-labels-content-size completed successfully.
 ```
 
+**Re-run after the off-wall hint change** (open question 6), by the coding agent on 2026-11-05, 23:07–23:09, in the same preview and the same way. All eight pass, 315 of 315 sub-checks.
+
+Before this run, `c1-drag-turn-tilt-reset` failed twice at 79/81, and the test was at fault, not the Lens. LEAF's interactor moves the hand a set distance per frame, so how far a drag turns the crystal depends on the preview's frame rate. The preview ran at about 20 fps, and the 250 ms left and down drags turned −0.45° (3 frames of 0.15°). The checks asked for more than 0.5°; in the final run the same drags turned −0.60°. Both drags moved the right way and left the other angle unchanged. The coding agent changed the four single-axis direction checks to ask for the right sign and at least one frame of turn (0.1°). It changed nothing else in the scenario or the Lens.
+
+```text
+I 23:07:30.432 [BRAGG-LEAF] SUMMARY c1-drag-turn-tilt-reset :: 81/81 checks passed
+I 23:07:35.182 [BRAGG-LEAF] SUMMARY c2-spot-010-hooks :: 37/37 checks passed
+I 23:07:57.817 [BRAGG-LEAF] SUMMARY c2-spot-010-real-drag :: 19/19 checks passed
+I 23:08:02.577 [BRAGG-LEAF] SUMMARY c3-wavelength-slide-ghost :: 52/52 checks passed
+I 23:08:11.258 [BRAGG-LEAF] SUMMARY c4-mission-sc-verdict :: 44/44 checks passed
+I 23:08:21.475 [BRAGG-LEAF] SUMMARY c4-mission-fcc-verdict :: 47/47 checks passed
+I 23:08:43.841 [BRAGG-LEAF] SUMMARY c4-no-leak-helpers :: 4/4 checks passed
+I 23:08:49.286 [BRAGG-LEAF] SUMMARY c5-labels-content-size :: 31/31 checks passed
+```
+
 **To re-run them:**
 - **In Lens Studio:** open the LEAF panel, pick a scenario and run it in the preview.
 - **From a coding agent:** call `open_leaf_panel`, `list_leaf_scenarios`, then `run_leaf_scenario` with an id.
@@ -375,4 +391,8 @@ Nothing runs on Lens start, so the Lens behaves normally in Interactive Preview.
 3. **The evidence board is partly out of view.** It spans 3°–20° to the right of straight ahead. While you look at the beam stop, the right half of the board is cut off. Options: move it closer to the beam stop, at the cost of overlapping the right-hand spots, or make it smaller.
 4. **The 1.0° mosaic window at Mo Kα** makes several reflections light at once at most orientations. That's honest rotation-photograph behaviour, but it makes the mission feel busy. Options: a narrower window in missions only, or a smaller candidate set. A narrower window makes spots harder to find by hand.
 5. **The "not yet" tone and the chime levels** were never heard (see "Problems"). Adjust them if they're too loud or too quiet.
-6. **The off-wall hint shows while a spot is lit on the wall.** At φ ≈ 11° with Cu Kα, (0 1 0) lands on the wall, and nine high-angle reflections are also in condition but land off the detector (physically right). The hint "Spot is off the wall. Try a shorter wavelength." fires for those, so it shows next to a lit spot in the opening shots, which reads as a contradiction. Suggested change: show the hint only when no lit spot lands on the wall. It changes the approved brief's wording, so it waits for my decision.
+6. **The off-wall hint showed while a spot was lit on the wall. Resolved.** At φ ≈ 11° with Cu Kα, (0 1 0) lands on the wall, and nine high-angle reflections are also in condition but land off the detector (physically right). The hint "Spot is off the wall. Try a shorter wavelength." fired for those, so it showed next to a lit spot in the opening shots, which read as a contradiction.
+   - **My decision:** show the hint only when no lit spot lands on the wall. The brief now says so ("When things show", "The mission" and "Risks").
+   - **What the coding agent changed:** in `Assets/Scripts/BraggSim.ts`, `step()` now sets `offWallHint` only when a lit reflection misses the detector and no lit reflection lands on it. The physics didn't change.
+   - **The test that covers it:** unit test 121, "off-wall hint: shows only when a lit reflection misses the detector and no lit spot lands on it". With (0 2 0) the only reflection in condition at λ 2.29 Å, off the wall, the hint shows. At φ = +11.0987°, χ = 0 with Cu Kα, (0 1 0) is lit on the wall while other reflections in condition miss it, and the hint is hidden. The test's first case used to sit at χ = 0, where (0 1 1) is also lit on the wall, so the coding agent moved it to χ = 5°. In the preview, the video-director scenario at φ 11.1° logged (0 1 0) lit and `"offWallHint":false`, and the hint text was gone. The LEAF re-run is under "LEAF scenarios".
+   - The first video cut was made before this change, so its opening shots still show the hint.
