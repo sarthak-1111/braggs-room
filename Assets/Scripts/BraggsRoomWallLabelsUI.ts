@@ -5,6 +5,9 @@
  *   - the 2θ tick labels along the beam stop's horizontal axis (10° … 50° each side, at
  *     x = ±150·tan 2θ, from BraggGeometry.twoThetaTickX) plus a "2θ" caption at each end;
  *   - the off-wall hint ("Spot is off the wall. Try a shorter wavelength.") under the beam stop;
+ *   - stage 2: the prediction ring's label (RingLabel, at the top of the ring, or under the beam
+ *     stop when the ring cannot be drawn), the Banner after a correct verdict, and the IntroText
+ *     ("Drag the crystal. Watch the wall.") that fades in at Lens start and out after introSeconds;
  *   - the Text on the pooled spot and ghost label holders (SpotPool > Spot_i > SpotLabel,
  *     SpotPool > Ghost_i > GhostLabel), bound once with bindSpotLabels / bindGhostLabels.
  * These labels are placed by physics, not by a layout, which is why this module is plain
@@ -15,13 +18,15 @@
  * 0.6 cm in front of the wall (same plane as the spots).
  *
  * Talks to BraggsRoomMain through: bindSpotLabels(holders), setSpotLabel(i, title, detail),
- * bindGhostLabels(holders), setGhostLabel(i, text), setOffWallHint(visible).
+ * bindGhostLabels(holders), setGhostLabel(i, text), setOffWallHint(visible),
+ * setRingLabel(label, radiusCm), setBanner(text), playIntro().
  *
  * Must not: decide where a label goes (SpotPool positions the holders) or what it says
  * (the sim writes the strings).
  */
 import {TEXT} from "./BraggText"
-import {TWO_THETA_TICKS_DEG, twoThetaTickX} from "./BraggGeometry"
+import {TWO_THETA_TICKS_DEG, ringLabelY, twoThetaTickX} from "./BraggGeometry"
+import {DEFAULT_DETECTOR} from "./BraggPhysics"
 import {SCENE_NAMES} from "./BraggsRoomSceneContracts"
 
 const EM_CM_TO_SIZE = 43.886
@@ -61,6 +66,26 @@ export class BraggsRoomWallLabelsUI extends BaseScriptComponent {
   @hint("How far below the horizontal axis the 2θ tick labels sit, cm")
   @widget(new SliderWidget(3, 12, 0.5))
   tickLabelDropCm: number = 6
+
+  @input
+  @hint("Line height of the banner and the intro line, cm (at least 6)")
+  @widget(new SliderWidget(6, 10, 0.1))
+  headlineHeightCm: number = 6.5
+
+  @input
+  @hint("How far above the beam stop the banner and the intro line sit, cm")
+  @widget(new SliderWidget(6, 30, 0.5))
+  headlineRiseCm: number = 12
+
+  @input("vec4", "{0.84,0.76,1,1}")
+  @hint("Colour of the prediction ring's label (a light version of the ring's violet)")
+  @widget(new ColorWidget())
+  ringLabelColor: vec4
+
+  @input
+  @hint("Seconds the intro line stays up after Lens start before it fades out")
+  @widget(new SliderWidget(3, 20, 0.5))
+  introSeconds: number = 10
   @ui.group_end
 
   private spotTexts: Text[] = []
@@ -68,6 +93,14 @@ export class BraggsRoomWallLabelsUI extends BaseScriptComponent {
   private ghostTexts: Text[] = []
   private ghostStrings: string[] = []
   private hintObject: SceneObject
+  private ringObject: SceneObject
+  private ringText: Text
+  private bannerObject: SceneObject
+  private bannerText: Text
+  private introObject: SceneObject
+  private introText: Text
+  private introStart = -1
+  private introCut = false
 
   onAwake(): void {
     const faint = new vec4(this.labelColor.x, this.labelColor.y, this.labelColor.z, this.faintAlpha)
@@ -86,6 +119,21 @@ export class BraggsRoomWallLabelsUI extends BaseScriptComponent {
     this.hintObject = this.obj(this.sceneObject, SCENE_NAMES.offWallHint, new vec3(0, -18, 0))
     this.makeText(this.hintObject, TEXT.offWall, this.smallLabelHeightCm, this.hintColor, HorizontalAlignment.Center, 160)
     this.hintObject.enabled = false
+
+    this.ringObject = this.obj(this.sceneObject, SCENE_NAMES.ringLabel, new vec3(0, 0, 0.05))
+    this.ringText = this.makeText(this.ringObject, "", this.smallLabelHeightCm, this.ringLabelColor, HorizontalAlignment.Center, 120)
+    this.ringObject.enabled = false
+
+    const rise = new vec3(0, this.headlineRiseCm, 0.1)
+    this.bannerObject = this.obj(this.sceneObject, SCENE_NAMES.banner, rise)
+    this.bannerText = this.makeText(this.bannerObject, "", this.headlineHeightCm, this.labelColor, HorizontalAlignment.Center, 200)
+    ;(this.bannerText as Text & {weight?: number}).weight = 700
+    this.bannerObject.enabled = false
+
+    this.introObject = this.obj(this.sceneObject, SCENE_NAMES.introText, rise)
+    this.introText = this.makeText(this.introObject, TEXT.intro, this.headlineHeightCm, this.labelColor, HorizontalAlignment.Center, 200)
+    this.introObject.enabled = false
+    this.createEvent("UpdateEvent").bind(() => this.updateIntro())
   }
 
   // ------------------------------------------------------------------ public API (Main → UI)
@@ -126,7 +174,61 @@ export class BraggsRoomWallLabelsUI extends BaseScriptComponent {
     if (this.hintObject && this.hintObject.enabled !== visible) this.hintObject.enabled = visible
   }
 
+  /**
+   * The prediction ring's label (frame.ring.label). radiusCm is the ring radius when the ring is
+   * drawn (the label sits at its top) or null (the label sits under the beam stop). null label hides it.
+   */
+  setRingLabel(label: string | null, radiusCm: number | null): void {
+    const on = !!label
+    if (this.ringObject.enabled !== on) this.ringObject.enabled = on
+    if (!on) return
+    if (this.ringText.text !== label) this.ringText.text = label as string
+    const y = ringLabelY(radiusCm, this.smallLabelHeightCm, DEFAULT_DETECTOR)
+    const p = this.ringObject.getTransform().getLocalPosition()
+    if (Math.abs(p.y - y) > 1e-3) this.ringObject.getTransform().setLocalPosition(new vec3(0, y, p.z))
+  }
+
+  /** "Identified: FCC, like copper" after a correct verdict (frame.banner); "" hides it. */
+  setBanner(text: string): void {
+    const on = text.length > 0
+    if (on && this.introObject.enabled) this.introCut = true // the banner replaces the intro line
+    if (this.bannerObject.enabled !== on) this.bannerObject.enabled = on
+    if (on && this.bannerText.text !== text) this.bannerText.text = text
+  }
+
+  /** Start the intro line: fade in over ~1 s, hold until introSeconds, fade out over ~1 s. */
+  playIntro(): void {
+    this.introStart = getTime()
+    this.introCut = false
+    this.introObject.enabled = true
+    this.setIntroAlpha(0)
+  }
+
+  /** True while the intro line is on screen (LEAF). */
+  isIntroVisible(): boolean {
+    return this.introObject.enabled
+  }
+
   // ------------------------------------------------------------------ helpers
+
+  private updateIntro(): void {
+    if (this.introStart < 0) return
+    const t = getTime() - this.introStart
+    const fadeIn = Math.min(1, Math.max(0, (t - 0.4) / 1.0))
+    const fadeOut = this.introCut ? 0 : Math.min(1, Math.max(0, (this.introSeconds + 1 - t) / 1.0))
+    const a = Math.min(fadeIn, fadeOut)
+    if (a <= 0 && t > 0.5) {
+      this.introObject.enabled = false
+      this.introStart = -1
+      return
+    }
+    this.setIntroAlpha(a)
+  }
+
+  private setIntroAlpha(a: number): void {
+    const c = this.labelColor
+    this.introText.textFill.color = new vec4(c.x, c.y, c.z, a)
+  }
 
   private makeText(so: SceneObject, value: string, lineHeightCm: number, color: vec4, align: HorizontalAlignment, widthCm: number): Text {
     const t = so.createComponent("Component.Text") as Text

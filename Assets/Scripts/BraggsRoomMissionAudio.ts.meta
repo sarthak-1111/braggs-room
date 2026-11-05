@@ -1,0 +1,64 @@
+- !<AssetImportMetadata/f3bef921-d4cd-4de8-8ba5-f8e50712b4fd>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 0f30c5ec-34a0-4af7-a8d9-01279e13e522
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 0f30c5ec-34a0-4af7-a8d9-01279e13e522
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 3d22ed5f-b81b-4b31-ab4b-1a8a98f4c3e6
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/3d22ed5f-b81b-4b31-ab4b-1a8a98f4c3e6>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 63b9ff7d-4010-403c-a70d-b79571aafb8c
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    flourish: false
+    flourishVolume: false
+    notYet: false
+    notYetVolume: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - flourish: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      notYet: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      flourishVolume: 0.900000
+      notYetVolume: 0.450000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">BraggsRoomMissionAudio – verdict flourish and \"not yet\" tone</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">References</span>"}'
+    - '// @ui {"widget":"group_start", "label":"References"}'
+    - '// @input Asset.AudioTrackAsset flourish {"hint":"MissionFlourish.wav: the rising three-note chime for a correct verdict"}'
+    - '// @input Asset.AudioTrackAsset notYet {"hint":"VerdictNotYet.wav: the soft low tone for a wrong or insufficient verdict"}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input float flourishVolume = 0.9 {"hint":"Flourish volume", "widget":"slider", "min":0, "max":1, "step":0.05}'
+    - "// @input float notYetVolume = 0.45 {\"hint\":\"'Not yet' volume (kept gentle)\", \"widget\":\"slider\", \"min\":0, \"max\":1, \"step\":0.05}"
+    - '// @ui {"widget":"group_end"}'

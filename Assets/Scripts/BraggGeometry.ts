@@ -593,3 +593,189 @@ export function mysteryCubeGeometry(cellCm = 8): Geo {
   }
   return g
 }
+
+// ---------------------------------------------------------------- stage 2: guides and overlays (glow parts)
+
+export const STAGE2_COLORS = {
+  /** Prediction ring: faint violet (additive). */
+  ring: [0.3, 0.2, 0.46, 1] as RGBA,
+  /** Guide arrow: soft green at about half brightness (additive, so "50 % alpha" is 50 % RGB). */
+  guide: [0.24, 0.5, 0.3, 1] as RGBA,
+  /** Edge chevron: soft warm white. */
+  chevron: [0.62, 0.6, 0.54, 1] as RGBA,
+  /** Sample tag: faint card, light outline and string. */
+  tagFill: [0.045, 0.045, 0.05, 1] as RGBA,
+  tagEdge: [0.36, 0.35, 0.32, 1] as RGBA,
+}
+
+/** Segments in the prediction ring (vertex count = 2 · (segments + 1)). */
+export const RING_SEGMENTS = 128
+
+/** A rectangle on the wall, cm from the beam stop (x right, y up); DEFAULT_DETECTOR is one. */
+export interface WallRect {
+  minX: number
+  maxX: number
+  minY: number
+  maxY: number
+}
+
+/**
+ * Prediction ring: a thin annulus of mid-radius `radiusCm` in the plane z = 0, facing +z.
+ * Its vertex layout depends only on `segments`, so a MeshBuilder built from one radius can be
+ * rewritten in place (setVertexInterleaved) for another; the line width stays `widthCm`.
+ * With `clip` (the wall), the parts of the ring off the wall are coloured black, which is
+ * transparent on the additive display, so a large ring never draws past the wall's edges.
+ */
+export function ringGeometry(
+  radiusCm: number,
+  widthCm = 0.6,
+  segments = RING_SEGMENTS,
+  color: RGBA = STAGE2_COLORS.ring,
+  clip: WallRect | null = null,
+): Geo {
+  const g = new Geo()
+  const r0 = Math.max(0, radiusCm - widthCm / 2)
+  const r1 = radiusCm + widthCm / 2
+  const n: Vec3 = [0, 0, 1]
+  const off: RGBA = [0, 0, 0, 0]
+  for (let i = 0; i <= segments; i++) {
+    const th = (i / segments) * Math.PI * 2
+    const c = Math.cos(th)
+    const s = Math.sin(th)
+    const x = radiusCm * c
+    const y = radiusCm * s
+    const onWall = !clip || (x >= clip.minX && x <= clip.maxX && y >= clip.minY && y <= clip.maxY)
+    const col = onWall ? color : off
+    g.vertex([r0 * c, r0 * s, 0], n, col)
+    g.vertex([r1 * c, r1 * s, 0], n, col)
+  }
+  for (let i = 0; i < segments; i++) {
+    const a = 2 * i // inner i
+    const b = a + 1 // outer i
+    const c = a + 2 // inner i+1
+    const d = a + 3 // outer i+1
+    g.tri(a, b, d)
+    g.tri(a, d, c)
+  }
+  return g
+}
+
+/**
+ * Height (cm above the beam stop) of the prediction-ring label of line height `labelHeightCm`:
+ * just above the top of the ring when that fits on the wall (`wall.maxY`); otherwise (no ring:
+ * unreachable, 2θ ≥ 90°, or a ring whose top is off the wall) under the beam stop.
+ */
+export function ringLabelY(radiusCm: number | null, labelHeightCm: number, wall: WallRect): number {
+  const under = -labelHeightCm * 2.6
+  if (radiusCm === null || !(radiusCm > 0)) return under
+  const y = radiusCm + labelHeightCm * 0.8
+  return y + labelHeightCm / 2 <= wall.maxY ? y : under
+}
+
+export type GuideAxisGeo = "phi" | "chi"
+
+/** Guide-arc defaults (devpost/clad-handoff-2.md §3): φ arc radius ~7 cm, ~70° on the near side. */
+export const GUIDE_ARC = {
+  phiRadiusCm: 7,
+  /** The χ arc runs in the vertical plane through the crystal; it needs to clear the rotating cell (half-diagonal 6.9 cm + atom). */
+  chiRadiusCm: 8.5,
+  arcDeg: 70,
+  tubeRadiusCm: 0.22,
+  headRadiusCm: 0.75,
+  headLengthCm: 1.8,
+  /** φ arc height relative to the crystal centre (just below the cell). */
+  phiDropCm: 7,
+}
+
+/**
+ * Curved guide arrow around the arc's centre (its pivot), on the near (+z) side.
+ *   phi: arc in the horizontal plane around +y; sign +1 puts the head at the user's right end, pointing right.
+ *   chi: arc in the vertical plane around +x; sign +1 puts the head at the top end, pointing up.
+ * Built as a thin tube with a cone head, so it reads from any angle.
+ */
+export function guideArcGeometry(
+  axis: GuideAxisGeo,
+  sign: 1 | -1,
+  radiusCm: number,
+  arcDeg = GUIDE_ARC.arcDeg,
+  color: RGBA = STAGE2_COLORS.guide,
+): Geo {
+  const g = new Geo()
+  const half = ((arcDeg / 2) * Math.PI) / 180
+  // Point and tangent (direction of increasing t) on the arc; t = 0 is straight toward the user.
+  const at = (t: number): Vec3 =>
+    axis === "phi" ? [radiusCm * Math.sin(t), 0, radiusCm * Math.cos(t)] : [0, radiusCm * Math.sin(t), radiusCm * Math.cos(t)]
+  const tangent = (t: number): Vec3 => (axis === "phi" ? [Math.cos(t), 0, -Math.sin(t)] : [0, Math.cos(t), -Math.sin(t)])
+
+  // The tube covers the whole arc; the cone sits on the head end and extends past it.
+  const t0 = -half
+  const t1 = half
+  const steps = 18
+  for (let i = 0; i < steps; i++) {
+    const a = at(t0 + ((t1 - t0) * i) / steps)
+    const b = at(t0 + ((t1 - t0) * (i + 1)) / steps)
+    addCylinder(g, a, b, GUIDE_ARC.tubeRadiusCm, color, 8)
+  }
+  const tHead = sign > 0 ? t1 : t0
+  const base = at(tHead)
+  const tan = tangent(tHead)
+  const dir: Vec3 = sign > 0 ? tan : [-tan[0], -tan[1], -tan[2]]
+  addLathe(g, [[GUIDE_ARC.headRadiusCm, 0], [0, GUIDE_ARC.headLengthCm]], 14, color, {origin: base, axis: dir})
+  return g
+}
+
+/**
+ * Edge chevron: a filled arrowhead `sizeCm` across, pointing +x in the plane z = 0, facing +z.
+ */
+export function chevronGeometry(sizeCm = 3, color: RGBA = STAGE2_COLORS.chevron): Geo {
+  const g = new Geo()
+  const s = sizeCm
+  const n: Vec3 = [0, 0, 1]
+  const tip = g.vertex([0.5 * s, 0, 0], n, color)
+  const top = g.vertex([-0.5 * s, 0.5 * s, 0], n, color)
+  const notch = g.vertex([-0.2 * s, 0, 0], n, color)
+  const bottom = g.vertex([-0.5 * s, -0.5 * s, 0], n, color)
+  g.tri(tip, top, notch)
+  g.tri(tip, notch, bottom)
+  return g
+}
+
+/**
+ * Sample tag card defaults: wide enough for "Face-centred cubic" at 1.3 cm text. The tag hangs
+ * beside the goniometer post (to the user's right of it, clear of the φ guide arc above and the
+ * φ/χ readouts below, seen from the user's eye); `tether` is where the post is in the card's frame.
+ */
+export const SAMPLE_TAG = {widthCm: 15, heightCm: 4.0, tether: [-9.2, 2.4] as [number, number]}
+
+/**
+ * Sample tag. Pivot: the card centre; faces +z. A faint fill, a light outline and a short tether
+ * from the card's top corner nearest the post to the post.
+ */
+export function sampleTagCardGeometry(
+  w = SAMPLE_TAG.widthCm,
+  h = SAMPLE_TAG.heightCm,
+  tether: [number, number] = SAMPLE_TAG.tether,
+): Geo {
+  const g = new Geo()
+  const x = w / 2
+  const y = h / 2
+  const n: Vec3 = [0, 0, 1]
+  const f = STAGE2_COLORS.tagFill
+  const i = g.vertex([-x, -y, -0.02], n, f)
+  g.vertex([x, -y, -0.02], n, f)
+  g.vertex([x, y, -0.02], n, f)
+  g.vertex([-x, y, -0.02], n, f)
+  g.tri(i, i + 1, i + 2)
+  g.tri(i, i + 2, i + 3)
+  const e = STAGE2_COLORS.tagEdge
+  const lw = 0.14
+  addBarXY(g, -x, -y, x, -y, lw, 0, e)
+  addBarXY(g, x, -y, x, y, lw, 0, e)
+  addBarXY(g, x, y, -x, y, lw, 0, e)
+  addBarXY(g, -x, y, -x, -y, lw, 0, e)
+  // A small eyelet at the corner nearest the post, and the tether from it.
+  const ex = tether[0] < 0 ? -x + 0.6 : x - 0.6
+  const ey = y - 0.6
+  addBarXY(g, ex, ey, tether[0], tether[1], 0.1, 0, e)
+  return g
+}

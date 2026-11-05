@@ -27,6 +27,14 @@ import {
   unitRayGeometry,
   wallGridGeometry,
   xrayTubeGeometry,
+  GUIDE_ARC,
+  RING_SEGMENTS,
+  SAMPLE_TAG,
+  chevronGeometry,
+  guideArcGeometry,
+  ringGeometry,
+  ringLabelY,
+  sampleTagCardGeometry,
 } from "../Assets/Scripts/BraggGeometry"
 import {crystalToLab, DEFAULT_DETECTOR} from "../Assets/Scripts/BraggPhysics"
 
@@ -45,6 +53,13 @@ const PARTS: Record<string, () => Geo> = {
   faceAtoms: () => cellFaceAtomsGeometry(),
   cellEdges: () => cellEdgesGeometry(),
   mystery: () => mysteryCubeGeometry(),
+  ring: () => ringGeometry(61.3),
+  guidePhiPlus: () => guideArcGeometry("phi", 1, GUIDE_ARC.phiRadiusCm),
+  guidePhiMinus: () => guideArcGeometry("phi", -1, GUIDE_ARC.phiRadiusCm),
+  guideChiPlus: () => guideArcGeometry("chi", 1, GUIDE_ARC.chiRadiusCm),
+  guideChiMinus: () => guideArcGeometry("chi", -1, GUIDE_ARC.chiRadiusCm),
+  chevron: () => chevronGeometry(3),
+  sampleTag: () => sampleTagCardGeometry(),
 }
 
 const OPAQUE = ["desk", "goniometer", "xrayTube", "beamStop", "cornerAtoms", "faceAtoms", "cellEdges"]
@@ -221,4 +236,117 @@ test("crystal: 8 cm cell centred on C, 8 corner atoms + 6 face atoms of Ø1.4", 
   assert.ok(edges.max[0] <= 4.13 && edges.max[0] >= 4.0)
   const mystery = bounds(mysteryCubeGeometry())
   assert.ok(near(mystery.max[1], 4.16, 1e-3))
+})
+
+// ---------------------------------------------------------------- stage 2 parts
+
+test("prediction ring: mid-radius r, constant width, vertex layout independent of r (rewritable in place)", () => {
+  const a = ringGeometry(26.4, 0.6)
+  const b = ringGeometry(140, 0.6)
+  assert.equal(a.vertexCount, 2 * (RING_SEGMENTS + 1))
+  assert.equal(a.vertexCount, b.vertexCount)
+  assert.deepEqual(a.indices, b.indices)
+  for (let i = 0; i < a.vertexCount; i++) {
+    const [x, y, z] = pos(a, i)
+    const r = Math.hypot(x, y)
+    assert.ok(near(z, 0))
+    assert.ok(near(r, i % 2 === 0 ? 26.1 : 26.7, 1e-6), `vertex ${i} at r = ${r}`)
+  }
+})
+
+test("prediction ring clipped to the wall: off-wall parts are black (transparent), on-wall parts keep the colour", () => {
+  const W = DEFAULT_DETECTOR
+  // A small ring is entirely on the wall: clipping changes nothing.
+  assert.deepEqual(ringGeometry(43.9, 0.6, RING_SEGMENTS, undefined, W).verts, ringGeometry(43.9, 0.6).verts)
+  // (4 4 4) at Mo Kα, a = 5.00 Å: 2θ 58.9°, r = 150·tan 58.9° ≈ 249 cm, larger than the wall.
+  const big = ringGeometry(249, 0.6, RING_SEGMENTS, undefined, W)
+  assert.equal(big.vertexCount, ringGeometry(10).vertexCount) // same layout: still rewritable in place
+  let lit = 0
+  for (let i = 0; i < big.vertexCount; i += 2) {
+    const [x, y] = pos(big, i)
+    const rgb = big.verts.slice(i * STRIDE + 6, i * STRIDE + 9)
+    const mx = x * (249 / Math.hypot(x, y))
+    const my = y * (249 / Math.hypot(x, y))
+    const onWall = mx >= W.minX && mx <= W.maxX && my >= W.minY && my <= W.maxY
+    if (onWall) lit++
+    assert.ok(onWall ? rgb.some((c) => c > 0) : rgb.every((c) => c === 0), `vertex ${i} at (${mx.toFixed(0)}, ${my.toFixed(0)})`)
+  }
+  assert.ok(lit > 0 && lit < RING_SEGMENTS / 4, `only the corner arcs of a 249 cm ring are on the wall (${lit} lit)`)
+})
+
+test("prediction ring label: above the ring when it fits on the wall, else under the beam stop", () => {
+  const W = DEFAULT_DETECTOR
+  assert.ok(near(ringLabelY(43.9, 4, W), 43.9 + 3.2))
+  assert.ok(near(ringLabelY(null, 4, W), -10.4)) // unreachable or 2θ ≥ 90°
+  assert.ok(near(ringLabelY(249, 4, W), -10.4)) // ring top off the wall
+  assert.ok(near(ringLabelY(150, 4, W), 153.2)) // 153.2 + 2 ≤ 160: still fits
+  assert.ok(near(ringLabelY(156, 4, W), -10.4))
+})
+
+/** The vertex of an arc mesh farthest along `dir` (the arrow tip). */
+function extreme(g: Geo, dir: Vec3): Vec3 {
+  let best = pos(g, 0)
+  let bestD = -Infinity
+  for (let i = 0; i < g.vertexCount; i++) {
+    const p = pos(g, i)
+    const d = p[0] * dir[0] + p[1] * dir[1] + p[2] * dir[2]
+    if (d > bestD) {
+      bestD = d
+      best = p
+    }
+  }
+  return best
+}
+
+test("guide arrow φ: horizontal arc on the near side; the head points right for +1 and left for −1", () => {
+  for (const sign of [1, -1] as const) {
+    const g = guideArcGeometry("phi", sign, GUIDE_ARC.phiRadiusCm)
+    const {min, max} = bounds(g)
+    assert.ok(min[2] > 0, "near side only (z > 0, toward the user)")
+    assert.ok(Math.max(Math.abs(min[1]), Math.abs(max[1])) <= GUIDE_ARC.headRadiusCm + 1e-6, "flat in the horizontal plane")
+    const tip = extreme(g, [sign, 0, 0])
+    const other = extreme(g, [-sign, 0, 0])
+    assert.ok(Math.abs(tip[0]) > Math.abs(other[0]) - 1e-6, "the head end reaches farther out on its side")
+    assert.ok(sign * tip[0] > 0)
+    // The arc stays clear of the goniometer axis and the tilted cell above it.
+    for (let i = 0; i < g.vertexCount; i++) {
+      const p = pos(g, i)
+      assert.ok(Math.hypot(p[0], p[2]) >= GUIDE_ARC.phiRadiusCm - GUIDE_ARC.headRadiusCm - 1e-6)
+    }
+  }
+})
+
+test("guide arrow χ: vertical arc on the near side; the head points up for +1 and down for −1; clears the cell", () => {
+  const cellClear = 4 * Math.sqrt(3) + 0.7 // cube half-diagonal + atom radius
+  for (const sign of [1, -1] as const) {
+    const g = guideArcGeometry("chi", sign, GUIDE_ARC.chiRadiusCm)
+    const {min, max} = bounds(g)
+    assert.ok(min[2] > 0, "near side only")
+    assert.ok(Math.max(Math.abs(min[0]), Math.abs(max[0])) <= GUIDE_ARC.headRadiusCm + 1e-6, "in the vertical plane x = 0")
+    const tip = extreme(g, [0, sign, 0])
+    const other = extreme(g, [0, -sign, 0])
+    assert.ok(Math.abs(tip[1]) > Math.abs(other[1]) - 1e-6)
+    assert.ok(sign * tip[1] > 0)
+    for (let i = 0; i < g.vertexCount; i++) {
+      const p = pos(g, i)
+      assert.ok(Math.hypot(p[0], p[1], p[2]) > cellClear, "never inside the rotating cell")
+    }
+  }
+})
+
+test("edge chevron: ~3 cm arrowhead pointing +x, facing +z", () => {
+  const g = chevronGeometry(3)
+  const {min, max} = bounds(g)
+  assert.ok(near(max[0], 1.5) && near(min[0], -1.5) && near(max[1], 1.5) && near(min[1], -1.5))
+  const tip = extreme(g, [1, 0, 0])
+  assert.ok(near(tip[1], 0))
+})
+
+test("sample tag: card of the declared size with a tether out to the post", () => {
+  const {min, max} = bounds(sampleTagCardGeometry())
+  assert.ok(max[0] >= SAMPLE_TAG.widthCm / 2 && max[0] <= SAMPLE_TAG.widthCm / 2 + 0.1)
+  assert.ok(min[1] <= -SAMPLE_TAG.heightCm / 2 && min[1] >= -SAMPLE_TAG.heightCm / 2 - 0.1)
+  // The tether reaches the post, beyond the card's left edge.
+  assert.ok(min[0] <= SAMPLE_TAG.tether[0] + 0.1)
+  assert.ok(max[1] >= SAMPLE_TAG.tether[1] - 0.1)
 })

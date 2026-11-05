@@ -4,12 +4,16 @@
  * beam stop B so a spot at wall offset (x, y) is simply local (x, y, 0.6)).
  *
  * Owns (pooled, built once in onAwake, never per frame):
- *   SpotPool > Spot_0 … Spot_11   disc + halo (glow)
+ *   SpotPool > Spot_0 … Spot_11
+ *                 > SpotDisc      disc + halo (glow); scaled by the celebration pulse
  *                 > SpotLabel     label holder (Text added by BraggsRoomWallLabelsUI)
  *                 > SpotAudio     spatial AudioComponent for the chime
  *                 > SpotRay       faint ray from the crystal centre to the spot
- *   SpotPool > Ghost_0 … Ghost_15 25 % disc
+ *   SpotPool > Ghost_0 … Ghost_15
+ *                 > GhostDisc     25 % disc; scaled by the celebration pulse
  *                 > GhostLabel    label holder (Text added by BraggsRoomWallLabelsUI)
+ * While a mission is solved (setCelebrating(true)) the lit spots and found ghosts pulse gently
+ * (scale 1 ↔ pulseScale over pulsePeriodSec); labels and rays do not scale.
  * A slot keeps its spot while that reflection stays lit, so labels and chimes don't jump.
  * Spot_i itself always stays enabled, so a chime that started is never cut off when its
  * spot goes dark; the slot's disc, label and ray show and hide instead (isSlotLit(i)).
@@ -17,7 +21,8 @@
  * Inputs: References (vertex-colour material, the two chime tracks) and Settings.
  *
  * Talks to BraggsRoomMain through: render(lit, ghosts, crystalWorldPos), slotForKey(key),
- * playChimeForSpot(spot, firstTime), getSpotLabelHolders(), getGhostLabelHolders().
+ * playChimeForSpot(spot, firstTime), getSpotLabelHolders(), getGhostLabelHolders(),
+ * setCelebrating(on), getLitWorldPositions().
  *
  * Must not: compute physics or decide which spots are lit; it draws SimFrame data.
  */
@@ -29,6 +34,7 @@ interface SpotSlot {
   root: SceneObject
   transform: Transform
   disc: RenderMeshVisual
+  discTransform: Transform
   label: SceneObject
   ray: SceneObject
   audio: AudioComponent
@@ -38,6 +44,7 @@ interface SpotSlot {
 interface GhostSlot {
   root: SceneObject
   transform: Transform
+  discTransform: Transform
   label: SceneObject
 }
 
@@ -81,15 +88,29 @@ export class BraggsRoomSpotPool extends BaseScriptComponent {
   @input
   @hint("Draw a faint ray from the crystal to each lit spot")
   showRays: boolean = true
+
+  @input
+  @hint("Celebration: largest scale of the pulsing spots and ghosts after a correct verdict")
+  @widget(new SliderWidget(1, 1.6, 0.01))
+  pulseScale: number = 1.25
+
+  @input
+  @hint("Celebration: seconds per pulse")
+  @widget(new SliderWidget(0.4, 3, 0.1))
+  pulsePeriodSec: number = 1.2
   @ui.group_end
 
   private spots: SpotSlot[] = []
   private ghosts: GhostSlot[] = []
+  private celebrating = false
+  private pulseStart = 0
+  private pulsing = false
 
   onAwake(): void {
     if (!this.material) print("BraggsRoomSpotPool: material is not wired; spots will not draw")
     for (let i = 0; i < SPOT_POOL_SIZE; i++) this.spots.push(this.makeSpot(i))
     for (let i = 0; i < GHOST_POOL_SIZE; i++) this.ghosts.push(this.makeGhost(i))
+    this.createEvent("UpdateEvent").bind(() => this.updatePulse())
   }
 
   // ------------------------------------------------------------------ public API
@@ -100,6 +121,25 @@ export class BraggsRoomSpotPool extends BaseScriptComponent {
 
   getGhostLabelHolders(): SceneObject[] {
     return this.ghosts.map((g) => g.label)
+  }
+
+  /** Pulse the spots and ghosts (frame.solved). */
+  setCelebrating(on: boolean): void {
+    if (on === this.celebrating) return
+    this.celebrating = on
+    if (on) this.pulseStart = getTime()
+  }
+
+  /** Current pulse scale of the spot and ghost discs (1 when not celebrating). */
+  getPulseScale(): number {
+    return this.spots.length ? this.spots[0].discTransform.getLocalScale().x : 1
+  }
+
+  /** World positions of the spots drawn right now (for the edge chevron). */
+  getLitWorldPositions(): vec3[] {
+    const out: vec3[] = []
+    for (const slot of this.spots) if (slot.key !== null) out.push(slot.transform.getWorldPosition())
+    return out
   }
 
   /** True while slot i shows a lit spot. */
@@ -185,7 +225,8 @@ export class BraggsRoomSpotPool extends BaseScriptComponent {
 
   private makeSpot(i: number): SpotSlot {
     const root = this.obj(this.sceneObject, `${SCENE_NAMES.spotPrefix}${i}`)
-    const disc = attachPart(root, "Spot", this.material)
+    const discObject = this.obj(root, SCENE_NAMES.spotDisc)
+    const disc = attachPart(discObject, "Spot", this.material)
     disc.enabled = false
 
     // Label anchor: right of the spot and a little above it (the text grows upward from here).
@@ -203,15 +244,30 @@ export class BraggsRoomSpotPool extends BaseScriptComponent {
     attachPart(ray, "Ray", this.material)
     ray.enabled = false
 
-    return {root, transform: root.getTransform(), disc, label, ray, audio, key: null}
+    return {root, transform: root.getTransform(), disc, discTransform: discObject.getTransform(), label, ray, audio, key: null}
   }
 
   private makeGhost(i: number): GhostSlot {
     const root = this.obj(this.sceneObject, `${SCENE_NAMES.ghostPrefix}${i}`)
-    attachPart(root, "GhostSpot", this.material)
+    const discObject = this.obj(root, SCENE_NAMES.ghostDisc)
+    attachPart(discObject, "GhostSpot", this.material)
     const label = this.obj(root, SCENE_NAMES.ghostLabel, new vec3(this.labelGapCm * 0.6, this.labelGapCm * 0.35, 0.1))
     root.enabled = false
-    return {root, transform: root.getTransform(), label}
+    return {root, transform: root.getTransform(), discTransform: discObject.getTransform(), label}
+  }
+
+  private updatePulse(): void {
+    if (!this.celebrating && !this.pulsing) return
+    let s = 1
+    if (this.celebrating) {
+      const period = Math.max(0.1, this.pulsePeriodSec)
+      const phase = ((getTime() - this.pulseStart) / period) * Math.PI * 2
+      s = 1 + (this.pulseScale - 1) * 0.5 * (1 - Math.cos(phase))
+    }
+    this.pulsing = this.celebrating
+    const v = new vec3(s, s, 1)
+    for (const slot of this.spots) slot.discTransform.setLocalScale(v)
+    for (const g of this.ghosts) g.discTransform.setLocalScale(v)
   }
 
   private obj(parent: SceneObject, name: string, position?: vec3): SceneObject {

@@ -45,5 +45,5 @@
     -
       {}
   InputLines:
-    - '// @input string part = "VirtualDesk" {"widget":"combobox", "values":[{"label":"Virtual desk (preview stand-in)", "value":"VirtualDesk"}, {"label":"Goniometer", "value":"Goniometer"}, {"label":"X-ray tube", "value":"XRayTube"}, {"label":"Beam stop", "value":"BeamStop"}, {"label":"Virtual wall grid (preview stand-in)", "value":"VirtualWall"}, {"label":"Spot", "value":"Spot"}, {"label":"Ghost spot", "value":"GhostSpot"}, {"label":"Ray (unit, along -z)", "value":"Ray"}]}'
+    - '// @input string part = "VirtualDesk" {"widget":"combobox", "values":[{"label":"Virtual desk (preview stand-in)", "value":"VirtualDesk"}, {"label":"Goniometer", "value":"Goniometer"}, {"label":"X-ray tube", "value":"XRayTube"}, {"label":"Beam stop", "value":"BeamStop"}, {"label":"Virtual wall grid (preview stand-in)", "value":"VirtualWall"}, {"label":"Spot", "value":"Spot"}, {"label":"Ghost spot", "value":"GhostSpot"}, {"label":"Ray (unit, along -z)", "value":"Ray"}, {"label":"Sample tag card", "value":"SampleTagCard"}]}'
     - '// @input Asset.Material material {"hint":"vertexBaseColorMaterial (SimpleVertexBaseColor.lspkg). Glow parts use an additive clone of it."}'

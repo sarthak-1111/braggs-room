@@ -1,0 +1,70 @@
+- !<AssetImportMetadata/ee410d43-d4ae-4955-ba3f-e3b0437bfe9e>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 3ef6f8d9-d858-42f3-a13b-bdbdd37e290b
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 3ef6f8d9-d858-42f3-a13b-bdbdd37e290b
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 03a5c4b3-a324-4e4c-8fcc-cee385f8afe5
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/03a5c4b3-a324-4e4c-8fcc-cee385f8afe5>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: c6731dd3-96cc-4f1e-a083-754eca21770d
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    brightness: false
+    camera: false
+    chevronDepthCm: false
+    chevronSizeCm: false
+    edgeMargin: false
+    material: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - camera: !<reference.Camera> 00000000-0000-0000-0000-000000000000
+      material: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      chevronDepthCm: !<float> 60.000000
+      chevronSizeCm: !<float> 3.000000
+      edgeMargin: 0.100000
+      brightness: 0.750000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">BraggsRoomEdgeChevron – points at a lit spot outside the view</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">References</span>"}'
+    - '// @ui {"widget":"group_start", "label":"References"}'
+    - '// @input Component.Camera camera {"hint":"The main camera (Camera Object)"}'
+    - '// @input Asset.Material material {"hint":"vertexBaseColorMaterial (SimpleVertexBaseColor.lspkg); the chevron draws with an additive clone"}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input float chevronDepthCm = 60 {"hint":"Distance in front of the camera, cm", "widget":"slider", "min":30, "max":120, "step":1}'
+    - '// @input float chevronSizeCm = 3 {"hint":"Chevron size, cm", "widget":"slider", "min":1.5, "max":6, "step":0.1}'
+    - '// @input float edgeMargin = 0.1 {"hint":"How far from the screen edge the chevron sits (0.1 = screen 0.1 … 0.9)", "widget":"slider", "min":0.03, "max":0.3, "step":0.01}'
+    - '// @input float brightness = 0.75 {"hint":"Peak brightness (it is subtle by design)", "widget":"slider", "min":0.2, "max":1, "step":0.05}'
+    - '// @ui {"widget":"group_end"}'

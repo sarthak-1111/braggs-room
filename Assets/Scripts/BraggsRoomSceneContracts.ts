@@ -10,10 +10,15 @@
  *   VirtualDesk (preview stand-in), Goniometer, Crystal > CrystalVisual, XRayTube, Beam,
  *   BeamStop, VirtualWall (preview stand-in), SpotPool, WallLabels, EvidenceBoard, Console,
  *   GoniometerLabels > PhiReadout, ChiReadout, AtomsNotToScale
+ * Stage 2 (authored): SampleTag, GuideArrow > GuideArrowPhi, GuideArrowChi, PredictionRing,
+ *   EdgeChevron, MissionAudio, Console > PredictorPanel
  * Runtime-built (pooled, never created per frame):
- *   SpotPool > Spot_0 … Spot_11 > SpotLabel, SpotAudio, SpotRay
- *   SpotPool > Ghost_0 … Ghost_15 > GhostLabel
- *   Console > … > WavelengthSlider, ResetButton, LatticeToggle, Stage2Slot
+ *   SpotPool > Spot_0 … Spot_11 > SpotDisc, SpotLabel, SpotAudio, SpotRay
+ *   SpotPool > Ghost_0 … Ghost_15 > GhostDisc, GhostLabel
+ *   Console > … > WavelengthSlider, ResetButton, ModeButton, LatticeToggle, PredictButton,
+ *                 VerdictSCButton, VerdictFCCButton, FeedbackLine, Stage2Slot
+ *   PredictorPanel > … > HMinus, HPlus, KMinus, KPlus, LMinus, LPlus
+ *   WallLabels > OffWallHint, RingLabel, Banner, IntroText
  */
 
 export const SCENE_NAMES = {
@@ -36,7 +41,36 @@ export const SCENE_NAMES = {
   ghostPrefix: "Ghost_",
   ghostLabel: "GhostLabel",
   offWallHint: "OffWallHint",
+  // stage 2
+  spotDisc: "SpotDisc",
+  ghostDisc: "GhostDisc",
+  modeButton: "ModeButton",
+  predictButton: "PredictButton",
+  verdictSCButton: "VerdictSCButton",
+  verdictFCCButton: "VerdictFCCButton",
+  feedbackLine: "FeedbackLine",
+  predictorPanel: "PredictorPanel",
+  hMinus: "HMinus",
+  hPlus: "HPlus",
+  kMinus: "KMinus",
+  kPlus: "KPlus",
+  lMinus: "LMinus",
+  lPlus: "LPlus",
+  ringLabel: "RingLabel",
+  banner: "Banner",
+  introText: "IntroText",
+  sampleTag: "SampleTag",
+  guideArrow: "GuideArrow",
+  guideArrowPhi: "GuideArrowPhi",
+  guideArrowChi: "GuideArrowChi",
+  predictionRing: "PredictionRing",
+  edgeChevron: "EdgeChevron",
 }
+
+/** Predictor stepper range and start (devpost/clad-handoff-2.md §1). */
+export const PREDICTOR_MIN = -4
+export const PREDICTOR_MAX = 4
+export const PREDICTOR_START = {h: 1, k: 1, l: 1}
 
 /** Spot_0 … Spot_11 (handoff contract). */
 export const SPOT_POOL_SIZE = 12

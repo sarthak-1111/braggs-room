@@ -7,6 +7,7 @@
  *   XRayTube                        -> XRayTube
  *   BeamStop                        -> BeamStop
  *   VirtualWall (preview stand-in)  -> VirtualWall (the detector grid)
+ *   SampleTag                       -> SampleTagCard (the card; its text comes from BraggsRoomGoniometerUI)
  * Spot / GhostSpot / Ray are listed for completeness; pooled objects created by script
  * should call BraggMeshes.attachPart instead (inputs are not set before onAwake runs).
  */
@@ -25,6 +26,7 @@ export class BraggPartMesh extends BaseScriptComponent {
       new ComboBoxItem("Spot", "Spot"),
       new ComboBoxItem("Ghost spot", "GhostSpot"),
       new ComboBoxItem("Ray (unit, along -z)", "Ray"),
+      new ComboBoxItem("Sample tag card", "SampleTagCard"),
     ]),
   )
   part: string = "VirtualDesk"

@@ -29,8 +29,12 @@
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
     faintAlpha: false
+    headlineHeightCm: false
+    headlineRiseCm: false
     hintColor: false
+    introSeconds: false
     labelColor: false
+    ringLabelColor: false
     smallLabelHeightCm: false
     spotLabelHeightCm: false
     tickLabelDropCm: false
@@ -49,6 +53,10 @@
       faintAlpha: 0.450000
       hintColor: !<Vec4> {x: 1.000000, y: 0.840000, z: 0.550000, w: 1.000000}
       tickLabelDropCm: !<float> 6.000000
+      headlineHeightCm: 6.500000
+      headlineRiseCm: !<float> 12.000000
+      ringLabelColor: !<Vec4> {x: 0.840000, y: 0.760000, z: 1.000000, w: 1.000000}
+      introSeconds: !<float> 10.000000
   ScriptTypes:
     -
       {}
@@ -63,4 +71,8 @@
     - '// @input float faintAlpha = 0.45 {"hint":"Opacity of ghost labels and 2θ tick labels (they are deliberately faint)", "widget":"slider", "min":0.2, "max":1, "step":0.05}'
     - '// @input vec4 hintColor = "{1,0.84,0.55,1}" {"hint":"Off-wall hint colour", "widget":"color"}'
     - '// @input float tickLabelDropCm = 6 {"hint":"How far below the horizontal axis the 2θ tick labels sit, cm", "widget":"slider", "min":3, "max":12, "step":0.5}'
+    - '// @input float headlineHeightCm = 6.5 {"hint":"Line height of the banner and the intro line, cm (at least 6)", "widget":"slider", "min":6, "max":10, "step":0.1}'
+    - '// @input float headlineRiseCm = 12 {"hint":"How far above the beam stop the banner and the intro line sit, cm", "widget":"slider", "min":6, "max":30, "step":0.5}'
+    - "// @input vec4 ringLabelColor = \"{0.84,0.76,1,1}\" {\"hint\":\"Colour of the prediction ring's label (a light version of the ring's violet)\", \"widget\":\"color\"}"
+    - '// @input float introSeconds = 10 {"hint":"Seconds the intro line stays up after Lens start before it fades out", "widget":"slider", "min":3, "max":20, "step":0.5}'
     - '// @ui {"widget":"group_end"}'

@@ -17,6 +17,7 @@ import {
   beamStopGeometry,
   deskGeometry,
   goniometerGeometry,
+  sampleTagCardGeometry,
   spotGeometry,
   unitBeamGeometry,
   unitPulseGeometry,
@@ -36,6 +37,7 @@ export type BraggPart =
   | "Ray"
   | "Beam"
   | "BeamPulse"
+  | "SampleTagCard"
 
 const BUILDERS: Record<BraggPart, () => Geo> = {
   VirtualDesk: deskGeometry,
@@ -48,10 +50,11 @@ const BUILDERS: Record<BraggPart, () => Geo> = {
   Ray: unitRayGeometry,
   Beam: unitBeamGeometry,
   BeamPulse: unitPulseGeometry,
+  SampleTagCard: () => sampleTagCardGeometry(),
 }
 
 /** Parts drawn with the additive glow material. */
-const GLOW_PARTS: BraggPart[] = ["VirtualWall", "Spot", "GhostSpot", "Ray", "Beam", "BeamPulse"]
+const GLOW_PARTS: BraggPart[] = ["VirtualWall", "Spot", "GhostSpot", "Ray", "Beam", "BeamPulse", "SampleTagCard"]
 
 export function isGlowPart(part: BraggPart): boolean {
   return GLOW_PARTS.indexOf(part) >= 0

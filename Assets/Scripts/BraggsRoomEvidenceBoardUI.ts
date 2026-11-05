@@ -3,8 +3,8 @@
  *
  * Owns (a passive view): a fixed-size BackPlate (60 × 40 cm by default) with a column of
  * text: the board title, a status line and up to 8 evidence lines, exactly as
- * frame.board (BraggSim.BoardView) describes them. A highlighted line (a wrong verdict's
- * evidence, stage 2) is drawn in the highlight colour.
+ * frame.board (BraggSim.BoardView) describes them. The highlighted line (the evidence a wrong
+ * verdict points at, frame.board.highlightIndex) gets a "» " prefix and the highlight colour.
  *
  * Inputs: presentation settings only. Authored on the "EvidenceBoard" SceneObject, placed
  * 2 cm in front of the wall so spots never draw over it.
@@ -59,7 +59,7 @@ export class BraggsRoomEvidenceBoardUI extends BaseScriptComponent {
   textColor: vec4
 
   @input("vec4", "{1,0.8,0.45,1}")
-  @hint("Colour of the line a verdict points at (stage 2)")
+  @hint("Colour of the line a wrong verdict points at (warm amber)")
   @widget(new ColorWidget())
   highlightColor: vec4
   @ui.group_end
@@ -85,7 +85,9 @@ export class BraggsRoomEvidenceBoardUI extends BaseScriptComponent {
     flex.direction = FlexDirection.Column
     flex.justifyContent = FlexJustify.Start
     flex.alignItems = FlexAlign.Stretch
-    flex.verticalAlignment = ContentVerticalAlignment.Top
+    // Center: the fixed 40 cm column is centred on the plate (Top would hang it from the plate's
+    // centre, so long boards ran below the plate into the banner); rows start at its top.
+    flex.verticalAlignment = ContentVerticalAlignment.Center
     flex.rowGap = 0.25
     flex.paddingTop = pad
     flex.paddingBottom = pad
@@ -109,8 +111,9 @@ export class BraggsRoomEvidenceBoardUI extends BaseScriptComponent {
     this.statusText.text = status
     for (let i = 0; i < this.lineTexts.length; i++) {
       const t = this.lineTexts[i]
-      t.text = i < lines.length ? lines[i] : ""
-      t.textFill.color = i === highlightIndex ? this.highlightColor : this.textColor
+      const hi = i === highlightIndex && i < lines.length
+      t.text = i < lines.length ? (hi ? `» ${lines[i]}` : lines[i]) : ""
+      t.textFill.color = hi ? this.highlightColor : this.textColor
     }
   }
 

@@ -1,0 +1,57 @@
+- !<AssetImportMetadata/7a52ab10-faca-4d2f-9f5c-b0e2b440180e>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> f52b64c9-0087-4555-ab9c-44beb5a5b767
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> f52b64c9-0087-4555-ab9c-44beb5a5b767
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> e6461026-62a7-4ef2-84d2-91f8c0387bb4
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/e6461026-62a7-4ef2-84d2-91f8c0387bb4>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: e5334e9d-9e04-48ff-9447-ee2689f9cd0b
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    chiArrow: false
+    material: false
+    phiArrow: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - material: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      phiArrow: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      chiArrow: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">BraggsRoomGuideArrow – which way to drag (φ or χ)</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">References</span>"}'
+    - '// @ui {"widget":"group_start", "label":"References"}'
+    - '// @input Asset.Material material {"hint":"vertexBaseColorMaterial (SimpleVertexBaseColor.lspkg); the arrow draws with an additive clone"}'
+    - '// @input SceneObject phiArrow {"hint":"GuideArrowPhi: holder for the horizontal arc, placed just below the crystal"}'
+    - '// @input SceneObject chiArrow {"hint":"GuideArrowChi: holder for the vertical arc, at the crystal centre"}'
+    - '// @ui {"widget":"group_end"}'
