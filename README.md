@@ -53,7 +53,28 @@ npm test        # 124 tests: physics against hand-computed values (18), the expe
                 # including every done criterion as pure logic (26), and the room's
                 # code-built meshes and layout (80)
 npm run table   # prints the table above
+npm run reference   # checks the physics against measured aluminium (below)
 ```
+
+### Checked against real aluminium
+
+When the mission's sample is FCC with a = 4.05 Å, the Lens names it "like aluminium". `npm run reference` checks that against a measured powder pattern of real aluminium: Swanson & Tatge, NBS Circular 539, Vol. I (1953), Table 3, measured with Cu Kα (1.5405 Å) at 23 °C ([doi:10.6028/NBS.CIRC.539v1](https://doi.org/10.6028/NBS.CIRC.539v1), free PDF from NIST). It uses the Lens's own functions in `BraggPhysics.ts`:
+- **Selection rule.** The FCC rule allows h² + k² + l² = 3, 4, 8, 11, 12, 16, 19, 20, 24 up to (422), and those are exactly the nine lines that were measured. None of the forbidden ones (1, 2, 5, 6, 9, 10, …) appear.
+- **Angles through the vector path.** For each line, the crystal is turned into its exact Bragg condition and the angle between the diffracted ray **k** + **G** and the beam is compared with the 2θ given by the measured d.
+
+| (hkl) | d measured (Å) | d in the Lens (Å) | 2θ from measured d (°) | 2θ in the Lens, k + G (°) |
+|---|---|---|---|---|
+| (111) | 2.338 | 2.3383 | 38.471 | 38.466 |
+| (200) | 2.024 | 2.0250 | 44.737 | 44.713 |
+| (220) | 1.431 | 1.4319 | 65.131 | 65.085 |
+| (311) | 1.221 | 1.2211 | 78.224 | 78.214 |
+| (222) | 1.1690 | 1.1691 | 82.432 | 82.420 |
+| (400) | 1.0124 | 1.0125 | 99.072 | 99.059 |
+| (331) | 0.9289 | 0.9291 | 112.035 | 111.992 |
+| (420) | 0.9055 | 0.9056 | 116.562 | 116.540 |
+| (422) | 0.8266 | 0.8267 | 137.444 | 137.407 |
+
+Every d agrees within 0.001 Å and every 2θ within 0.05°. What's left comes from the Lens rounding aluminium's lattice parameter to 4.05 Å (measured: 4.0494 Å) and from the scatter of the measured lines themselves. The Lens itself only draws reflections up to (222), and uses 1.54 Å for Cu Kα.
 
 ## Open and run it in Lens Studio
 

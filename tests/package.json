@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "tsc -p tsconfig.json && node --test .build/tests/physics.test.js .build/tests/sim.test.js .build/tests/geometry.test.js",
-    "table": "tsc -p tsconfig.json && node .build/tests/reference-table.js"
+    "table": "tsc -p tsconfig.json && node .build/tests/reference-table.js",
+    "reference": "tsc -p tsconfig.json && node .build/tests/reference-check.js"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

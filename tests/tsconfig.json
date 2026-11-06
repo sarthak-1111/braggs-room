@@ -9,5 +9,5 @@
     "rootDir": "..",
     "outDir": ".build"
   },
-  "files": ["physics.test.ts", "sim.test.ts", "geometry.test.ts", "reference-table.ts"]
+  "files": ["physics.test.ts", "sim.test.ts", "geometry.test.ts", "reference-table.ts", "reference-check.ts"]
 }
