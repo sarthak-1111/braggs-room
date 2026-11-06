@@ -64,15 +64,17 @@ export class BraggsC1DragScenario extends Scenario {
 
     // LEAF moves the hand a set distance per frame, so how far a drag turns depends on the
     // preview's frame rate (each 0.1 cm frame is 0.15°). The direction checks below need the
-    // right sign and at least one frame of turn (MIN_TURN), not a fixed size.
+    // right sign and at least one frame of turn (MIN_TURN), not a fixed size. The pose checks
+    // use MIN_TILT, the axis component a MIN_TURN turn gives (sin 0.1° ≈ 0.0017).
     const MIN_TURN = 0.1
+    const MIN_TILT = Math.sin((MIN_TURN * Math.PI) / 180)
 
     // 1. Horizontal: right → φ increases, χ unchanged; the near side turns right.
     let d = await drag("right", new vec3(0.1, 0, 0), 400)
     c.ok("drag right turns φ up", d.dPhi > MIN_TURN, `Δφ ${f3(d.dPhi)}°`)
     c.ok("drag right leaves χ unchanged", Math.abs(d.dChi) < 1e-6, `Δχ ${f3(d.dChi, 6)}°`)
     let pose = checkPose("after right")
-    c.ok("drag right: near side (+z face) turned right (x > 0), stays level (y ≈ 0)", pose.fwd.x > 0.01 && Math.abs(pose.fwd.y) < 1e-3, `fwd ${v3s(pose.fwd, 4)}`)
+    c.ok("drag right: near side (+z face) turned right (x > 0), stays level (y ≈ 0)", pose.fwd.x > MIN_TILT && Math.abs(pose.fwd.y) < 1e-3, `fwd ${v3s(pose.fwd, 4)}`)
 
     d = await drag("left", new vec3(-0.1, 0, 0), 250)
     c.ok("drag left turns φ down", d.dPhi < -MIN_TURN, `Δφ ${f3(d.dPhi)}°`)
@@ -86,7 +88,7 @@ export class BraggsC1DragScenario extends Scenario {
     c.ok("drag up leaves φ unchanged", Math.abs(d.dPhi) < 1e-6, `Δφ ${f3(d.dPhi, 6)}°`)
     pose = checkPose("after up")
     // With φ ≠ 0 the up axis is R_χ(+y) = (0, cos χ, −sin χ): the top leans away from the user.
-    c.ok("drag up: top tilts away (up axis z < 0)", pose.up.z < -0.005, `up ${v3s(pose.up, 4)}, φ ${f3(phiBeforeUp, 2)}`)
+    c.ok("drag up: top tilts away (up axis z < 0)", pose.up.z < -MIN_TILT, `up ${v3s(pose.up, 4)}, φ ${f3(phiBeforeUp, 2)}`)
 
     d = await drag("down", new vec3(0, -0.1, 0), 250)
     c.ok("drag down tilts χ down", d.dChi < -MIN_TURN, `Δχ ${f3(d.dChi)}°`)
@@ -105,7 +107,7 @@ export class BraggsC1DragScenario extends Scenario {
       checkPose(`after mixed ${i}`)
     }
     const end = state()
-    c.ok("after the drags the crystal is turned and tilted (both non-zero)", Math.abs(end.phi) > 0.5 && Math.abs(end.chi) > 0.5, `φ ${f3(end.phi)}, χ ${f3(end.chi)}`)
+    c.ok("after the drags the crystal is turned and tilted (both non-zero)", Math.abs(end.phi) > MIN_TURN && Math.abs(end.chi) > MIN_TURN, `φ ${f3(end.phi)}, χ ${f3(end.chi)}`)
 
     // 4. Reset orientation (real UIKit button press).
     await interactor.trigger(interactable("ResetButton"))

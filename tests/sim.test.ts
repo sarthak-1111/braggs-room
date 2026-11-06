@@ -393,18 +393,26 @@ test("rotation runs at half speed within 2° of a reflection", () => {
   near(sim.phi - before, 0.1, 1e-9, "half speed")
 })
 
-test("off-wall hint: shows only when a lit reflection misses the detector and no lit spot lands on it", () => {
-  // Only spot off the wall: the hint asks for a shorter wavelength.
-  // χ = 5° keeps (0 1 1) out of condition; at χ = 0 it lights on the wall beside (0 2 0).
-  const sim = new BraggSim()
-  sim.setWavelength(2.29) // (020): 2θ = 69.8°, 4.1 m out
-  goTo(sim, {h: 0, k: 2, l: 0}, 5, 30)
-  const f = sim.step()
-  assert.equal(f.offWallHint, true)
-  assert.equal(f.lit.some((s) => s.key === "0,2,0"), false)
+test("off-wall hint: shows only after a spot has been found, when a lit reflection misses the detector and no lit spot lands on it", () => {
+  // (a) Nothing found yet and only (0 2 0) in condition, off the wall: no hint, since
+  // "try a shorter wavelength" is wrong advice for a student who has found nothing yet.
+  // The sim starts at λ 2.29 Å, so no λ slide lights anything first (one from 1.54 Å at φ 0
+  // passes (−1 ±2 0) on the wall). χ = 5° keeps (0 1 1) out of condition; at χ = 0 it
+  // lights on the wall beside (0 2 0).
+  const sim = new BraggSim({freeLambda: 2.29}) // (020): 2θ = 69.8°, 4.1 m out
+  const f = goTo(sim, {h: 0, k: 2, l: 0}, 5, 30)
+  assert.equal(f.board.status, "None yet. Turn the crystal.", "nothing found yet")
   assert.equal(f.lit.length, 0, "nothing lit on the wall")
+  assert.equal(f.offWallHint, false, "no hint before any spot is found")
 
-  // Free mode, Cu Kα: (0 1 0) is lit on the wall while high-angle reflections in condition miss it.
+  // (b) Same sim once (0 1 0) has lit on the wall: the same off-wall-only orientation shows the hint.
+  assert.ok(goTo(sim, {h: 0, k: 1, l: 0}).lit.some((s) => s.key === "0,1,0"), "(0 1 0) lit on the wall")
+  const back = goTo(sim, {h: 0, k: 2, l: 0}, 5, 30)
+  assert.equal(back.lit.some((s) => s.key === "0,2,0"), false)
+  assert.equal(back.lit.length, 0, "nothing lit on the wall")
+  assert.equal(back.offWallHint, true, "hint once a spot has been found")
+
+  // (c) Free mode, Cu Kα: (0 1 0) is lit on the wall while high-angle reflections in condition miss it.
   const free = new BraggSim()
   assert.equal(free.lambda, 1.54)
   free.setOrientation(11.0987, 0)

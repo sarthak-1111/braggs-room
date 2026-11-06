@@ -170,7 +170,10 @@ export interface SimFrame {
   chi: number
   /** Lit spots that land on the detector. */
   lit: SpotView[]
-  /** A lit reflection lands off the detector and no lit reflection lands on it. */
+  /**
+   * A lit reflection lands off the detector, no lit reflection lands on it, and a spot has
+   * already lit on the wall since the found list was last cleared.
+   */
   offWallHint: boolean
   ghosts: GhostView[]
   ring: RingView | null
@@ -480,7 +483,10 @@ export class BraggSim {
       chi: this.chi,
       lit,
       // Only when nothing lit is on the wall: next to a lit spot the hint reads as a contradiction.
-      offWallHint: offWall && lit.length === 0,
+      // And only once a spot has lit on the wall (the found list, cleared at Lens start, on a
+      // mission start or end and on an SC/FCC switch; not by Reset orientation): before that,
+      // "try a shorter wavelength" is wrong advice for a student who hasn't found anything yet.
+      offWallHint: offWall && lit.length === 0 && this.found.size > 0,
       ghosts,
       ring: this.ringView(),
       guide: h.guide,

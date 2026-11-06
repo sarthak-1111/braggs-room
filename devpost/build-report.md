@@ -45,6 +45,7 @@ I was away during the build, so nobody answered the agents' questions. Where the
      Committed.
 9. **LEAF** scenarios per done criterion: eight scenarios written by CLAD's `live-lens-tester`. In the final run all eight pass, 315 of 315 sub-checks. One test-setup mistake was fixed on the way. See "LEAF scenarios" below.
 10. **Off-wall hint change**, after the first video cut: my decision on open question 6. The coding agent changed the hint rule, extended unit test 121 (still 124 of 124), checked it in the preview, made the drag-direction checks in `c1-drag-turn-tilt-reset` independent of the preview's frame rate, and re-ran all eight LEAF scenarios (315 of 315).
+11. **Second off-wall hint change**, after the second video cut: my second decision on open question 6. The coding agent kept the hint hidden until a spot has lit on the wall, extended unit test 121 again (still 124 of 124), checked it in the preview, made three more checks in `c1-drag-turn-tilt-reset` independent of the preview's frame rate, and re-ran all eight LEAF scenarios (315 of 315). It found that the change doesn't remove the hint from the video's opening turn (see open question 6).
 
 ## Physics decisions
 
@@ -108,13 +109,13 @@ I was away during the build, so nobody answered the agents' questions. Where the
 
 ### Physics and logic unit tests (command line)
 
-Run with `cd tests && npm install && npm test` (Node v20.12.1, TypeScript 5.9.3) after stage 2, and again after the off-wall hint change (open question 6). **124 of 124 pass.**
+Run with `cd tests && npm install && npm test` (Node v20.12.1, TypeScript 5.9.3) after stage 2, and again after each off-wall hint change (open question 6). **124 of 124 pass.**
 
 - Tests 1–80 are CLAD's geometry tests for the code-built meshes and the layout.
 - Tests 81–98 are the physics tests.
 - Tests 99–124 are the experiment-logic tests, including every done criterion checked as pure logic.
 
-This is the real output of the re-run after the off-wall hint change; only node's per-test timing blocks (`duration_ms`) are removed:
+This is the real output of the re-run after the second off-wall hint change, on 2026-11-06; only node's per-test timing blocks (`duration_ms`) are removed:
 
 ```text
 > test
@@ -239,7 +240,7 @@ ok 117 - criterion 4: no leak. The same drag path gives identical guide arrows a
 ok 118 - criterion 4: the prediction ring depends only on a and λ (identical in SC and FCC rounds)
 ok 119 - guide arrow: appears within 4° of a reflection, points the right way, hides in the window
 ok 120 - rotation runs at half speed within 2° of a reflection
-ok 121 - off-wall hint: shows only when a lit reflection misses the detector and no lit spot lands on it
+ok 121 - off-wall hint: shows only after a spot has been found, when a lit reflection misses the detector and no lit spot lands on it
 ok 122 - free mode FCC toggle: forbidden reflections stay dark
 ok 123 - free-mode evidence board lists (hkl), 2θ and the sin²θ ratio to the lowest-angle reflection
 ok 124 - a fast drag cannot skip a condition: passing through still records it
@@ -250,7 +251,7 @@ ok 124 - a fast drag cannot skip a condition: passing through still records it
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 979.9671
+# duration_ms 787.9494
 ```
 
 `npm run table` prints the hand-computed reference values that the physics tests check against. Real output:
@@ -338,6 +339,21 @@ I 23:08:43.841 [BRAGG-LEAF] SUMMARY c4-no-leak-helpers :: 4/4 checks passed
 I 23:08:49.286 [BRAGG-LEAF] SUMMARY c5-labels-content-size :: 31/31 checks passed
 ```
 
+**Re-run after the second off-wall hint change** (open question 6), by the coding agent on 2026-11-06, 08:55–08:58, in the same preview and the same way. All eight pass, 315 of 315 sub-checks.
+
+Before this run, `c1-drag-turn-tilt-reset` failed once at 79/81 (08:54), and again the test was at fault, not the Lens. The preview ran slower still: the 400 ms right drag turned only 0.45° (3 frames). Two checks still asked for a fixed size: the crystal's forward axis x > 0.01 after the right drag (0.45° gives 0.0079), and |φ|, |χ| > 0.5° after all the drags (φ was 0.405°). Every pose still matched R_χ · R_φ and every sign was right. The coding agent changed these two checks, and the up-axis check after the up drag (z < −0.005), to ask for at least the turn of one 0.1° step (sin 0.1° ≈ 0.0017 on an axis). It changed nothing else in the scenario or the Lens.
+
+```text
+I 08:56:09.138 [BRAGG-LEAF] SUMMARY c1-drag-turn-tilt-reset :: 81/81 checks passed
+I 08:56:15.639 [BRAGG-LEAF] SUMMARY c2-spot-010-hooks :: 37/37 checks passed
+I 08:57:11.639 [BRAGG-LEAF] SUMMARY c2-spot-010-real-drag :: 19/19 checks passed
+I 08:57:17.427 [BRAGG-LEAF] SUMMARY c3-wavelength-slide-ghost :: 52/52 checks passed
+I 08:57:27.564 [BRAGG-LEAF] SUMMARY c4-mission-sc-verdict :: 44/44 checks passed
+I 08:57:39.089 [BRAGG-LEAF] SUMMARY c4-mission-fcc-verdict :: 47/47 checks passed
+I 08:58:02.056 [BRAGG-LEAF] SUMMARY c4-no-leak-helpers :: 4/4 checks passed
+I 08:58:08.951 [BRAGG-LEAF] SUMMARY c5-labels-content-size :: 31/31 checks passed
+```
+
 **To re-run them:**
 - **In Lens Studio:** open the LEAF panel, pick a scenario and run it in the preview.
 - **From a coding agent:** call `open_leaf_panel`, `list_leaf_scenarios`, then `run_leaf_scenario` with an id.
@@ -396,3 +412,8 @@ Nothing runs on Lens start, so the Lens behaves normally in Interactive Preview.
    - **What the coding agent changed:** in `Assets/Scripts/BraggSim.ts`, `step()` now sets `offWallHint` only when a lit reflection misses the detector and no lit reflection lands on it. The physics didn't change.
    - **The test that covers it:** unit test 121, "off-wall hint: shows only when a lit reflection misses the detector and no lit spot lands on it". With (0 2 0) the only reflection in condition at λ 2.29 Å, off the wall, the hint shows. At φ = +11.0987°, χ = 0 with Cu Kα, (0 1 0) is lit on the wall while other reflections in condition miss it, and the hint is hidden. The test's first case used to sit at χ = 0, where (0 1 1) is also lit on the wall, so the coding agent moved it to χ = 5°. In the preview, the video-director scenario at φ 11.1° logged (0 1 0) lit and `"offWallHint":false`, and the hint text was gone. The LEAF re-run is under "LEAF scenarios".
    - The first video cut was made before this change and showed the hint next to the lit spot. The coding agent re-shot the four opening shots after the change, and the current cut no longer shows it there (see "How the video was made" in `devpost/video-script.md`).
+   - **My second decision, after the second video cut:** on the turn from φ 0 towards (0 1 0) at Cu Kα, the hint showed from φ ≈ 5.7° to 10.0°, so it advised a shorter wavelength 0.2° before the (0 1 0) spot. That's wrong advice for someone who hasn't found anything yet, so the hint now also stays hidden until a spot has lit on the wall.
+   - **What the coding agent changed:** `offWallHint` in `step()` now also needs the found list to be non-empty. That's the list the ghosts are drawn from; a reflection goes in it when it lights on the wall. It's cleared when the Lens starts, when a mission round starts, on going back to free mode and on an SC/FCC switch. Reset orientation keeps it. The physics didn't change.
+   - **The test:** unit test 121, extended and renamed "off-wall hint: shows only after a spot has been found, when a lit reflection misses the detector and no lit spot lands on it" (still 124 tests). (a) A fresh sim at λ 2.29 Å with (0 2 0) at χ = 5°, the only reflection in condition, off the wall, and nothing found: no hint. (b) The same sim after (0 1 0) has lit on the wall, back at the same orientation: the hint shows. (c) The Cu Kα case at φ = +11.0987° with (0 1 0) lit on the wall: no hint.
+   - **What the coding agent found in the preview:** this doesn't remove the hint from the video's opening turn. On a real drag from φ 0, (−1 −2 0) (2θ 51.0°) lights on the wall at φ ≈ 0.1–2° and (−1 2 1) (2θ 56.3°) at φ ≈ 3.5–5.5°, each with a chime and a ghost; the take notes record the same. So by φ 5.7° two spots are found and the hint shows. From a fresh Lens, the video-director scenario at `phi:7.0` logged nothing lit, those two ghosts and `"offWallHint":true`. Switching to FCC and back to SC there (which clears the found list without turning the crystal) logged φ 6.98°, nothing lit, no ghosts, "None yet. Turn the crystal." and `"offWallHint":false`, and the screenshot has no hint. Turning on to φ 11.1° lit (0 1 0) with the hint off; turning back to φ 7.05° brought the hint back, with the (0 1 0) ghost. In the sim, none of the drags it tried from the start pose at Cu Kα (to χ −45° to 45° in 5° steps and φ −40° to 40° in 1° steps, χ first or φ first), and no +φ drag at the start of a mission round (SC and FCC, a = 3.3–5.7 Å), reaches an off-wall-only orientation before a spot has lit on the wall. So with real input the new rule rarely changes anything.
+   - **Still open for me:** keep this rule, change it again (for example, tie the hint to how far the nearest on-wall reflection is), or change the video's opening turn.
