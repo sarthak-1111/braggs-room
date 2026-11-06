@@ -15,6 +15,9 @@ Support/
 # Local editor state (Workspaces/, PluginsUserPreferences/ and .vscode/ ship their own .gitignore)
 *.esproj.*.lock
 
+# Specs debug signing key, created by Lens Studio when the project opens
+/spk_debug_key.pem
+
 # Duplicate copies of the plan-lens skill made by `npx skills add --all`
 # (the canonical copy is .agents/skills/plan-lens, pinned in skills-lock.json)
 .claude/skills/

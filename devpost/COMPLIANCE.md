@@ -57,9 +57,17 @@ After the deadline, the submission is locked (Rules §5). I save a Devpost draft
 
 - [ ] Every done criterion in the brief has a LEAF test. Record which pass and which have no test.
 - [ ] Walk through it by hand in Interactive Preview: WASD to move, Q and E to go down and up, right-drag to look, click to pinch.
-- [ ] A **fresh clone** of the public repo opens in Lens Studio and runs in the preview with no missing assets.
+- [x] A **fresh clone** of the public repo opens in Lens Studio and runs in the preview with no missing assets.
   - On Nov 6 the coding agent cloned the repo from GitHub and compared every file with the working project. They are identical apart from line endings (git on Windows checks text files out with CRLF). The only file the working project has that the repo doesn't is `.virtual-scene.json`, which is generated and ignored.
-  - Still to do by hand: open the clone in Lens Studio and run a LEAF scenario. The agent didn't, because the open project had unsaved changes and switching projects would have raised a save prompt that nobody could answer remotely.
+  - Later on Nov 6 the coding agent opened a clone at `810bf70` in Lens Studio 5.24.1:
+    - It loaded in about 84 s, regenerating `Cache/` and `Support/`, with no missing assets or packages and no TypeScript errors.
+    - All 8 LEAF done-criteria scenarios passed in the clone (340 of 340 checks, no re-runs).
+    - The only log errors were ones the working project shows too: the analytics service needing a sign-in, and no audio output device on that machine.
+  - Opening the project writes a few files that a judge may see in `git status`. None are part of the Lens:
+    - Lens Studio adds its own block to `.gitignore`;
+    - it writes a `.gitattributes` that routes `Assets/` and `Packages/` through Git LFS (don't commit it);
+    - it creates `spk_debug_key.pem` (ignored);
+    - it removes the `.agents/` folder (`git checkout -- .agents` brings it back).
 - [ ] The video and the description claim only what the preview actually shows.
 
 ## 5. A public repo with the Lens Studio project files and `devpost/`
