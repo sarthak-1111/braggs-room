@@ -58,6 +58,8 @@ After the deadline, the submission is locked (Rules §5). I save a Devpost draft
 - [ ] Every done criterion in the brief has a LEAF test. Record which pass and which have no test.
 - [ ] Walk through it by hand in Interactive Preview: WASD to move, Q and E to go down and up, right-drag to look, click to pinch.
 - [ ] A **fresh clone** of the public repo opens in Lens Studio and runs in the preview with no missing assets.
+  - On Nov 6 the coding agent cloned the repo from GitHub and compared every file with the working project. They are identical apart from line endings (git on Windows checks text files out with CRLF). The only file the working project has that the repo doesn't is `.virtual-scene.json`, which is generated and ignored.
+  - Still to do by hand: open the clone in Lens Studio and run a LEAF scenario. The agent didn't, because the open project had unsaved changes and switching projects would have raised a save prompt that nobody could answer remotely.
 - [ ] The video and the description claim only what the preview actually shows.
 
 ## 5. A public repo with the Lens Studio project files and `devpost/`
