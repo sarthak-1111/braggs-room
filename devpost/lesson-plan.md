@@ -1,17 +1,20 @@
-# Lesson plan: Bragg's Room in a 25-minute class
+# Lesson plan: Bragg's Room in a 30-minute class
 
-✏️ **REVIEW.** The coding agent drafted this from the Lens's behaviour and its unit-tested numbers. I check it against how I'd actually teach it before submitting.
+✏️ **REVIEW.** The coding agent drafted this from the Lens's behaviour and its unit-tested numbers, then corrected it after a simulated walkthrough in which an AI agent followed it step by step in the preview, playing a lecturer ([`simulated-walkthrough.md`](simulated-walkthrough.md)). I check it against how I'd actually teach it before submitting.
 
 **Level:** first undergraduate course that meets X-ray diffraction (solid-state physics, materials science, physical or inorganic chemistry).
 **Students should already know:** Miller indices, d-spacings in a cubic lattice (d = a / √(h² + k² + l²)), and Bragg's law (nλ = 2d sin θ).
-**Setup:** Lens Studio 5.24.1 or later with this repo open, Preview set to SPECS and Interactive Preview (see the README for the controls), one laptop per pair. On a SPECS device the same activity runs with your hands and your real wall. Students work in pairs: one drives, one records.
+**Setup:** Lens Studio 5.24.1 or later with this repo open, Preview set to SPECS and Interactive Preview (see the README for the controls), one laptop per pair. On a SPECS device the same activity runs with your hands and your real wall. Students work in pairs: one drives, one records. Give pairs 3 minutes to learn the controls before Part A:
+- Look down and slightly left for the crystal. Step back about a metre (**S**) so the crystal, the wall and the console are all in view.
+- If χ (the tilt readout on the goniometer base) drifts away from 0°, press **Reset orientation**.
+- "Spot is off the wall. Try a shorter wavelength." means a reflection is lit but its spot misses the wall. Carry on turning.
 
 ## Learning goals
 
 By the end, a student can:
 1. explain why a reflection lights only at particular crystal orientations, and why the spot sits at **2θ** from the beam, not θ;
 2. predict where a spot lands on a flat detector from θ and the crystal-to-wall distance (x = L tan 2θ);
-3. predict which way a spot moves when the wavelength changes (sin θ = λ / 2d);
+3. predict how a spot's angle changes with wavelength (sin θ = λ / 2d), and recognise a second-order reflection;
 4. use systematic absences, backed by a positive control, to tell simple cubic from face-centred cubic.
 
 ## Before (3 min): predict on paper
@@ -22,23 +25,24 @@ Show the textbook figure (two planes, two arrows, the equation). Ask each studen
 
 Collect the answers; don't discuss them yet. Ask the same question again at the end (see "After").
 
-## Part A (5 min): find the first spot (free mode)
+## Part A (6 min): find the first spot (free mode)
 
-1. Turn the crystal left or right (φ) until a spot lights on the wall. Record φ, θ, 2θ and the spot's distance from the beam stop.
-2. Check the distance: x = 150 cm × tan 2θ.
-3. Turn about 1° further. Why does the spot go dark?
+1. Turn the crystal left or right (φ) until the (0 1 0) spot lights on the wall. Record φ (on the goniometer base) and θ and 2θ (on the spot's label).
+2. The wall is 150 cm beyond the crystal and carries a 2θ scale in degrees. Work out how far the spot is from the beam stop, x = 150 cm × tan 2θ, and check that the spot sits at 2θ on the wall's scale.
+3. Turn about 1° further. Why does the spot go dark? A faint marker stays where it was.
 
-## Part B (5 min): change the wavelength
+## Part B (6 min): change the wavelength
 
-1. With the (0 1 0) spot lit, slide λ from Cu Kα up towards Co Kα (1.79 Å) and back down towards Mo Kα (0.71 Å). Which way does the spot move, and why does it eventually go dark at a fixed crystal angle?
-2. The faint *ghost* shows where the found reflection would land at the current λ. Predict 2θ at Mo Kα before you look, then check against the ghost.
+1. With (0 1 0) lit, slowly slide λ up from Cu Kα towards Co Kα (1.79 Å). Watch the faint **ghost**: it shows where (0 1 0) would land at the current λ. Which way does it move? The bright spot goes dark after only a few hundredths of an ångström. Why, if the crystal hasn't moved?
+2. Predict 2θ for (0 1 0) at Mo Kα (0.71 Å), then slide down to Mo Kα and check against the ghost.
+3. At Mo Kα, new spots light up although the crystal hasn't moved. Which ones? One of them sits at nearly the same crystal angle as (0 1 0) did. Why?
 
 ## Part C (10 min): Mission, identify the crystal
 
-Press **Start mission**. The sample is randomly SC or FCC with its lattice parameter a on its tag; the round runs at Mo Kα (0.71 Å), and spot labels show 2θ only.
+Press **Start mission**. The sample is randomly SC or FCC with its lattice parameter a on its tag. The round runs at Mo Kα (0.71 Å), and spot labels show 2θ only. Your question: **is it simple cubic or face-centred cubic?**
 1. Find spots by turning the crystal. For each, record 2θ, compute d = λ / (2 sin θ), then N = (a / d)² and round to an integer: N = h² + k² + l².
-2. Watch the evidence board: it also logs when the crystal passes the (100) and (110) conditions **with no spot**.
-3. Before pressing a verdict, write down your evidence: which N values you saw, which absences you logged, and your positive control.
+2. Watch the evidence board. It also logs "(100) condition passed: no spot" when the crystal passes the (100) Bragg condition **and nothing lights**, and the same for (110).
+3. Before pressing a verdict, write down your evidence: which N values you saw, which absences were logged, and your positive control.
 4. Press **Simple cubic** or **Face-centred cubic**. If the Lens says you're wrong, read why, find the evidence it asks for, and try again.
 
 ## After (2 min): the same question again
@@ -51,8 +55,9 @@ Repeat the "Before" question, alone and in writing. Compare the two answers.
 2. A real crystal's rocking width is far narrower than the Lens's 1.0°. What would finding spots by hand be like with a real crystal, and why do real instruments scan instead?
 3. Why does "no spot at the (100) condition" only count as evidence once you've seen a (111) or (200) spot?
 4. FCC allows (h k l) only when all three are even or all odd. Which of N = 1, 2, 3, 4, 8, 11, 12 survive? What is physically cancelling the others?
-5. The Lens draws every allowed spot equally bright. What would real intensities add, and what extra could they tell you?
-6. What in the Lens is deliberately not to scale, and why is that acceptable here? (The atoms, and the 1.0° mosaic spread; every angle and direction is real.)
+5. (0 2 0) and (0 1 0) come from the same planes. How does nλ = 2d sin θ describe (0 2 0) as the second order of (0 1 0)?
+6. The Lens draws every allowed spot equally bright. What would real intensities add, and what extra could they tell you?
+7. What in the Lens is deliberately not to scale, and why is that acceptable here? (The atoms, and the 1.0° mosaic spread; every angle and direction is real.)
 
 ## Answer key
 
@@ -63,14 +68,23 @@ Repeat the "Before" question, alone and in writing. Compare the two answers.
 | (0 1 0) | 1.54 (Cu Kα) | 11.10 | 22.20 | 61.2 cm |
 | (0 1 0) | 1.79 (Co Kα) | 12.93 | 25.86 | 72.7 cm |
 | (0 1 0) | 0.71 (Mo Kα) | 5.09 | 10.18 | 26.9 cm |
+| (0 2 0) | 0.71 (Mo Kα) | 10.22 | 20.45 | 55.9 cm |
+| (0 1 1), (0 1 −1) | 0.71 (Mo Kα) | 7.21 | 14.42 | 38.6 cm |
 | (1 1 0) | 1.54 | 15.80 | 31.59 | 92.3 cm |
 | (1 1 1) | 1.54 | 19.48 | 38.95 | 121.3 cm |
 
-- **Before/after question:** the spot first lights when the crystal has turned about 11° (the Bragg angle θ = 11.1°), and it lands at 2θ = 22.2°, about 61 cm to the side of the beam stop. Answers to look out for: a spot placed at θ instead of 2θ (11°, about 29 cm from the beam stop), or no position given at all because the flat figure doesn't say where the wall is.
-- **Part A, step 3:** the Bragg condition is sharp; the Lens lights a spot only within its 1.0° mosaic window.
-- **Part B:** a longer λ means a larger θ for the same d, so the spot moves out; a shorter λ pulls it in. At a fixed crystal angle the planes leave the 1.0° window, so the spot goes dark; the ghost shows where it would be.
+- **Before/after question:** the spot lights when the crystal has turned about 11° (the Bragg angle θ = 11.1°), and it lands at 2θ = 22.2°, about 61 cm to the side of the beam stop. Answers to look out for: a spot placed at θ instead of 2θ (11°, about 29 cm from the beam stop), or no position given at all because the flat figure doesn't say where the wall is.
+- **Part A, step 1:** pairs turning up from 0 will see the spot light at φ ≈ 10.1–10.3°, a little below θ = 11.1°. That's because the Lens lights a spot anywhere within its 1.0° mosaic window. The label always shows the exact Bragg angle.
+- **Part A, step 3:** the Bragg condition is sharp; the Lens lights a spot only within its 1.0° window.
+- **Part B, step 1:** a longer λ needs a larger θ for the same d, so the ghost moves outwards (25.9° at Co Kα). With the crystal still, the planes keep the same glancing angle, so they leave the 1.0° window quickly and the bright spot goes dark. The ghost shows where it would be.
+- **Part B, step 2:** 2θ = 10.18° at Mo Kα.
+- **Part B, step 3:** at Mo Kα, (0 2 0) lights at 2θ 20.4° and (0 1 1) and (0 1 −1) at 2θ 14.4°. (0 2 0) is the second order of the same planes as (0 1 0): it needs θ = 10.22°, close to the crystal's angle of about 10–11°, so it's inside the window.
 
-**Mission (example: FCC, a = 4.05 Å, Mo Kα 0.71 Å, the round shown in the demo video):**
+**Mission, any round:** the round's a is on the sample's tag. For each reflection, sin θ = λ√N / 2a, with λ = 0.71 Å.
+- FCC shows only N = 3, 4, 8, 11, 12.
+- SC also shows N = 1, 2, 5, 6, 9, 10.
+
+Example: FCC, a = 4.05 Å, the round shown in the demo video.
 
 | N = h² + k² + l² | family | d (Å) | 2θ (°) | FCC |
 |---|---|---|---|---|
@@ -84,4 +98,4 @@ Repeat the "Before" question, alone and in writing. Compare the two answers.
 
 - **Simple cubic** is shown by any spot FCC forbids (mixed parity): N = 1, 2, 5, 6, 9 or 10, such as a (100)- or (110)-type spot.
 - **FCC** needs the (100) and (110) conditions passed with no spot **and** a (111) or (200) spot seen: the positive control proves the setup could see spots, so the absences mean something.
-- A correct verdict names the real material with the closest lattice parameter: copper (FCC, 3.61 Å), aluminium (FCC, 4.05 Å), rock salt (FCC lattice, 5.64 Å), α-polonium (SC, 3.35 Å) or caesium chloride (primitive cubic lattice, 4.12 Å).
+- A correct verdict names the real material with the closest lattice parameter and the same lattice type: copper (FCC, 3.61 Å), aluminium (FCC, 4.05 Å), rock salt (FCC lattice, 5.64 Å), α-polonium (SC, 3.35 Å) or caesium chloride (primitive cubic lattice, 4.12 Å). The sample has that lattice type; it isn't that material.

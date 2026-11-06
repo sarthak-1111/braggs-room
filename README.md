@@ -6,7 +6,7 @@
 
 Built for [Learn AR with SPECS](https://learn-specs.devpost.com/). It runs in Lens Studio's Interactive Preview; no SPECS device is needed.
 
-> **Who it's for:** undergraduate physics, chemistry and materials students, and their teachers. Flat textbook diagrams of diffraction don't convey the 3D geometry: how the crystal's orientation, the beam and the spot on the detector are linked. For teachers there's a 25-minute class activity with an answer key: [`devpost/lesson-plan.md`](devpost/lesson-plan.md).
+> **Who it's for:** undergraduate physics, chemistry and materials students, and their teachers. Flat textbook diagrams of diffraction don't convey the 3D geometry: how the crystal's orientation, the beam and the spot on the detector are linked. For teachers there's a 30-minute class activity with an answer key: [`devpost/lesson-plan.md`](devpost/lesson-plan.md).
 
 ## What you can do
 

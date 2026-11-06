@@ -26,7 +26,7 @@ Undergraduate physics, chemistry and materials students, and the people who teac
 
 ✏️ **PERSONALISE.** One or two sentences in my own words on why this matters to me as a diffraction researcher, for example a moment when I saw students struggle with the textbook picture, or what I wish I'd had when I learned it.
 
-For teachers, there's a 25-minute class activity with learning goals, a before-and-after prediction question, discussion questions and an answer key: [`devpost/lesson-plan.md`](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md).
+For teachers, there's a 30-minute class activity with learning goals, a before-and-after prediction question, discussion questions and an answer key: [`devpost/lesson-plan.md`](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md).
 
 ## Why it matters
 
@@ -66,6 +66,17 @@ Every angle and direction is computed with the vector (Laue/Ewald) form and then
 - **Unit tests.** The physics is checked against hand-computed Bragg angles; there are 124 unit tests in all.
 - **Measured data.** The physics is also checked against a measured powder pattern of real aluminium [8]. The FCC rule allows exactly the nine lines that were measured up to (422), every d-spacing agrees within 0.001 Å, and every 2θ agrees within 0.05°. The table is in the README (`npm run reference`).
 - **Labels for what isn't real.** What's deliberately exaggerated, the atom size and the 1.0° mosaic window, is labelled in the Lens.
+
+## Testing so far
+
+Before testing with real students, I ran **simulated** first-time-user walkthroughs. Three AI agents each played one persona and drove the Lens in Lens Studio's preview, using only what's on screen and the README's controls:
+- a first-year chemistry student;
+- a PhD student who runs a diffractometer;
+- a lecturer following the lesson plan.
+
+They aren't real users, and they can't show that anyone learns from it. But they found real problems, and the most useful finding was positive: the PhD persona checked every number on screen by hand, and all of them were right to 0.1°.
+
+All three were confused by the off-wall hint, the mission never states its question, and my lesson plan asked for a distance the screen doesn't show. I've fixed the lesson plan, and the Lens changes are next. Details: [`devpost/simulated-walkthrough.md`](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/simulated-walkthrough.md).
 
 ## How I built it
 
