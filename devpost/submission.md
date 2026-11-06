@@ -76,7 +76,12 @@ Before testing with real students, I ran **simulated** first-time-user walkthrou
 
 They aren't real users, and they can't show that anyone learns from it. But they found real problems, and the most useful finding was positive: the PhD persona checked every number on screen by hand, and all of them were right to 0.1°.
 
-All three were confused by the off-wall hint, the mission never states its question, and my lesson plan asked for a distance the screen doesn't show. I've fixed the lesson plan, and the Lens changes are next. Details: [`devpost/simulated-walkthrough.md`](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/simulated-walkthrough.md).
+They found real problems too:
+- all three were confused by the off-wall hint;
+- the mission never stated its question, and the verdict never said "correct";
+- my lesson plan asked for a distance the screen didn't show.
+
+I fixed all of them in the Lens and in the lesson plan, and re-shot the video. Details: [`devpost/simulated-walkthrough.md`](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/simulated-walkthrough.md).
 
 ## How I built it
 

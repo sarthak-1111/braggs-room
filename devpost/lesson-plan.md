@@ -7,7 +7,7 @@
 **Setup:** Lens Studio 5.24.1 or later with this repo open, Preview set to SPECS and Interactive Preview (see the README for the controls), one laptop per pair. On a SPECS device the same activity runs with your hands and your real wall. Students work in pairs: one drives, one records. Give pairs 3 minutes to learn the controls before Part A:
 - Look down and slightly left for the crystal. Step back about a metre (**S**) so the crystal, the wall and the console are all in view.
 - If χ (the tilt readout on the goniometer base) drifts away from 0°, press **Reset orientation**.
-- "Spot is off the wall. Try a shorter wavelength." means a reflection is lit but its spot misses the wall. Carry on turning.
+- "A reflection at 2θ … is lit, but misses the wall." means a reflection is in its Bragg condition but its spot lands beyond the wall. Carry on turning.
 
 ## Learning goals
 
@@ -28,7 +28,7 @@ Collect the answers; don't discuss them yet. Ask the same question again at the 
 ## Part A (6 min): find the first spot (free mode)
 
 1. Turn the crystal left or right (φ) until the (0 1 0) spot lights on the wall. Record φ (on the goniometer base) and θ and 2θ (on the spot's label).
-2. The wall is 150 cm beyond the crystal and carries a 2θ scale in degrees. Work out how far the spot is from the beam stop, x = 150 cm × tan 2θ, and check that the spot sits at 2θ on the wall's scale.
+2. The label at the beam stop says the wall is 150 cm from the crystal, and the wall carries a 2θ scale in degrees. Work out how far the spot is from the beam stop, x = 150 cm × tan 2θ, and check that the spot sits at 2θ on the wall's scale.
 3. Turn about 1° further. Why does the spot go dark? A faint marker stays where it was.
 
 ## Part B (6 min): change the wavelength
@@ -39,9 +39,9 @@ Collect the answers; don't discuss them yet. Ask the same question again at the 
 
 ## Part C (10 min): Mission, identify the crystal
 
-Press **Start mission**. The sample is randomly SC or FCC with its lattice parameter a on its tag. The round runs at Mo Kα (0.71 Å), and spot labels show 2θ only. Your question: **is it simple cubic or face-centred cubic?**
+Press **Start mission**. The sample is randomly SC or FCC with its lattice parameter a on its tag. The round runs at Mo Kα (0.71 Å), and spot labels show 2θ only. The board asks the question: **simple cubic or face-centred cubic?**
 1. Find spots by turning the crystal. For each, record 2θ, compute d = λ / (2 sin θ), then N = (a / d)² and round to an integer: N = h² + k² + l².
-2. Watch the evidence board. It also logs "(100) condition passed: no spot" when the crystal passes the (100) Bragg condition **and nothing lights**, and the same for (110).
+2. Watch the evidence board. It also logs "(100) Bragg condition reached: no spot" when the crystal passes the (100) Bragg condition **and nothing lights**, and the same for (110).
 3. Before pressing a verdict, write down your evidence: which N values you saw, which absences were logged, and your positive control.
 4. Press **Simple cubic** or **Face-centred cubic**. If the Lens says you're wrong, read why, find the evidence it asks for, and try again.
 

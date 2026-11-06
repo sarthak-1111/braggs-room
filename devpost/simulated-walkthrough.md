@@ -61,6 +61,13 @@ A simulated user can find usability problems and check what the screen says. It 
   - gives a key for any mission round (sin θ = λ√N / 2a);
   - explains why φ at first light is a little below θ;
   - adds setup tips and runs 30 minutes.
-- **The Lens.** Changes to the off-wall hint and to the mission and verdict wording are proposed; build report, open question 6.
+- **The Lens, done** (approved by me; the coding agent made the changes through CLAD, with all 124 unit tests and all 8 LEAF scenarios passing). Details are in the build report, "Changes after the simulated walkthrough".
+  - The off-wall hint now names the reflection and gives no advice: "A reflection at 2θ 51.0° is lit, but misses the wall."
+  - The board states the mission's question: "Simple cubic or face-centred cubic? Find 3 distinct reflections."
+  - A correct verdict says so: "Correct: face-centred cubic. Same lattice as aluminium (a = 4.05 Å); this sample: …".
+  - Absences read "(100) Bragg condition reached: no spot".
+  - A label at the beam stop gives the distance: "wall 150 cm from the crystal".
+  - Revealed labels keep "2θ".
+- **The video.** Every Lens shot was re-shot after these changes.
 
 The full reports, with think-aloud logs and 122 screenshots, are kept outside the repo, in my video build folder.
