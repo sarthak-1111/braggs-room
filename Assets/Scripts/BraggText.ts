@@ -79,13 +79,32 @@ export function fmtLatticeParam(a: number): string {
   return `a = ${fmtNumber(a, 2)} Å`
 }
 
+/** Off-wall hint: names the reflection by 2θ only, so it never gives away (hkl) in a mission. */
+export function fmtOffWallHint(twoThetaDeg: number): string {
+  return `A reflection at 2θ ${fmtDeg(twoThetaDeg)} is lit, but misses the wall.`
+}
+
+/**
+ * The mission's question for the evidence board: "Simple cubic or face-centred cubic? Find 3 distinct
+ * reflections." while fewer than `needed` distinct reflections are logged, then the question alone.
+ */
+export function fmtMissionQuestion(found: number, needed: number): string {
+  return found >= needed ? TEXT.missionQuestion : `${TEXT.missionQuestion} Find ${needed} distinct reflections.`
+}
+
+/** Small label at the beam stop: "wall 150 cm from the crystal". */
+export function fmtWallDistance(distanceCm: number): string {
+  return `wall ${fmtNumber(distanceCm, 0)} cm from the crystal`
+}
+
 export const TEXT = {
   intro: "Drag the crystal. Watch the wall.",
-  offWall: "Spot is off the wall. Try a shorter wavelength.",
   atomsNotToScale: "atoms not to scale",
   mosaic: "mosaic spread exaggerated (1.0°)",
-  absence100: "(100) condition passed: no spot",
-  absence110: "(110) condition passed: no spot",
+  absence100: "(100) Bragg condition reached: no spot",
+  absence110: "(110) Bragg condition reached: no spot",
+  /** The mission's question, on the evidence board until the verdict is correct (see fmtMissionQuestion). */
+  missionQuestion: "Simple cubic or face-centred cubic?",
   startMission: "Start mission",
   backToFree: "Back to free mode",
   verdictSC: "Simple cubic",

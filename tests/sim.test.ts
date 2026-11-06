@@ -131,7 +131,7 @@ test("criterion 3: the found ghost follows sin θ = λ/2d; at Mo Kα it sits at 
   near(ghost.twoThetaDeg, 10.1834, 2e-3, "2θ")
   near(Math.hypot(ghost.wall.x, ghost.wall.y), 26.944, 0.01, "distance from the beam stop")
   near(ghost.wall.y, 0, 1e-6, "on the horizontal line")
-  assert.equal(ghost.label, "(0 1 0) 10.2°")
+  assert.equal(ghost.label, "(0 1 0) 2θ 10.2°")
   // and it keeps following at another wavelength: sin θ = λ/2d
   sim.setWavelength(1.0)
   const g2 = sim.step().ghosts.find((g) => g.key === "0,1,0") as any
@@ -150,6 +150,8 @@ test("criterion 4: a mission round starts at Mo Kα with the crystal hidden and 
   assert.equal(f.drawnLattice, null)
   assert.equal(f.sampleTag, "Mystery sample · a = 4.40 Å")
   assert.equal(f.verdictUnlocked, false)
+  assert.equal(f.board.question, "Simple cubic or face-centred cubic? Find 3 distinct reflections.", "the board states the mission's question")
+  assert.equal(f.board.status, "Distinct reflections: 0 of 3")
   const g = goTo(sim, {h: 1, k: 1, l: 1})
   const spot = g.lit.find((s) => s.key === "1,1,1")
   assert.ok(spot)
@@ -247,6 +249,7 @@ test("criterion 4 (SC): a (100)-type spot supports SC; FCC is refused with that 
   goClean(sim, {h: 1, k: 1, l: 0}) // N = 2
   const f = goClean(sim, {h: 1, k: 1, l: 1}) // N = 3
   assert.equal(f.verdictUnlocked, true)
+  assert.equal(f.board.question, "Simple cubic or face-centred cubic?", "three found: the question alone")
   assert.equal(f.board.lines.length, 3)
   assert.ok(f.board.lines.every((l) => l.startsWith("Spot  2θ")))
 
@@ -255,12 +258,18 @@ test("criterion 4 (SC): a (100)-type spot supports SC; FCC is refused with that 
   assert.equal(wrong.kind, "wrong")
   assert.equal(wrong.message, `The spot at 2θ ${tt100.toFixed(1)}° is (100)-type: FCC forbids it.`)
   assert.equal(sim.step().board.highlightIndex, 0)
+  assert.equal(sim.step().board.question, "Simple cubic or face-centred cubic?", "a wrong verdict keeps the question")
 
   const right = sim.submitVerdict("SC")
   assert.equal(right.kind, "correct")
+  assert.equal(
+    right.message,
+    "Correct: simple cubic. Same lattice as caesium chloride (primitive cubic, a = 4.12 Å); this sample: a = 5.00 Å.",
+  )
   const g = sim.step()
   assert.equal(g.justSolved, true)
   assert.equal(g.solved, true)
+  assert.equal(g.board.question, "", "solved: the question goes")
   assert.equal(g.banner, "Identified: SC, like caesium chloride")
   assert.equal(g.drawnLattice, "SC")
   assert.equal(g.board.lines[0], `(100)  2θ ${tt100.toFixed(1)}°  (λ 0.71 Å)`)
@@ -273,9 +282,9 @@ test("criterion 4 (FCC): absences of (100) and (110) plus a (111) spot support F
   sim.startMission({lattice: "FCC", a: A_TEST})
   let f = goClean(sim, {h: 0, k: 1, l: 0})
   assert.equal(f.lit.length, 0, "the (100) condition is met and nothing lights")
-  assert.deepEqual(f.board.lines, ["(100) condition passed: no spot"])
+  assert.deepEqual(f.board.lines, ["(100) Bragg condition reached: no spot"])
   f = goClean(sim, {h: 1, k: 1, l: 0})
-  assert.deepEqual(f.board.lines, ["(100) condition passed: no spot", "(110) condition passed: no spot"])
+  assert.deepEqual(f.board.lines, ["(100) Bragg condition reached: no spot", "(110) Bragg condition reached: no spot"])
   goClean(sim, {h: 1, k: 1, l: 1}) // N = 3: the positive control
   goClean(sim, {h: 0, k: 2, l: 0}) // N = 4
   f = goClean(sim, {h: 2, k: 2, l: 0}) // N = 8
@@ -283,10 +292,11 @@ test("criterion 4 (FCC): absences of (100) and (110) plus a (111) spot support F
 
   const wrong = sim.submitVerdict("SC")
   assert.equal(wrong.kind, "wrong")
-  assert.equal(wrong.message, "(100) and (110) passed with no spot: SC would show them.")
+  assert.equal(wrong.message, "(100) and (110) Bragg conditions reached with no spot: SC would show them.")
 
   const right = sim.submitVerdict("FCC")
   assert.equal(right.kind, "correct")
+  assert.equal(right.message, "Correct: face-centred cubic. Same lattice as rock salt (a = 5.64 Å); this sample: a = 5.00 Å.")
   const g = sim.step()
   assert.equal(g.banner, "Identified: FCC, like rock salt")
   assert.equal(g.drawnLattice, "FCC")
@@ -318,6 +328,11 @@ test("criterion 4 (SC): without a spot FCC forbids, the SC verdict asks for more
   const fb = sim.submitVerdict("SC")
   assert.equal(fb.kind, "insufficient")
   assert.equal(fb.message, "Not enough evidence yet. Find a spot FCC forbids, such as a (100)- or (110)-type spot.")
+  // The same evidence for FCC: no absence logged yet, so both are asked for.
+  assert.equal(
+    sim.submitVerdict("FCC").message,
+    "Not enough evidence yet. Still needed: reach the (100) Bragg condition with no spot; reach the (110) Bragg condition with no spot.",
+  )
 })
 
 test("criterion 4: verdict buttons stay locked below three distinct reflections", () => {
@@ -325,7 +340,10 @@ test("criterion 4: verdict buttons stay locked below three distinct reflections"
   sim.startMission({lattice: "SC", a: A_TEST})
   goClean(sim, {h: 0, k: 1, l: 0})
   goClean(sim, {h: 1, k: 1, l: 0})
-  assert.equal(sim.step().verdictUnlocked, false)
+  const f = sim.step()
+  assert.equal(f.verdictUnlocked, false)
+  assert.equal(f.board.status, "Distinct reflections: 2 of 3")
+  assert.equal(f.board.question, "Simple cubic or face-centred cubic? Find 3 distinct reflections.")
   assert.equal(sim.submitVerdict("SC").message, "Record three distinct reflections first.")
 })
 
@@ -393,7 +411,7 @@ test("rotation runs at half speed within 2° of a reflection", () => {
   near(sim.phi - before, 0.1, 1e-9, "half speed")
 })
 
-test("off-wall hint: shows only after a spot has been found, when a lit reflection misses the detector and no lit spot lands on it", () => {
+test("off-wall hint: shows only after a spot has been found, when a lit reflection misses the detector and no lit spot lands on it; it names the smallest such 2θ", () => {
   // (a) Nothing found yet and only (0 2 0) in condition, off the wall: no hint, since
   // "try a shorter wavelength" is wrong advice for a student who has found nothing yet.
   // The sim starts at λ 2.29 Å, so no λ slide lights anything first (one from 1.54 Å at φ 0
@@ -404,6 +422,7 @@ test("off-wall hint: shows only after a spot has been found, when a lit reflecti
   assert.equal(f.board.status, "None yet. Turn the crystal.", "nothing found yet")
   assert.equal(f.lit.length, 0, "nothing lit on the wall")
   assert.equal(f.offWallHint, false, "no hint before any spot is found")
+  assert.equal(f.offWallText, "")
 
   // (b) Same sim once (0 1 0) has lit on the wall: the same off-wall-only orientation shows the hint.
   assert.ok(goTo(sim, {h: 0, k: 1, l: 0}).lit.some((s) => s.key === "0,1,0"), "(0 1 0) lit on the wall")
@@ -411,6 +430,19 @@ test("off-wall hint: shows only after a spot has been found, when a lit reflecti
   assert.equal(back.lit.some((s) => s.key === "0,2,0"), false)
   assert.equal(back.lit.length, 0, "nothing lit on the wall")
   assert.equal(back.offWallHint, true, "hint once a spot has been found")
+  assert.equal(back.offWallText, "A reflection at 2θ 69.8° is lit, but misses the wall.")
+
+  // (b2) Several lit reflections miss the wall, none lands on it: the hint names the smallest 2θ.
+  // At φ −64°, χ −45°: (1 −1 2) at 2θ 89.0° and (−2 −2 1) at 2θ 118.4° (past 90°, never on the wall).
+  sim.setOrientation(-64, -45)
+  const several = sim.step()
+  const offTwoTheta = sim.candidates
+    .map((m) => P.evaluateReflection(m, sim.a, sim.lambda, sim.phi, sim.chi, sim.cfg.toleranceDeg, sim.cfg.detector))
+    .filter((r) => P.isAllowed(r.m, sim.freeLattice) && r.inCondition && !(r.onDetector && r.wall))
+    .map((r) => (r.twoThetaB as number).toFixed(1))
+  assert.deepEqual([...new Set(offTwoTheta)].sort(), ["118.4", "89.0"])
+  assert.equal(several.lit.length, 0)
+  assert.equal(several.offWallText, "A reflection at 2θ 89.0° is lit, but misses the wall.")
 
   // (c) Free mode, Cu Kα: (0 1 0) is lit on the wall while high-angle reflections in condition miss it.
   const free = new BraggSim()
@@ -425,6 +457,7 @@ test("off-wall hint: shows only after a spot has been found, when a lit reflecti
   })
   assert.ok(missed.length > 0, "another reflection in condition misses the detector")
   assert.equal(g.offWallHint, false, "no hint next to a lit spot")
+  assert.equal(g.offWallText, "")
 })
 
 test("free mode FCC toggle: forbidden reflections stay dark", () => {

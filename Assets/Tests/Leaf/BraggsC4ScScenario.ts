@@ -35,10 +35,13 @@ export class BraggsC4ScScenario extends Scenario {
     c.eq("2 distinct d-spacings: verdict locked", f.verdictUnlocked, false)
     c.ok("2 distinct: verdict buttons hidden", !verdictShown().sc && !verdictShown().fcc)
     c.eq("2 distinct: board status", f.board.status, "Distinct reflections: 2 of 3")
+    await frames(2)
+    c.eq("2 distinct: EvidenceQuestion states the question", textOf("EvidenceQuestion"), "Simple cubic or face-centred cubic?\nFind 3 distinct reflections.")
     f = await clean(c, main, {h: 1, k: 1, l: 1}, "SC") // N = 3
     c.eq("3 distinct d-spacings: verdict unlocked", f.verdictUnlocked, true)
     c.ok("3 distinct: both verdict buttons shown", verdictShown().sc && verdictShown().fcc)
     c.eq("3 distinct: board status", f.board.status, "3 distinct reflections: verdict unlocked")
+    c.eq("3 distinct: board question shortens to the question alone", f.board.question, "Simple cubic or face-centred cubic?")
     c.ok("board lines are unlabelled spots before the verdict", f.board.lines.length === 3 && f.board.lines.every((l) => l.startsWith("Spot  2θ")), JSON.stringify(f.board.lines))
     checkMissionLabels(c, main, "SC (111)")
     await frames(4)
@@ -65,7 +68,13 @@ export class BraggsC4ScScenario extends Scenario {
     await frames(3)
     f = main.getFrame()
     c.eq("SC verdict: feedback kind", f.feedback ? f.feedback.kind : null, "correct")
-    c.ok("SC verdict: message names a real material (caesium chloride, a = 4.12 Å)", !!f.feedback && f.feedback.message.indexOf("aesium chloride") >= 0 && f.feedback.message.indexOf("4.12") >= 0, f.feedback ? f.feedback.message : "")
+    const rightMsg = "Correct: simple cubic. Same lattice as caesium chloride (primitive cubic, a = 4.12 Å); this sample: a = 5.00 Å."
+    c.eq("SC verdict: message says Correct and names a real material (caesium chloride, a = 4.12 Å)", f.feedback ? f.feedback.message : null, rightMsg)
+    c.eq("SC verdict: FeedbackLine text", textOf("FeedbackLine"), rightMsg)
+    c.eq("SC verdict: board question cleared once solved", f.board.question, "")
+    for (const g of f.ghosts) {
+      c.ok(`SC verdict: revealed ghost label keeps 2θ (${g.key})`, /^\(.+\) 2θ \d+\.\d°$/.test(g.label), JSON.stringify(g.label))
+    }
     c.eq("SC verdict: banner", f.banner, "Identified: SC, like caesium chloride")
     c.ok("SC verdict: Banner shown with that text", so("Banner").isEnabledInHierarchy && textOf("Banner") === f.banner, JSON.stringify(textOf("Banner")))
     c.eq("SC verdict: no 'not yet' tone", main.notYetCount - notYet, 0)

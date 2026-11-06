@@ -28,13 +28,14 @@ export class BraggsC4FccScenario extends Scenario {
     await pressModeButtonToMission(c, main, interactor)
     await forceRound(c, main, "FCC")
 
+    c.eq("mission start: EvidenceQuestion states the question", textOf("EvidenceQuestion"), "Simple cubic or face-centred cubic?\nFind 3 distinct reflections.")
     let f = await clean(c, main, {h: 0, k: 1, l: 0}, "FCC")
     c.eq("(100) condition met in FCC: nothing lights", f.lit.length, 0)
     c.ok("board logs the (100) absence", JSON.stringify(f.board.lines) === JSON.stringify([TEXT.absence100]), JSON.stringify(f.board.lines))
-    c.eq("EvidenceLine_0 shows '(100) condition passed: no spot'", boardLine(0), "(100) condition passed: no spot")
+    c.eq("EvidenceLine_0 shows '(100) Bragg condition reached: no spot'", boardLine(0), "(100) Bragg condition reached: no spot")
     f = await clean(c, main, {h: 1, k: 1, l: 0}, "FCC")
     c.ok("board logs the (110) absence", JSON.stringify(f.board.lines) === JSON.stringify([TEXT.absence100, TEXT.absence110]), JSON.stringify(f.board.lines))
-    c.eq("EvidenceLine_1 shows '(110) condition passed: no spot'", boardLine(1), "(110) condition passed: no spot")
+    c.eq("EvidenceLine_1 shows '(110) Bragg condition reached: no spot'", boardLine(1), "(110) Bragg condition reached: no spot")
     c.eq("absences do not count as reflections", main.getSim().distinctCount(), 0)
     f = await clean(c, main, {h: 1, k: 1, l: 1}, "FCC") // N = 3, the positive control
     checkMissionLabels(c, main, "FCC (111)")
@@ -45,9 +46,10 @@ export class BraggsC4FccScenario extends Scenario {
     c.eq("3 distinct: verdict unlocked", f.verdictUnlocked, true)
     c.ok("3 distinct: both verdict buttons shown", verdictShown().sc && verdictShown().fcc)
     await frames(4)
+    c.eq("3 distinct: EvidenceQuestion keeps the question alone", textOf("EvidenceQuestion"), "Simple cubic or face-centred cubic?")
 
     // Wrong verdict (real press): SC is refused with the two absences.
-    const wrongMsg = "(100) and (110) passed with no spot: SC would show them."
+    const wrongMsg = "(100) and (110) Bragg conditions reached with no spot: SC would show them."
     let notYet = main.notYetCount
     await interactor.trigger(interactable("VerdictSCButton"))
     await frames(3)
@@ -56,7 +58,7 @@ export class BraggsC4FccScenario extends Scenario {
     c.eq("wrong SC verdict: message names the evidence", f.feedback ? f.feedback.message : null, wrongMsg)
     c.eq("wrong SC verdict: FeedbackLine text", textOf("FeedbackLine"), wrongMsg)
     c.eq("wrong SC verdict: board highlights the (100) absence", f.board.highlightIndex, 0)
-    c.eq("wrong SC verdict: EvidenceLine_0 drawn highlighted", boardLine(0), "» (100) condition passed: no spot")
+    c.eq("wrong SC verdict: EvidenceLine_0 drawn highlighted", boardLine(0), "» (100) Bragg condition reached: no spot")
     c.eq("wrong SC verdict: 'not yet' tone", main.notYetCount - notYet, 1)
 
     // Correct verdict (real press).
@@ -66,7 +68,13 @@ export class BraggsC4FccScenario extends Scenario {
     await frames(3)
     f = main.getFrame()
     c.eq("FCC verdict: feedback kind", f.feedback ? f.feedback.kind : null, "correct")
-    c.ok("FCC verdict: message names a real material (rock salt, a = 5.64 Å)", !!f.feedback && f.feedback.message.indexOf("ock salt") >= 0 && f.feedback.message.indexOf("5.64") >= 0, f.feedback ? f.feedback.message : "")
+    const rightMsg = "Correct: face-centred cubic. Same lattice as rock salt (a = 5.64 Å); this sample: a = 5.00 Å."
+    c.eq("FCC verdict: message says Correct and names a real material (rock salt, a = 5.64 Å)", f.feedback ? f.feedback.message : null, rightMsg)
+    c.eq("FCC verdict: FeedbackLine text", textOf("FeedbackLine"), rightMsg)
+    c.eq("FCC verdict: EvidenceQuestion cleared once solved", textOf("EvidenceQuestion"), "")
+    for (const g of f.ghosts) {
+      c.ok(`FCC verdict: revealed ghost label keeps 2θ (${g.key})`, /^\(.+\) 2θ \d+\.\d°$/.test(g.label), JSON.stringify(g.label))
+    }
     c.eq("FCC verdict: banner", f.banner, "Identified: FCC, like rock salt")
     c.ok("FCC verdict: Banner shown with that text", so("Banner").isEnabledInHierarchy && textOf("Banner") === f.banner, JSON.stringify(textOf("Banner")))
     c.eq("FCC verdict: no 'not yet' tone", main.notYetCount - notYet, 0)

@@ -12,19 +12,19 @@ Built for [Learn AR with SPECS](https://learn-specs.devpost.com/). It runs in Le
 
 **Free mode** (simple cubic, a = 4.0 Å, Cu Kα λ = 1.54 Å)
 - **Turn the crystal** by pinch-dragging it. Left/right spins it about the vertical axis (φ); up/down tilts it about the horizontal axis across the beam (χ, ±45°), like a real two-circle goniometer. It never rolls about the beam. The φ and χ readouts sit on the goniometer base.
-- **Find a reflection.** Turn about 11° from the start and the (0 1 0) spot lights up 61 cm to the side of the beam stop: θ = 11.1°, 2θ = 22.2°. A faint ray joins the crystal to the spot. Turn about 1° further and it goes dark again.
+- **Find a reflection.** Turn about 11° from the start and the (0 1 0) spot lights up 61 cm to the side of the beam stop: θ = 11.1°, 2θ = 22.2°. A small label by the beam stop says the wall is 150 cm from the crystal, and 150 cm × tan 22.2° = 61 cm. A faint ray joins the crystal to the spot. Turn about 1° further and it goes dark again.
 - **Change the wavelength** with the slider (0.70 to 2.30 Å, marked at Mo Kα 0.71, Cu Kα 1.54, Co Kα 1.79 and Cr Kα 2.29 Å). A lit spot moves out as λ goes up and in as λ goes down. Once a reflection has been found, a faint *ghost* keeps showing where it would land at the current wavelength.
 - **Switch to FCC** with the lattice toggle and watch the mixed-parity reflections vanish.
 - The **evidence board** on the wall lists what you've found, with 2θ and the sin²θ ratio to the lowest-angle reflection (1 : 2 : 3 : 4 : 5 : 6 : 8 for simple cubic).
 
 **Mission: identify the crystal**
 - **Start mission** loads a mystery sample. It is randomly SC or FCC, with a ∈ [3.3, 5.7] Å shown on its tag, and the round starts at Mo Kα (0.71 Å). The crystal is drawn as a frosted cube, and spot labels show 2θ only.
-- The board logs each distinct reflection you observe (a different d-spacing), and also logs "(100) condition passed: no spot" or "(110) condition passed: no spot" when the crystal passes through those conditions and nothing lights.
+- The board states the question, "Simple cubic or face-centred cubic? Find 3 distinct reflections." It logs each distinct reflection you observe (a different d-spacing), and also logs "(100) Bragg condition reached: no spot" or "(110) Bragg condition reached: no spot" when the crystal passes through those conditions and nothing lights.
 - **Predict (hkl)**: pick any h, k, l with the steppers to see a ring where that reflection would land. It depends only on a and λ, so it never gives the answer away.
 - After three distinct reflections, the **Simple cubic** and **Face-centred cubic** buttons unlock together.
   - SC is supported by any spot that FCC forbids, such as a (100)- or (110)-type spot.
-  - FCC is supported when the (100) and (110) conditions have passed with no spot **and** a (111) or (200) spot has been seen. That spot is the positive control: it proves the setup could see spots, so the absences mean something.
-- A correct verdict reveals every spot's indices and names a real material with the closest lattice parameter (copper, aluminium, rock salt; α-polonium, caesium chloride's primitive cubic lattice). A wrong verdict shows the evidence against it.
+  - FCC is supported when the (100) and (110) Bragg conditions have been reached with no spot **and** a (111) or (200) spot has been seen. That spot is the positive control: it proves the setup could see spots, so the absences mean something.
+- A correct verdict says so, for example "Correct: face-centred cubic. Same lattice as aluminium (a = 4.05 Å); this sample: a = 4.22 Å.", reveals every spot's indices and names a real material with the closest lattice parameter (copper, aluminium, rock salt; α-polonium, caesium chloride's primitive cubic lattice). A wrong verdict shows the evidence against it.
 
 ## The physics (all angles and directions are real)
 

@@ -18,7 +18,7 @@
  *   Console > … > WavelengthSlider, ResetButton, ModeButton, LatticeToggle, PredictButton,
  *                 VerdictSCButton, VerdictFCCButton, FeedbackLine, Stage2Slot
  *   PredictorPanel > … > HMinus, HPlus, KMinus, KPlus, LMinus, LPlus
- *   WallLabels > OffWallHint, RingLabel, Banner, IntroText
+ *   WallLabels > OffWallHint, WallDistance, RingLabel, Banner, IntroText
  */
 
 export const SCENE_NAMES = {
@@ -41,6 +41,7 @@ export const SCENE_NAMES = {
   ghostPrefix: "Ghost_",
   ghostLabel: "GhostLabel",
   offWallHint: "OffWallHint",
+  wallDistance: "WallDistance",
   // stage 2
   spotDisc: "SpotDisc",
   ghostDisc: "GhostDisc",

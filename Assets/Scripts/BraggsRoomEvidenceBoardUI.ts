@@ -2,14 +2,16 @@
  * BraggsRoomEvidenceBoardUI: the evidence board on the wall beside the beam stop (UIKit only).
  *
  * Owns (a passive view): a fixed-size BackPlate (60 × 40 cm by default) with a column of
- * text: the board title, a status line and up to 8 evidence lines, exactly as
- * frame.board (BraggSim.BoardView) describes them. The highlighted line (the evidence a wrong
+ * text: the board title, the mission's question (a row that collapses to nothing when there is no
+ * question: free mode, or once solved), a status line and up to 8 evidence lines, exactly as
+ * frame.board (BraggSim.BoardView) describes them. Rows shrink their text to the board's width
+ * rather than clip. The highlighted line (the evidence a wrong
  * verdict points at, frame.board.highlightIndex) gets a "» " prefix and the highlight colour.
  *
  * Inputs: presentation settings only. Authored on the "EvidenceBoard" SceneObject, placed
  * 2 cm in front of the wall so spots never draw over it.
  *
- * Talks to BraggsRoomMain through setBoard(title, status, lines, highlightIndex).
+ * Talks to BraggsRoomMain through setBoard(title, question, status, lines, highlightIndex).
  *
  * Must not: hold or interpret evidence. The sim writes every string.
  */
@@ -22,13 +24,18 @@ import {BackPlate} from "SpectaclesUIKit.lspkg/Scripts/BackPlate"
 // Text.size is the em-square height: em cm = size / 43.886. The board is read from
 // about 2.1 m, so its scale is set in cm for that distance (not the 110 cm Specs scale).
 const EM_CM_TO_SIZE = 43.886
-type Role = "Title" | "Status" | "Line"
+type Role = "Title" | "Question" | "Status" | "Line"
 const TYPE_SCALE: Record<Role, {emCm: number; weight: number}> = {
   Title: {emCm: 3.2, weight: 700},
+  Question: {emCm: 2.4, weight: 600},
   Status: {emCm: 2.4, weight: 500},
   Line: {emCm: 2.6, weight: 500},
 }
-const ROW_H: Record<Role, number> = {Title: 4.0, Status: 3.0, Line: 3.2}
+// Height budget (40 cm plate, 2 cm padding each side = 36 cm): title 4.0 + question 3.0 + status 3.0
+// + 8 lines × 3.0 + 10 gaps × 0.1 = 35.0 cm, so a full mission board with its question stays on the plate.
+// The question's two-line long form (6.0) only shows with at most 4 evidence lines (26.0 cm).
+const ROW_H: Record<Role, number> = {Title: 4.0, Question: 3.0, Status: 3.0, Line: 3.0}
+const ROW_GAP = 0.1
 const MAX_LINES = 8
 const LAYOUT_Z_LIFT = 0.02
 
@@ -65,6 +72,8 @@ export class BraggsRoomEvidenceBoardUI extends BaseScriptComponent {
   @ui.group_end
 
   private titleText: Text
+  private questionText: Text
+  private questionItem: FlexItem
   private statusText: Text
   private lineTexts: Text[] = []
   private lastKey = ""
@@ -88,13 +97,16 @@ export class BraggsRoomEvidenceBoardUI extends BaseScriptComponent {
     // Center: the fixed 40 cm column is centred on the plate (Top would hang it from the plate's
     // centre, so long boards ran below the plate into the banner); rows start at its top.
     flex.verticalAlignment = ContentVerticalAlignment.Center
-    flex.rowGap = 0.25
+    flex.rowGap = ROW_GAP
     flex.paddingTop = pad
     flex.paddingBottom = pad
     flex.paddingLeft = pad
     flex.paddingRight = pad
 
     this.titleText = this.addRow(content, "EvidenceTitle", "Found reflections", "Title", innerW)
+    this.questionText = this.addRow(content, "EvidenceQuestion", "", "Question", innerW)
+    this.questionItem = this.questionText.getSceneObject().getComponent(FlexItem.getTypeName()) as FlexItem
+    this.questionItem.overrideHeight = 0 // collapsed until a mission asks its question
     this.statusText = this.addRow(content, "EvidenceStatus", "None yet. Turn the crystal.", "Status", innerW)
     this.statusText.textFill.color = new vec4(this.textColor.x, this.textColor.y, this.textColor.z, 0.7)
     for (let i = 0; i < MAX_LINES; i++) {
@@ -103,11 +115,17 @@ export class BraggsRoomEvidenceBoardUI extends BaseScriptComponent {
   }
 
   /** Show frame.board. Cheap to call every frame: it only touches Text when something changed. */
-  setBoard(title: string, status: string, lines: string[], highlightIndex: number): void {
-    const key = `${title}\u0001${status}\u0001${lines.join("\u0002")}\u0001${highlightIndex}`
+  setBoard(title: string, question: string, status: string, lines: string[], highlightIndex: number): void {
+    const key = `${title}\u0001${question}\u0001${status}\u0001${lines.join("\u0002")}\u0001${highlightIndex}`
     if (key === this.lastKey || !this.titleText) return
     this.lastKey = key
     this.titleText.text = title
+    // One sentence per line, so the long form ("…cubic? Find 3 distinct reflections.") stays at full
+    // size. It only shows before three distinct reflections are logged, when the board has at most
+    // 4 evidence lines, so its second line still fits the plate.
+    const q = question.split("? ").join("?\n")
+    this.questionText.text = q
+    this.questionItem.overrideHeight = q ? q.split("\n").length * ROW_H.Question : 0
     this.statusText.text = status
     for (let i = 0; i < this.lineTexts.length; i++) {
       const t = this.lineTexts[i]

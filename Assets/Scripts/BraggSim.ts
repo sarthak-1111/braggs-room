@@ -40,7 +40,9 @@ import {
   fmtLambda,
   fmtLatticeParam,
   fmtMiller,
+  fmtMissionQuestion,
   fmtNumber,
+  fmtOffWallHint,
   fmtPhi,
   spotLabelFree,
   spotLabelMission,
@@ -147,6 +149,11 @@ export interface GuideView {
 
 export interface BoardView {
   title: string
+  /**
+   * Mission only, until the verdict is correct: "Simple cubic or face-centred cubic? Find 3 distinct
+   * reflections.", then just the question once three are logged. "" in free mode and once solved.
+   */
+  question: string
   status: string
   lines: string[]
   /** Index into lines of the evidence a wrong verdict points at; −1 for none. */
@@ -175,6 +182,11 @@ export interface SimFrame {
    * already lit on the wall since the found list was last cleared.
    */
   offWallHint: boolean
+  /**
+   * The hint's text while offWallHint is true, else "": "A reflection at 2θ 95.3° is lit, but misses
+   * the wall.", naming the off-wall reflection with the smallest 2θ (2θ only, never (hkl)).
+   */
+  offWallText: string
   ghosts: GhostView[]
   ring: RingView | null
   guide: GuideView
@@ -380,7 +392,7 @@ export class BraggSim {
       this.highlight = this.log.find((e) => e.kind === "absence") ?? null
       return {
         kind: "wrong",
-        message: `${fams} passed with no spot: SC would show ${both ? "them" : "it"}.`,
+        message: `${fams} Bragg condition${both ? "s" : ""} reached with no spot: SC would show ${both ? "them" : "it"}.`,
       }
     }
     if (verdict === "FCC" && mixed) {
@@ -397,10 +409,7 @@ export class BraggSim {
       this.solvedFlag = true
       this.pendingSolved = true
       this.banner = `Identified: ${verdict}, like ${mat.name.split(" (")[0]}`
-      return {
-        kind: "correct",
-        message: `${latticeName(verdict)}. ${capitalize(mat.name)}: a = ${fmtNumber(mat.a, 2)} Å. This sample: ${fmtLatticeParam(this.a)}.`,
-      }
+      return {kind: "correct", message: correctMessage(verdict, mat.name, mat.a, this.a)}
     }
     // 3. Not enough evidence yet.
     if (verdict === "SC") {
@@ -410,8 +419,8 @@ export class BraggSim {
       }
     }
     const missing: string[] = []
-    if (!this.absences.includes("100")) missing.push("pass the (100) condition with no spot")
-    if (!this.absences.includes("110")) missing.push("pass the (110) condition with no spot")
+    if (!this.absences.includes("100")) missing.push("reach the (100) Bragg condition with no spot")
+    if (!this.absences.includes("110")) missing.push("reach the (110) Bragg condition with no spot")
     if (!this.hasPositiveControl()) missing.push("see a (111) or (200) spot (the positive control)")
     return {kind: "insufficient", message: `Not enough evidence yet. Still needed: ${missing.join("; ")}.`}
   }
@@ -446,7 +455,8 @@ export class BraggSim {
   /** Build the frame to draw and flush one-shot events (new spots, solved). */
   step(): SimFrame {
     const lit: SpotView[] = []
-    let offWall = false
+    // Smallest 2θ among lit reflections that miss the detector; null when none does.
+    let offWallTwoTheta: number | null = null
     const litKeysNow = new Set<string>()
     for (const m of this.candidates) {
       if (!isAllowed(m, this.lattice)) continue
@@ -455,7 +465,10 @@ export class BraggSim {
       if (r.onDetector && r.wall) {
         lit.push(this.spotView(r))
         litKeysNow.add(millerKey(m))
-      } else offWall = true
+      } else {
+        const tt = r.twoThetaB as number
+        if (offWallTwoTheta === null || tt < offWallTwoTheta) offWallTwoTheta = tt
+      }
     }
 
     const ghosts: GhostView[] = []
@@ -474,6 +487,11 @@ export class BraggSim {
     this.pendingSolved = false
 
     const h = this.helpers()
+    // Only when nothing lit is on the wall: next to a lit spot the hint reads as a contradiction.
+    // And only once a spot has lit on the wall (the found list, cleared at Lens start, on a
+    // mission start or end and on an SC/FCC switch; not by Reset orientation), so the hint
+    // doesn't appear before the student has found anything.
+    const offWallHint = offWallTwoTheta !== null && lit.length === 0 && this.found.size > 0
     return {
       mode: this.mode,
       drawnLattice: this.mode === "free" || this.solvedFlag ? this.lattice : null,
@@ -482,11 +500,8 @@ export class BraggSim {
       phi: this.phi,
       chi: this.chi,
       lit,
-      // Only when nothing lit is on the wall: next to a lit spot the hint reads as a contradiction.
-      // And only once a spot has lit on the wall (the found list, cleared at Lens start, on a
-      // mission start or end and on an SC/FCC switch; not by Reset orientation): before that,
-      // "try a shorter wavelength" is wrong advice for a student who hasn't found anything yet.
-      offWallHint: offWall && lit.length === 0 && this.found.size > 0,
+      offWallHint,
+      offWallText: offWallHint ? fmtOffWallHint(offWallTwoTheta as number) : "",
       ghosts,
       ring: this.ringView(),
       guide: h.guide,
@@ -647,7 +662,7 @@ export class BraggSim {
     if (!r.wall || !r.onDetector) return null
     const twoTheta = r.twoThetaB as number
     const label = this.showIndices()
-      ? `${fmtMiller(rec.m)} ${fmtDeg(twoTheta)}`
+      ? `${fmtMiller(rec.m)} ${spotLabelMission(twoTheta)}`
       : spotLabelMission(twoTheta)
     return {key: millerKey(rec.m), m: rec.m, wall: r.wall, twoThetaDeg: twoTheta, label}
   }
@@ -682,6 +697,7 @@ export class BraggSim {
     })
     return {
       title: `Found reflections · ${this.freeLattice} ${fmtLatticeParam(this.a)}`,
+      question: "",
       status: recs.length ? "(hkl)   2θ now   sin²θ ratio" : "None yet. Turn the crystal.",
       lines,
       highlightIndex: -1,
@@ -701,6 +717,7 @@ export class BraggSim {
         : `Distinct reflections: ${n} of ${this.cfg.verdictMinDistinct}`
     return {
       title: `Evidence · sample ${fmtLatticeParam(this.a)}`,
+      question: this.solvedFlag ? "" : fmtMissionQuestion(n, this.cfg.verdictMinDistinct),
       status,
       lines,
       highlightIndex: hi >= 0 ? hi : -1,
@@ -722,7 +739,15 @@ export class BraggSim {
   }
 }
 
-/** Capitalise a leading Latin letter only ("copper" → "Copper"; "α-polonium" stays as is). */
-function capitalize(s: string): string {
-  return /^[a-z]/.test(s) ? s[0].toUpperCase() + s.slice(1) : s
+/**
+ * The correct-verdict message: "Correct: face-centred cubic. Same lattice as aluminium (a = 4.05 Å);
+ * this sample: a = 4.22 Å." A note in the material's name joins the brackets:
+ * "caesium chloride (primitive cubic lattice)" → "Same lattice as caesium chloride (primitive cubic, a = 4.12 Å)".
+ */
+function correctMessage(verdict: Lattice, materialName: string, materialA: number, sampleA: number): string {
+  const cut = materialName.indexOf(" (")
+  const name = cut >= 0 ? materialName.slice(0, cut) : materialName
+  const note = cut >= 0 ? materialName.slice(cut + 2).replace(/\)$/, "").replace(/ lattice$/, "") : ""
+  const ref = `${note ? note + ", " : ""}a = ${fmtNumber(materialA, 2)} Å`
+  return `Correct: ${latticeName(verdict).toLowerCase()}. Same lattice as ${name} (${ref}); this sample: ${fmtLatticeParam(sampleA)}.`
 }

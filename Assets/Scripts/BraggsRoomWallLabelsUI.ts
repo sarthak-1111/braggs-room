@@ -4,7 +4,10 @@
  * Owns:
  *   - the 2θ tick labels along the beam stop's horizontal axis (10° … 50° each side, at
  *     x = ±150·tan 2θ, from BraggGeometry.twoThetaTickX) plus a "2θ" caption at each end;
- *   - the off-wall hint ("Spot is off the wall. Try a shorter wavelength.") under the beam stop;
+ *   - the off-wall hint ("A reflection at 2θ 95.3° is lit, but misses the wall.", frame.offWallText)
+ *     18 cm under the beam stop;
+ *   - the wall-distance label ("wall 150 cm from the crystal", from the detector config), faint,
+ *     below the hint and to the right of the incoming beam;
  *   - stage 2: the prediction ring's label (RingLabel, at the top of the ring, or under the beam
  *     stop when the ring cannot be drawn), the Banner after a correct verdict, and the IntroText
  *     ("Drag the crystal. Watch the wall.") that fades in at Lens start and out after introSeconds;
@@ -18,13 +21,13 @@
  * 0.6 cm in front of the wall (same plane as the spots).
  *
  * Talks to BraggsRoomMain through: bindSpotLabels(holders), setSpotLabel(i, title, detail),
- * bindGhostLabels(holders), setGhostLabel(i, text), setOffWallHint(visible),
+ * bindGhostLabels(holders), setGhostLabel(i, text), setOffWallHint(text),
  * setRingLabel(label, radiusCm), setBanner(text), playIntro().
  *
  * Must not: decide where a label goes (SpotPool positions the holders) or what it says
  * (the sim writes the strings).
  */
-import {TEXT} from "./BraggText"
+import {TEXT, fmtWallDistance} from "./BraggText"
 import {TWO_THETA_TICKS_DEG, ringLabelY, twoThetaTickX} from "./BraggGeometry"
 import {DEFAULT_DETECTOR} from "./BraggPhysics"
 import {SCENE_NAMES} from "./BraggsRoomSceneContracts"
@@ -93,6 +96,7 @@ export class BraggsRoomWallLabelsUI extends BaseScriptComponent {
   private ghostTexts: Text[] = []
   private ghostStrings: string[] = []
   private hintObject: SceneObject
+  private hintText: Text
   private ringObject: SceneObject
   private ringText: Text
   private bannerObject: SceneObject
@@ -117,8 +121,15 @@ export class BraggsRoomWallLabelsUI extends BaseScriptComponent {
       this.makeText(so, "2θ", this.smallLabelHeightCm, faint, HorizontalAlignment.Center, 12)
     }
     this.hintObject = this.obj(this.sceneObject, SCENE_NAMES.offWallHint, new vec3(0, -18, 0))
-    this.makeText(this.hintObject, TEXT.offWall, this.smallLabelHeightCm, this.hintColor, HorizontalAlignment.Center, 160)
+    this.hintText = this.makeText(this.hintObject, "", this.smallLabelHeightCm, this.hintColor, HorizontalAlignment.Center, 160)
     this.hintObject.enabled = false
+
+    // Wall distance: faint and left-aligned, below the hint (y −18) with a 4 cm gap, starting just
+    // right of the beam stop: seen from the user's position the incoming beam reaches the stop from
+    // the lower left, so it doesn't cross the label. Clear of the 2θ ticks (y −6), the ring label under the stop (y ≈ −10) and the
+    // intro line and banner above the stop.
+    const distanceObject = this.obj(this.sceneObject, SCENE_NAMES.wallDistance, new vec3(4, -26, 0))
+    this.makeText(distanceObject, fmtWallDistance(DEFAULT_DETECTOR.distanceCm), this.smallLabelHeightCm, faint, HorizontalAlignment.Left, 80)
 
     this.ringObject = this.obj(this.sceneObject, SCENE_NAMES.ringLabel, new vec3(0, 0, 0.05))
     this.ringText = this.makeText(this.ringObject, "", this.smallLabelHeightCm, this.ringLabelColor, HorizontalAlignment.Center, 120)
@@ -169,9 +180,12 @@ export class BraggsRoomWallLabelsUI extends BaseScriptComponent {
     t.text = label
   }
 
-  /** Show or hide "Spot is off the wall. Try a shorter wavelength." (frame.offWallHint). */
-  setOffWallHint(visible: boolean): void {
-    if (this.hintObject && this.hintObject.enabled !== visible) this.hintObject.enabled = visible
+  /** The off-wall hint (frame.offWallText), e.g. "A reflection at 2θ 95.3° is lit, but misses the wall."; "" hides it. */
+  setOffWallHint(text: string): void {
+    if (!this.hintObject) return
+    const visible = text.length > 0
+    if (visible && this.hintText.text !== text) this.hintText.text = text
+    if (this.hintObject.enabled !== visible) this.hintObject.enabled = visible
   }
 
   /**

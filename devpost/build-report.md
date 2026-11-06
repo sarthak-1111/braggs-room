@@ -46,6 +46,82 @@ I was away during the build, so nobody answered the agents' questions. Where the
 9. **LEAF** scenarios per done criterion: eight scenarios written by CLAD's `live-lens-tester`. In the final run all eight pass, 315 of 315 sub-checks. One test-setup mistake was fixed on the way. See "LEAF scenarios" below.
 10. **Off-wall hint change**, after the first video cut: my decision on open question 6. The coding agent changed the hint rule, extended unit test 121 (still 124 of 124), checked it in the preview, made the drag-direction checks in `c1-drag-turn-tilt-reset` independent of the preview's frame rate, and re-ran all eight LEAF scenarios (315 of 315).
 11. **Second off-wall hint change**, after the second video cut: my second decision on open question 6. The coding agent kept the hint hidden until a spot has lit on the wall, extended unit test 121 again (still 124 of 124), checked it in the preview, made three more checks in `c1-drag-turn-tilt-reset` independent of the preview's frame rate, and re-ran all eight LEAF scenarios (315 of 315). It found that the change doesn't remove the hint from the video's opening turn (see open question 6).
+12. **Changes after the simulated walkthrough** (Nov 6): I approved all five. The coding agent changed the hint, the board, the verdict message and two labels in TypeScript only, kept 124 of 124 unit tests, made `c2-spot-010-real-drag` independent of the preview's frame rate, and re-ran all eight LEAF scenarios (340 of 340). See "Changes after the simulated walkthrough".
+
+## Changes after the simulated walkthrough (Nov 6)
+
+Three simulated first-time users drove the Lens in the preview (see `devpost/simulated-walkthrough.md`). They found five things on screen worth changing.
+
+**My decision:** approved all five after reading the walkthrough.
+
+1. **The off-wall hint names the reflection and gives no advice.** It used to read "Spot is off the wall. Try a shorter wavelength." It never said which reflection it meant, and it suggested that spots slide with λ. It now reads, for example, "A reflection at 2θ 51.0° is lit, but misses the wall."
+   - It names the off-wall reflection with the smallest 2θ, by 2θ only. No (hkl), so nothing leaks in a mission.
+   - When it shows hasn't changed.
+2. **The mission states its question.** Under the evidence board's title, until the verdict is correct:
+   - "Simple cubic or face-centred cubic?" and "Find 3 distinct reflections." on two lines, above the existing "Distinct reflections: n of 3";
+   - once three are found, just "Simple cubic or face-centred cubic?".
+3. **The verdict says "Correct".** It used to read "Face-centred cubic. Aluminium: a = 4.05 Å. This sample: a = 4.22 Å.", which can read as "the sample is aluminium".
+   - Now: "Correct: face-centred cubic. Same lattice as aluminium (a = 4.05 Å); this sample: a = 4.22 Å."
+   - For SC: "Correct: simple cubic. Same lattice as caesium chloride (primitive cubic, a = 4.12 Å); this sample: …". The note in the material's name joins the brackets, so there's no double parenthesis.
+   - The wall banner ("Identified: FCC, like aluminium") hasn't changed.
+4. **Absence rows.** "(100) condition passed: no spot" could read as "the check passed".
+   - The rows now read "(100) Bragg condition reached: no spot" and "(110) Bragg condition reached: no spot".
+   - The wrong-SC message now reads "(100) and (110) Bragg conditions reached with no spot: SC would show them."
+   - The "not enough evidence" message asks the user to "reach the (100) Bragg condition with no spot".
+5. **Two small ones.**
+   - "wall 150 cm from the crystal" in faint 4 cm text, below and to the right of the beam stop, from the detector distance in `BraggPhysics.ts`.
+   - Found ghosts that show their indices (in free mode, and after a correct verdict) read "(0 2 0) 2θ 19.4°" instead of "(0 2 0) 19.4°". The coding agent changed the free-mode ghosts too, so there's one format. Before the verdict, mission ghosts still read "2θ 19.4°".
+
+**What the coding agent changed** (TypeScript only; no scene edits, because every one of these texts is built in code):
+- `BraggText.ts`: the new strings (`fmtOffWallHint`, `fmtMissionQuestion`, `fmtWallDistance`, the absence rows). `TEXT.offWall` is gone.
+- `BraggSim.ts`:
+  - a new frame field, `offWallText`, next to `offWallHint`;
+  - a new board field, `board.question`;
+  - the correct, wrong and "not enough evidence" messages, and the ghost labels.
+- `BraggsRoomWallLabelsUI.ts`:
+  - the hint shows `offWallText`, still 18 cm under the beam stop;
+  - a new `WallDistance` label, 26 cm under and 4 cm right of the beam stop and left-aligned, so from the user's position the incoming beam doesn't cross it.
+- `BraggsRoomEvidenceBoardUI.ts`: a question row under the title. It collapses to nothing in free mode and once the round is solved. To keep a full board on the 40 cm plate, evidence rows are now 3.0 cm apart instead of 3.2 cm, with 0.1 cm gaps instead of 0.25 cm. The two-line form of the question only shows before three reflections are found, when there are at most 4 evidence lines.
+- `BraggsRoomMain.ts` and `BraggsRoomSceneContracts.ts`: the wiring.
+- The video director's STATE line has a new key, `offWallText`, and `board` has a new `question`; every existing key is kept.
+
+**Tests.**
+- Still 124 unit tests, 124 pass. Existing tests were extended for the new strings, the new frame field and the board's question. Test 121 now also checks that the hint names the smaller 2θ when two reflections miss the wall: 89.0°, not 118.4°.
+- `npm run reference` still passes.
+- LEAF: the scenarios that checked the old strings (c3, c4 SC, c4 FCC) were updated, then extended:
+  - c4: the question row, the exact "Correct: …" message and the revealed ghost labels;
+  - c5: the question row's size, the distance label, and the hint's text, which must be at least 4 cm tall and must not overlap the 2θ tick labels.
+
+**LEAF re-run**, by the coding agent on 2026-11-06, 15:13–15:25, in the same preview and the same way. All eight pass, 340 of 340 sub-checks. c1, c2-hooks and c3 ran before the real-drag fix below, against the same Lens code.
+
+```text
+I 15:13:52.723 [BRAGG-LEAF] SUMMARY c1-drag-turn-tilt-reset :: 81/81 checks passed
+I 15:13:58.449 [BRAGG-LEAF] SUMMARY c2-spot-010-hooks :: 37/37 checks passed
+I 15:24:30.987 [BRAGG-LEAF] SUMMARY c2-spot-010-real-drag :: 19/19 checks passed
+I 15:15:05.266 [BRAGG-LEAF] SUMMARY c3-wavelength-slide-ghost :: 52/52 checks passed
+I 15:24:52.060 [BRAGG-LEAF] SUMMARY c4-mission-sc-verdict :: 50/50 checks passed
+I 15:25:04.762 [BRAGG-LEAF] SUMMARY c4-mission-fcc-verdict :: 53/53 checks passed
+I 15:25:30.446 [BRAGG-LEAF] SUMMARY c4-no-leak-helpers :: 4/4 checks passed
+I 15:25:37.819 [BRAGG-LEAF] SUMMARY c5-labels-content-size :: 44/44 checks passed
+```
+
+Before this, `c2-spot-010-real-drag` failed twice (17/18, then 1/3). The test was at fault, not the Lens.
+- The preview ran at about 12 fps (81.5 ms a frame; about 20 fps on Nov 5). The coding agent checked the committed code in the same session at 11.7 fps, so these changes didn't cause it.
+- At 12 fps a 150 ms real drag spans two frames and turned the crystal about 0.01° instead of 0.12°. So 40 small drags never got past the 1° window, and in the second run the first loop never reached the spot.
+- The coding agent made each drag last at least 4 frames and adapt its length to the step it produces (under 0.25° near the condition). The second loop now runs only if the spot lit. The checks are unchanged: it lit at φ 10.17°, and went dark between θ_B + 0.946° and θ_B + 1.054°.
+
+**Screenshots** of the Preview, in my video build folder (`build/capture/panels/`):
+- `fix3_1.png`: the hint "A reflection at 2θ 51.0° is lit, but misses the wall." at φ 6.95° on the opening turn. It sits under the beam stop, clear of the 2θ ticks and the distance label. The incoming beam crosses the text near "2θ", as it crossed the old hint.
+- `fix3_2.png`: the question on the board after a real **Start mission** press.
+- `fix3_3.png`: "Correct: face-centred cubic. Same lattice as aluminium (a = 4.05 Å); this sample: a = 4.05 Å." on the console, in the video's FCC a = 4.05 Å round. It fits on two lines, with nothing clipped; the line breaks inside "(a = 4.05 Å)".
+- `fix3_4.png`: the two "Bragg condition reached: no spot" rows at full size, with nothing clipped.
+- `fix3_5a.png`: "wall 150 cm from the crystal".
+- `fix3_5b.png`: revealed ghost labels, such as "(0 2 0) 2θ 20.2°".
+
+**Seen, not changed:**
+- In the first 10 s, the (0 1 0) spot label can run into the intro line.
+- In the FCC a = 4.05 Å round, the longer "(0 2 0) 2θ 20.2°" ghost label now ends about 2 cm under the banner.
+- `devpost/video-script.md` still quotes the old board line for the coming re-shoot.
 
 ## Physics decisions
 
@@ -75,7 +151,7 @@ I was away during the build, so nobody answered the agents' questions. Where the
 6. **Evidence board, mission:** each line is the 2θ *and the wavelength at which it was seen* ("Spot 2θ 10.2° (λ 0.71 Å)"), because 2θ alone changes meaning when the slider moves. Free mode shows 2θ at the *current* λ (it follows the ghosts) and the sin²θ ratio N/N_min.
 7. **Back to free mode** resets λ to 1.54 Å, the orientation to 0 and the found list, and keeps the SC/FCC choice. **Switching SC/FCC** clears the found list.
 8. **Predictor range** −4 … 4 per index, starting at (1 1 1). An unreachable (hkl) (λ > 2d) shows "(h k l) unreachable at this λ".
-9. **Wrong-verdict evidence:** for "FCC" against a mixed-parity spot, the message names the *first* such spot ("The spot at 2θ 10.2° is (100)-type: FCC forbids it.") and highlights its board line. For "SC" against logged absences: "(100) and (110) passed with no spot: SC would show them."
+9. **Wrong-verdict evidence:** for "FCC" against a mixed-parity spot, the message names the *first* such spot ("The spot at 2θ 10.2° is (100)-type: FCC forbids it.") and highlights its board line. For "SC" against logged absences: "(100) and (110) Bragg conditions reached with no spot: SC would show them." (changed after the simulated walkthrough; it used to say "passed").
 10. **Insufficient evidence** for SC: "Find a spot FCC forbids, such as a (100)- or (110)-type spot." For FCC, the missing items are listed.
 11. **Materials:** names are lower case in sentences; the banner drops the parenthesis ("Identified: SC, like caesium chloride"), and the feedback line gives "caesium chloride (primitive cubic lattice): a = 4.12 Å".
 12. **Mission crystal** is drawn as a frosted "mystery" cube until it's solved, since drawing the atoms would give the answer away.
@@ -109,13 +185,13 @@ I was away during the build, so nobody answered the agents' questions. Where the
 
 ### Physics and logic unit tests (command line)
 
-Run with `cd tests && npm install && npm test` (Node v20.12.1, TypeScript 5.9.3) after stage 2, and again after each off-wall hint change (open question 6). **124 of 124 pass.**
+Run with `cd tests && npm install && npm test` (Node v20.12.1, TypeScript 5.9.3) after stage 2, again after each off-wall hint change (open question 6), and after the changes from the simulated walkthrough. **124 of 124 pass.**
 
 - Tests 1–80 are CLAD's geometry tests for the code-built meshes and the layout.
 - Tests 81–98 are the physics tests.
 - Tests 99–124 are the experiment-logic tests, including every done criterion checked as pure logic.
 
-This is the real output of the re-run after the second off-wall hint change, on 2026-11-06; only node's per-test timing blocks (`duration_ms`) are removed:
+This is the real output of the re-run after the changes from the simulated walkthrough, on 2026-11-06; only node's per-test timing blocks (`duration_ms`) are removed:
 
 ```text
 > test
@@ -240,7 +316,7 @@ ok 117 - criterion 4: no leak. The same drag path gives identical guide arrows a
 ok 118 - criterion 4: the prediction ring depends only on a and λ (identical in SC and FCC rounds)
 ok 119 - guide arrow: appears within 4° of a reflection, points the right way, hides in the window
 ok 120 - rotation runs at half speed within 2° of a reflection
-ok 121 - off-wall hint: shows only after a spot has been found, when a lit reflection misses the detector and no lit spot lands on it
+ok 121 - off-wall hint: shows only after a spot has been found, when a lit reflection misses the detector and no lit spot lands on it; it names the smallest such 2θ
 ok 122 - free mode FCC toggle: forbidden reflections stay dark
 ok 123 - free-mode evidence board lists (hkl), 2θ and the sin²θ ratio to the lowest-angle reflection
 ok 124 - a fast drag cannot skip a condition: passing through still records it
@@ -251,7 +327,7 @@ ok 124 - a fast drag cannot skip a condition: passing through still records it
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 787.9494
+# duration_ms 898.4191
 ```
 
 `npm run table` prints the hand-computed reference values that the physics tests check against. Real output:
@@ -271,7 +347,7 @@ hkl    a(Å)  λ(Å)   d(Å)     θ(°)      2θ(°)     L·tan2θ (cm, L = 150)
 
 ### LEAF scenarios, per done criterion
 
-**Every done criterion has at least one LEAF scenario, and all 8 scenarios pass (315 of 315 sub-checks).**
+**Every done criterion has at least one LEAF scenario, and all 8 scenarios pass** (315 of 315 sub-checks; 340 of 340 in the re-run after the simulated walkthrough, which added checks). The table below is the run of 2026-11-05; some texts it quotes have changed since (see "Changes after the simulated walkthrough").
 
 - **Written by** CLAD's `live-lens-tester` agent, in `Assets/Tests/Leaf/`, registered in `LeafIndex` on the `LeafIndex` scene object.
 - **Final run by** the main session on 2026-11-05, 19:07–19:09, in Interactive Preview (SPECS). It used the LEAF panel's MCP tools: `list_leaf_scenarios`, then `run_leaf_scenario` for each id.
@@ -416,4 +492,5 @@ Nothing runs on Lens start, so the Lens behaves normally in Interactive Preview.
    - **What the coding agent changed:** `offWallHint` in `step()` now also needs the found list to be non-empty. That's the list the ghosts are drawn from; a reflection goes in it when it lights on the wall. It's cleared when the Lens starts, when a mission round starts, on going back to free mode and on an SC/FCC switch. Reset orientation keeps it. The physics didn't change.
    - **The test:** unit test 121, extended and renamed "off-wall hint: shows only after a spot has been found, when a lit reflection misses the detector and no lit spot lands on it" (still 124 tests). (a) A fresh sim at λ 2.29 Å with (0 2 0) at χ = 5°, the only reflection in condition, off the wall, and nothing found: no hint. (b) The same sim after (0 1 0) has lit on the wall, back at the same orientation: the hint shows. (c) The Cu Kα case at φ = +11.0987° with (0 1 0) lit on the wall: no hint.
    - **What the coding agent found in the preview:** this doesn't remove the hint from the video's opening turn. On a real drag from φ 0, (−1 −2 0) (2θ 51.0°) lights on the wall at φ ≈ 0.1–2° and (−1 2 1) (2θ 56.3°) at φ ≈ 3.5–5.5°, each with a chime and a ghost; the take notes record the same. So by φ 5.7° two spots are found and the hint shows. From a fresh Lens, the video-director scenario at `phi:7.0` logged nothing lit, those two ghosts and `"offWallHint":true`. Switching to FCC and back to SC there (which clears the found list without turning the crystal) logged φ 6.98°, nothing lit, no ghosts, "None yet. Turn the crystal." and `"offWallHint":false`, and the screenshot has no hint. Turning on to φ 11.1° lit (0 1 0) with the hint off; turning back to φ 7.05° brought the hint back, with the (0 1 0) ghost. In the sim, none of the drags it tried from the start pose at Cu Kα (to χ −45° to 45° in 5° steps and φ −40° to 40° in 1° steps, χ first or φ first), and no +φ drag at the start of a mission round (SC and FCC, a = 3.3–5.7 Å), reaches an off-wall-only orientation before a spot has lit on the wall. So with real input the new rule rarely changes anything.
-   - **Still open for me:** keep this rule, change it again (for example, tie the hint to how far the nearest on-wall reflection is), or change the video's opening turn.
+   - **Then still open for me:** keep this rule, change it again (for example, tie the hint to how far the nearest on-wall reflection is), or change the video's opening turn.
+   - **My third decision, after the simulated walkthrough:** keep when the hint shows, and change what it says. It now names the reflection by its 2θ ("A reflection at 2θ 51.0° is lit, but misses the wall.") and gives no advice. So where it still shows on the video's opening turn, it states a fact instead of giving wrong advice. See "Changes after the simulated walkthrough". **Resolved.**

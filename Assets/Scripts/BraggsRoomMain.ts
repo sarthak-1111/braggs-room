@@ -247,7 +247,7 @@ export class BraggsRoomMain extends BaseScriptComponent {
     drawn.ghosts.forEach((g, i) => {
       if (g) this.wallLabels.setGhostLabel(i, g.label)
     })
-    this.wallLabels.setOffWallHint(f.offWallHint)
+    this.wallLabels.setOffWallHint(f.offWallText)
     const ringRadius = f.ring && f.ring.reachable ? f.ring.radiusCm : null
     this.predictionRing.setRing(ringRadius)
     this.wallLabels.setRingLabel(f.ring ? f.ring.label : null, ringRadius)
@@ -255,7 +255,7 @@ export class BraggsRoomMain extends BaseScriptComponent {
     this.spotPool.setCelebrating(f.solved)
     this.edgeChevron.setTargets(this.spotPool.getLitWorldPositions())
 
-    this.evidenceBoard.setBoard(f.board.title, f.board.status, f.board.lines, f.board.highlightIndex)
+    this.evidenceBoard.setBoard(f.board.title, f.board.question, f.board.status, f.board.lines, f.board.highlightIndex)
     this.controlConsole.followWavelength(f.lambda)
     this.controlConsole.setLambdaLabel(f.lambdaLabel)
     this.controlConsole.setMissionState(f.mode, f.verdictUnlocked, f.solved, f.feedback)

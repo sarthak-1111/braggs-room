@@ -95,7 +95,7 @@ export class BraggsC3WavelengthScenario extends Scenario {
     // The ghost keeps following sin θ = λ / 2d down to Mo Kα.
     checkGhost(c, main, 1.2, null)
     checkGhost(c, main, 0.9, null)
-    checkGhost(c, main, 0.71, "(0 1 0) 10.2°")
+    checkGhost(c, main, 0.71, "(0 1 0) 2θ 10.2°")
     const g = ghost(main.getFrame(), KEY)
     if (g) {
       c.near("Mo Kα: ghost 2θ ≈ 10.18°", g.g.twoThetaDeg, 10.1834, 0.002, "°")
