@@ -1,6 +1,6 @@
 # Devpost submission text: Bragg's Room
 
-This is the text I submitted to Learn AR with SPECS on Nov 9, 2026 (Devpost project: https://devpost.com/software/bragg-s-room). The coding agent drafted it from the build report, the design brief and the simulated walkthrough; I reviewed it before submitting.
+This is the text I submitted to Learn AR with SPECS on Nov 9, 2026 (Devpost project: https://devpost.com/software/bragg-s-room). The coding agent drafted it from the build report, the design brief and the simulated walkthrough; I reviewed it before submitting. Later on Nov 9 I added "Designed for glasses", concrete plan-lens examples and the re-cut video, after the judges' live review asked for uncut footage and for who the Lens is for.
 
 ---
 
@@ -25,6 +25,17 @@ In Lens Studio's preview the wall and desk are virtual stand-ins drawn at real s
 Undergraduate physics, chemistry and materials students, and the people who teach them. Diffraction is usually taught with a flat diagram: two lines for the planes, two arrows, and nλ = 2d sin θ. The equation is right, but the diagram hides the part students find hardest: how the crystal's orientation in 3D, the beam and the spot's position on the detector are linked. In Bragg's Room that link happens at room scale with real angles. Your hands turn the crystal while your eyes stay on the wall pattern.
 
 For teachers, there's a 30-minute class activity with learning goals, a before-and-after prediction question, discussion questions and an answer key: [lesson plan](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md).
+
+## Designed for glasses
+
+I designed it around what glasses do well, and around what they can't do:
+- **Your room is the interface.** Nothing floats in front of your face like a web page. Labels sit beside the spots on the wall, the φ and χ readouts sit on the goniometer base, and the evidence board hangs on the wall beside the beam stop.
+- **Hand and wall in one view.** The crystal sits about 25° below your eye line and the beam stop about 7° below it, so you can watch your hand turn the crystal and the first spots light up on the wall together.
+- **One gesture, few buttons.** A pinch-drag turns the crystal. Everything else is a big button on a console on the desk. The predictor stays folded until you open it, and the verdict buttons appear only once you've found three distinct reflections.
+- **Only what's needed.** In a mission, spot labels show 2θ only. The off-wall hint appears only when a lit reflection misses the wall and nothing on the wall is lit.
+- **Sound and edges for a narrow view.** Each spot chimes from where it is on the wall, and a chevron at the edge of your view points to a lit spot you can't see.
+- **Readable from where you stand.** Measured from the start position, spot labels are about 5 cm per line (about 1.4° tall), and the smallest text, the board's status line, is still 0.69°.
+- **Black is see-through.** On SPECS, black renders as transparent, so the wall is a faint light grid, not a solid panel.
 
 ## Why it matters
 
@@ -60,13 +71,18 @@ Every angle and direction is computed with the vector (Laue/Ewald) form and then
 
 ## How I built it
 
-I planned the Lens with the **plan-lens** skill from the Learn AR with SPECS skill pack. Its interview checked my idea against AR design practice and against what Lens Studio's preview can show, and produced the [design brief](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/design-brief.md). The design decisions in it are mine; values marked "(default)" were filled in by plan-lens for me to review.
+I planned the Lens with the **plan-lens** skill from the Learn AR with SPECS skill pack. Its interview checked my idea against AR design practice and against what Lens Studio's preview can show, and produced the [design brief](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/design-brief.md). The design decisions in it are mine; values marked "(default)" were filled in by plan-lens for me to review. Its questions changed the design:
+- It pointed out that if every round kept a = 4.0 Å, the first spot would give the answer away: at Cu Kα, simple cubic lights (100) at 2θ ≈ 22°, and FCC has nothing below 39°. And if a were hidden, the line ratios couldn't tell the two apart. So in the brief, each round's sample tag shows a random lattice parameter (3.3–5.7 Å), and the FCC verdict rests on absences with a positive control.
+- It asked which reflections should get ghost markers in a mission. Answering it, I saw that drawing ghosts for allowed reflections would leak the answer, so the predictor shows any (hkl) you pick, whether or not it exists.
+- It flagged that the preview can't detect walls. So the brief uses a virtual wall at real size as a stand-in, and keeps snapping to a real wall out of the done criteria.
+
+As a diffraction researcher, I specified the physics myself: the vector Laue/Ewald form, the FCC selection rule, and unit tests against hand-computed Bragg angles.
 
 Coding agents then built it with **CLAD** through **Lens Studio and the Lens Studio MCP**. CLAD's `specs-experience-builder` agent built the room, the console (Spectacles UI Kit) and the sounds. CLAD's `live-lens-tester` agent wrote **LEAF** scenarios for each done criterion, and all eight pass in the preview, driving the Lens with simulated pinch-drags and button presses. The physics and game logic were written to my specification and are checked by 44 command-line unit tests, including hand-computed Bragg angles; 80 more check the room's code-built geometry. A fresh clone of the public repo opens in Lens Studio 5.24.1 with no missing assets, and all eight LEAF scenarios pass there too (340 of 340 checks). The full record, including what the agents chose during the build and what I directed, is in the [build report](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/build-report.md).
 
 Pre-existing code: none, apart from the Lens Studio Specs Base Template, Snap's packages (Spectacles Interaction Kit, Spectacles UI Kit, LEAF, Bitmoji 3D) and the vertex-colour material that ships with the CLAD plugin.
 
-**About the video:** the footage is the Lens running in Lens Studio's Interactive Preview, captured frame by frame while a LEAF scenario drove it with real pinch-drags and button presses. The narration is synthesized speech (Bark). The mission round is fixed to FCC, a = 4.05 Å, with a test hook so it matches the narration, and the closing solve is a scripted stand-in, labelled as one.
+**About the video:** all the footage is the Lens running in Lens Studio's Interactive Preview, driven by a LEAF scenario with real pinch-drags and button presses. One mission round (0:48 to 1:42), from Start mission to the verdict, is an uncut real-time screen recording with a running clock on screen. The preview runs at only about 5 frames per second on my PC, so the motion there is choppy. The other shots were captured frame by frame. The narration is synthesized speech (Bark). The preview records no sound, so the Lens's own sounds are placed where its log says they played. The mission round is fixed to FCC, a = 4.05 Å, with a test hook so it matches the narration.
 
 ## Testing so far
 
@@ -106,7 +122,7 @@ I fixed all of them in the Lens and in the lesson plan, and re-shot the video. D
 ## Links
 
 - Code: https://github.com/sarthak-1111/braggs-room
-- Video: https://youtu.be/9aPGQw05psg
+- Video: https://youtu.be/oRucnWf3XC8
 - Lesson plan: https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md
 
 ## Built with

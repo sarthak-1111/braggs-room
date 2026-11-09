@@ -48,12 +48,27 @@ This script follows the approved brief's demo notes, which win where they differ
 - **Permission:** keep a written note (a message is fine) from the student or colleague agreeing to appear in a public YouTube video.
 - **Upload:** YouTube, visibility **Public**, under 3:00. Paste the link into the Devpost form and into `devpost/submission.md`.
 
-## How the video was made (Nov 5–6 2026)
+## How the video was made (Nov 5–9 2026)
 
-The coding agent made the cut (2:28) with my existing video setup (Remotion, FFmpeg, Bark, Whisper). It follows this timeline with these differences. The on-screen text and the closing credits say the same.
+The coding agent made the cut with my existing video setup (Remotion, FFmpeg, Bark, Whisper). It follows this timeline with these differences. The on-screen text and the closing credits say the same.
+
+**Re-cut on Nov 9 (2:35, https://youtu.be/oRucnWf3XC8).** In the judges' live review they asked for a stretch of uncut footage, so you see what someone sees from start to finish, in order. They also asked entrants to say who the Lens is for. So:
+- The mission section is now one uncut round (below). It replaces the frame-by-frame mission shots and the scripted solve.
+- A line naming the audience is on screen from the first frame and on the closing card.
+
+The first cut (2:29, https://youtu.be/9aPGQw05psg) stays up. The notes below describe the re-cut; where the first cut differed, they say so.
 
 - **The opening is shorter than the timeline above.** Line 1 keeps only its first sentence and line 2 drops "It's true.", so the Lens is on screen at 0:04 and (0 1 0) lights with its chime at 0:08, not 0:15. The first cut (2:37) reached the Lens at about 0:11; I wanted the demo inside the first 10 seconds.
-- **Footage is captured frame by frame, not screen-recorded.** The Windows session running Lens Studio had no display to record from, so the Preview panel was captured as stills through the Lens Studio MCP (`CapturePanelScreenshotTool`) while the `video-director` LEAF scenario (`Assets/Tests/Video/BraggsVideoDirectorScenario.ts`) stepped the Lens: real pinch-drag gestures and button presses, the λ slider set through its value setter. The stills are played back at their captured pace (motion steps of 0.07–0.13 s, holds of 1–2 s). Nothing in a frame is drawn over or edited; the readouts beside the preview come from the Lens's own state at each capture.
+- **One mission round is an uncut real-time screen recording (0:48–1:42, 54 s).** FFmpeg recorded the Preview viewport from the Lens Studio window while the `video-director` LEAF scenario played the round:
+  - a real press of Start mission, then the test hook below;
+  - real pinch-drags turning the crystal φ 0 → 4.2° → 8.9° → 9.6° → 19.6°. The board logs the (100) and (110) absences, (200) lights as the positive control, and (220) unlocks the verdict;
+  - a real press of Face-centred cubic.
+
+  A running clock and a log of the scripted input are on screen.
+  - **Frame rate.** The preview runs at only about 5 fps on my PC, so the motion is choppy. The director now makes each drag last about 5 frames at the measured rate. With 250 ms drags at that frame rate the crystal barely turned, and the first attempt failed.
+  - **The random round shows first.** For about 2 s after the press, the board shows the random round (a = 4.43 Å) before the hook fixes it to 4.05 Å.
+  - **Sounds.** The director logs each sound the Lens plays with its wall-clock time, and the Lens's own sound files are placed at those times.
+- **The other footage is captured frame by frame, not screen-recorded.** When those shots were made, the Windows session running Lens Studio had no display to record from, so the Preview panel was captured as stills through the Lens Studio MCP (`CapturePanelScreenshotTool`) while the `video-director` LEAF scenario (`Assets/Tests/Video/BraggsVideoDirectorScenario.ts`) stepped the Lens: real pinch-drag gestures and button presses, the λ slider set through its value setter. The stills are played back at their captured pace (motion steps of 0.07–0.13 s, holds of 1–2 s). Nothing in a frame is drawn over or edited; the readouts beside the preview come from the Lens's own state at each capture.
 - **Every Lens shot was re-shot on Nov 6, after the changes from the simulated walkthrough** (`devpost/simulated-walkthrough.md`). The frames show:
   - the off-wall hint naming the reflection ("A reflection at 2θ 51.0° is lit, but misses the wall.");
   - the mission's question on the board;
@@ -65,7 +80,7 @@ The coding agent made the cut (2:28) with my existing video setup (Remotion, FFm
 - **Text cut at the frame edge.** On the turn towards (0 1 0) (φ 5.7°–10.0°) the hint shows, because a reflection is lit beyond the wall while nothing is lit on it. The Preview panel used for capture is tall and narrow, so the end of that sentence is cut off at the frame edge. The 2θ value stays readable.
 - **The Lens's sounds are placed, not recorded.** Panel captures carry no audio, so the Lens's own files (`Assets/GeneratedSFX`: first-sighting chime, repeat chime, verdict chord) are mixed in on the frame where the Lens logged playing them, at most one chime per 0.25 s as in the Lens.
 - **The mission round is fixed to FCC, a = 4.05 Å** with the `testStartMission` hook, after a real press of Start mission, so the narration matches the sample. The subtitle on screen says so.
-- **The solve at 2:10 is a scripted stand-in**, labelled as one on screen. Replace it with a student or colleague's run only with their written permission.
+- **No student footage.** The first cut ended on a scripted solve at 2:10, labelled as a stand-in. The re-cut drops it: the uncut round ends on its own real verdict. Footage of a student or colleague goes in only with their written permission.
 - **The process section uses stills**, not a screen capture of the build: CLAD's own Lens Studio captures from the build, a count of the coordinating session's Lens Studio MCP calls, and the LEAF results in the Lens Studio Logger.
 - **Music:** a quiet synthesized bed (CC0, made from scratch with a script), low-passed and ducked under the voice, with one closing hit on the title card.
 - **Narration:** Bark, preset `v2/en_speaker_6`, one prompt per line, four takes each; the take that Whisper transcribed cleanest, before and after processing, was kept, trimmed and sped up 1.1×. The voice sits about 20 dB above the music on every line.

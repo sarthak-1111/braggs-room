@@ -21,6 +21,10 @@
  *   cmd   without a plan: apply these actions once and print the state. Default "status" (prints
  *          only), so "run all" in the LEAF panel is harmless.
  *   tag    copied into every STATE line, to tell takes apart in the log.
+ *   events "1": also print an EVENT line (with Date.now()) before every action. Sound EVENT lines
+ *          (chime, flourish, notYet) are always printed during a take or a cmd other than "status",
+ *          so a real-time screen recording can be lined up with the actions and get the Lens's own
+ *          sounds placed where it played them (the preview records no audio).
  *
  * Actions (";"-separated, applied in order)
  *   none                  nothing (a hold, e.g. while the camera reframes)
@@ -34,7 +38,8 @@
  *                         startMission path with the round's type and a fixed (a predictable round)
  *   wait:<ms>             sleep
  *   until:<s>             wait until the Lens has run for this many seconds (e.g. past the intro line)
- *   probe                 measure the preview's frame rate and Lens-time speed
+ *   probe                 measure the preview's frame rate and Lens-time speed, and make later drags
+ *                         last about 5 frames at that rate (250–1500 ms)
  *
  * LEAF's own on-screen log strip (LeafDebugUICamera, test tooling) is hidden while a plan or a cmd
  * other than "status" runs, so captures show only the Lens; a plan shows it again when it ends.
@@ -122,16 +127,24 @@ interface StepLog {
 
 class Director {
   private ix = new DefaultLeafInteractor()
+  /** Print an EVENT line before each action (for lining a screen recording up with the actions). */
+  logActions = false
+  /** Length of one drag, ms. `probe` sets it to about 5 preview frames: LEAF's hand moves a set distance
+   *  per frame, so at a low frame rate a 250 ms drag spans one frame and barely turns the crystal. */
+  private dragMs = 250
+  /** Drag gain learned by turnTo, kept from one turn to the next (degrees per cm-per-frame per drag). */
+  private gx = 8
+  private gy = 8
 
   constructor(private main: BraggsRoomMain) {}
 
   /** Turn and/or tilt to an absolute (φ, χ) with real drags, learning the drag gain as it goes. */
   private async turnTo(phiT: number | null, chiT: number | null): Promise<string> {
     const crystal: Interactable = interactable(SCENE_NAMES.crystal)
-    // Degrees per (cm per frame) of drag vector, per 250 ms drag. Measured about 6 at 21 fps;
+    // Degrees per (cm per frame) of drag vector, per drag. Measured about 6 for a 250 ms drag at 21 fps;
     // the frame rate and the sim's slowdown near conditions change it, so it is learned.
-    let gx = 8
-    let gy = 8
+    let gx = this.gx
+    let gy = this.gy
     let n = 0
     for (; n < 40; n++) {
       const f = this.main.getFrame()
@@ -141,12 +154,14 @@ class Director {
       const k = n === 0 ? 0.6 : 0.8
       const vx = Math.abs(ep) > TURN_TOL_DEG ? clampAbs((k * ep) / gx, 0.0005, 2.0) : 0
       const vy = Math.abs(ec) > TURN_TOL_DEG ? clampAbs((k * ec) / gy, 0.0005, 2.0) : 0
-      await this.ix.drag(crystal, new vec3(vx, vy, 0), 250)
+      await this.ix.drag(crystal, new vec3(vx, vy, 0), this.dragMs)
       await frames(2)
       const g = this.main.getFrame()
       if (vx !== 0 && Math.abs(g.phi - f.phi) > 0.003) gx = clampAbs((g.phi - f.phi) / vx, 0.1, 60)
       if (vy !== 0 && Math.abs(g.chi - f.chi) > 0.003) gy = clampAbs((g.chi - f.chi) / vy, 0.1, 60)
     }
+    this.gx = gx
+    this.gy = gy
     return `${n} real drags`
   }
 
@@ -162,6 +177,7 @@ class Director {
     for (const raw of actions.split(";")) {
       const action = raw.trim()
       if (!action || action === "status" || action === "none") continue
+      if (this.logActions) print(`${TAG} EVENT ${JSON.stringify({kind: "act", action, wallMs: Date.now(), t: r2(getTime())})}`)
       const [verb, ...rest] = action.split(":")
       const arg = rest.join(":")
       if (verb === "phi" || verb === "chi") {
@@ -184,6 +200,8 @@ class Director {
         while (getTime() < Number(arg)) await frames(1)
       } else if (verb === "probe") {
         log.rate = await probeRate()
+        this.dragMs = Math.min(1500, Math.max(250, Math.round(5000 / Math.max(1, log.rate.fps))))
+        log.notes.push(`drag ${this.dragMs} ms`)
       } else {
         throw new Error(`unknown action "${action}"`)
       }
@@ -243,6 +261,44 @@ class Director {
   }
 }
 
+/**
+ * While a take runs, print "[BRAGG-VIDEO] EVENT {json}" with the wall-clock time (Date.now()) whenever the
+ * Lens plays one of its sounds, so a real-time screen recording can get the Lens's own sounds placed at the
+ * right moments (the preview records no audio). Read-only: it only watches the Lens's counters.
+ */
+function watchEvents(main: BraggsRoomMain, tag: string): () => void {
+  let on = true
+  let chime = main.chimeCount
+  let flourish = main.flourishCount
+  let notYet = main.notYetCount
+  const emit = (kind: string, extra: Record<string, unknown> = {}): void =>
+    print(`${TAG} EVENT ${JSON.stringify({tag, kind, wallMs: Date.now(), t: r2(getTime()), ...extra})}`)
+  const loop = async (): Promise<void> => {
+    while (on) {
+      await frames(1)
+      if (main.chimeCount !== chime) {
+        const f = main.getFrame()
+        emit("chime", {first: f.newlyLit.some((s) => s.firstTime), count: main.chimeCount - chime})
+        chime = main.chimeCount
+      }
+      if (main.flourishCount !== flourish) {
+        emit("flourish")
+        flourish = main.flourishCount
+      }
+      if (main.notYetCount !== notYet) {
+        emit("notYet")
+        notYet = main.notYetCount
+      }
+    }
+  }
+  loop()
+  emit("watch")
+  return () => {
+    on = false
+    emit("end")
+  }
+}
+
 async function waitForNudge(cam: Transform, from: vec3): Promise<void> {
   const t0 = Date.now()
   while (cam.getWorldPosition().distance(from) <= NUDGE_CM) {
@@ -259,8 +315,10 @@ export class BraggsVideoDirectorScenario extends Scenario {
     const tag = (config && config.get("tag")) || ""
     const main = await lensReady()
     const d = new Director(main)
+    d.logActions = (config && config.get("events")) === "1"
 
     if (!plan) {
+      const stopWatch = cmd !== "status" ? watchEvents(main, tag) : null
       if (cmd !== "status") setLeafHud(false)
       const counts = d.counts()
       const log: StepLog = {notes: [], forced: [], rate: null}
@@ -270,10 +328,12 @@ export class BraggsVideoDirectorScenario extends Scenario {
         await sleep(SETTLE_MS)
       }
       d.report({tag, cmd}, log, counts)
+      if (stopWatch) stopWatch()
       return
     }
 
     setLeafHud(false)
+    const stopWatch = watchEvents(main, tag)
     const steps = plan.split("|").map((s) => s.trim()).filter((s) => s.length > 0)
     const cam = cameraTransform()
     for (let i = 0; i < steps.length; i++) {
@@ -283,12 +343,14 @@ export class BraggsVideoDirectorScenario extends Scenario {
       const actions = hash >= 0 ? steps[i].slice(hash + 1) : steps[i]
       const counts = d.counts()
       const log: StepLog = {notes: [], forced: [], rate: null}
+      print(`${TAG} EVENT ${JSON.stringify({tag, kind: "step", step: i, shot, wallMs: Date.now(), t: r2(getTime())})}`)
       await d.apply(actions, log)
       await frames(3)
       await sleep(SETTLE_MS)
       d.report({tag, step: i, of: steps.length, shot, cmd: actions}, log, counts)
     }
     await waitForNudge(cam, cam.getWorldPosition())
+    stopWatch()
     setLeafHud(true)
   }
 }
