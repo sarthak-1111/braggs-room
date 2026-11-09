@@ -10,6 +10,7 @@ Checked against: [Official Rules](https://learn-specs.devpost.com/rules), [Overv
 | Submission period opens | Oct 15, 2026, 10:00 am | Oct 15, 23:00 |
 | **Submission deadline** | **Nov 9, 2026, 5:00 pm EST** | **Nov 10, 07:00** |
 | **My target** | Nov 9, morning | **Nov 9, evening** |
+| **Submitted** | Nov 8 | **Nov 9** ([Devpost project](https://devpost.com/software/bragg-s-room)) |
 | Live Project Review (optional) | Nov 5, 12:00 pm | Nov 6, 02:00 |
 | Judging period (repo must stay public) | Nov 10, 10:00 am – Nov 17, 5:00 pm | Nov 11, 00:00 – Nov 18, 07:00 |
 | Winners announced | about Nov 19, 2:00 pm | about Nov 20, 04:00 |

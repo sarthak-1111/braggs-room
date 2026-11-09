@@ -1,6 +1,6 @@
 # Devpost submission text: Bragg's Room
 
-I paste the sections below into the Devpost form. Lines marked **✏️ PERSONALISE** are drafts written by the coding agent, and I rewrite them in my own words before submitting: the judges are reading for my voice and my experience. Everything else describes what the Lens actually does in the preview, and only changes if the Lens changes.
+This is the text I submitted to Learn AR with SPECS on Nov 9, 2026 (Devpost project: https://devpost.com/software/bragg-s-room). The coding agent drafted it from the build report, the design brief and the simulated walkthrough; I reviewed it before submitting.
 
 ---
 
@@ -16,7 +16,7 @@ A wavelength slider runs from Mo Kα to Cr Kα. A longer wavelength pushes a lit
 
 The mission is **Identify the crystal**. You get a mystery sample with a known lattice parameter, randomly simple cubic or face-centred cubic, and labels that show only 2θ. You hunt for reflections, and an evidence board on the wall logs each distinct d-spacing you observe. It also logs when the crystal passes through the (100) and (110) conditions and *nothing* lights. An absence only counts with a positive control: a (111) or (200) spot proves the setup could see spots at all. A predictor shows where any (hkl) would land without revealing whether it exists. When you name the lattice, the Lens checks your evidence, tells you what contradicts a wrong answer, and on a right one reveals every spot's indices and names a real material with that structure ("Identified: FCC, like copper").
 
-The physics is the vector (Laue/Ewald) form: |k| = 1/λ, reciprocal lattice vectors rotate with the crystal, a reflection lights when |k + G| ≈ |k| (within a 1.0° mosaic window, exaggerated so spots can be found by hand), and the diffracted ray k + G is intersected with the wall. The physics module is plain TypeScript, unit-tested against hand-computed Bragg angles. The atoms are drawn enlarged and labelled "atoms not to scale"; every angle and direction is real.
+The physics is the vector (Laue/Ewald) form: |k| = 1/λ, reciprocal lattice vectors rotate with the crystal, a reflection lights when |k + G| ≈ |k| (within a 1.0° mosaic window, exaggerated so spots can be found by hand), and the diffracted ray k + G is intersected with the wall. The atoms are drawn enlarged and labelled "atoms not to scale"; every angle and direction is real.
 
 In Lens Studio's preview the wall and desk are virtual stand-ins drawn at real size. On SPECS, the detector would anchor to your real wall.
 
@@ -24,13 +24,9 @@ In Lens Studio's preview the wall and desk are virtual stand-ins drawn at real s
 
 Undergraduate physics, chemistry and materials students, and the people who teach them. Diffraction is usually taught with a flat diagram: two lines for the planes, two arrows, and nλ = 2d sin θ. The equation is right, but the diagram hides the part students find hardest: how the crystal's orientation in 3D, the beam and the spot's position on the detector are linked. In Bragg's Room that link happens at room scale with real angles. Your hands turn the crystal while your eyes stay on the wall pattern.
 
-✏️ **PERSONALISE.** One or two sentences in my own words on why this matters to me as a diffraction researcher, for example a moment when I saw students struggle with the textbook picture, or what I wish I'd had when I learned it.
-
-For teachers, there's a 30-minute class activity with learning goals, a before-and-after prediction question, discussion questions and an answer key: [`devpost/lesson-plan.md`](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md).
+For teachers, there's a 30-minute class activity with learning goals, a before-and-after prediction question, discussion questions and an answer key: [lesson plan](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md).
 
 ## Why it matters
-
-✏️ **REVIEW.** The coding agent drafted this section and the next from sources a research agent opened and checked (listed under References). I read the sources and confirm the wording before submitting.
 
 Bragg's law is easy to learn as a formula without the geometry behind it. Teaching papers report this:
 - Students who can recite 2d sin θ = nλ "find it more difficult to sketch the corresponding geometry" of a real experiment [1].
@@ -44,14 +40,9 @@ Bragg's Room aims at the step that the flat figure leaves out: where the spot go
 
 ## What's new
 
-There are good teaching tools for single-crystal diffraction:
-- XRayView [6], which covers the reciprocal lattice, the Ewald sphere and systematic absences;
-- EwaldSphere [7], a virtual diffractometer with an area detector;
-- EPFL's DiffractOgram;
-- York's interactive Ewald-sphere tutorial;
-- CrystalMaker's SingleCrystal.
+There are good teaching tools for single-crystal diffraction: XRayView [6], which covers the reciprocal lattice, the Ewald sphere and systematic absences; EwaldSphere [7], a virtual diffractometer with an area detector; EPFL's DiffractOgram; York's interactive Ewald-sphere tutorial; and CrystalMaker's SingleCrystal. All of them draw the pattern on a screen.
 
-All of them draw the pattern on a screen. In Bragg's Room the pattern is in your room: you find the spot on your wall at its true 2θ, 61 cm from the beam stop, by turning the crystal with your hand while you watch the wall. A search for this submission found no other tool that puts a single-crystal X-ray pattern at its true angles in the learner's own space. Classroom laser demonstrations do throw diffraction patterns onto real walls, but those patterns come from gratings, not from crystal planes at X-ray angles.
+In Bragg's Room the pattern is in your room: you find the spot on your wall at its true 2θ, 61 cm from the beam stop, by turning the crystal with your hand while you watch the wall. A search for this submission found no other tool that puts a single-crystal X-ray pattern at its true angles in the learner's own space. Classroom laser demonstrations do throw diffraction patterns onto real walls, but those patterns come from gratings, not from crystal planes at X-ray angles.
 
 The mission is about reasoning, not only seeing:
 - the evidence board logs what lit and what didn't;
@@ -64,56 +55,42 @@ That's how a crystallographer argues for a structure.
 
 Every angle and direction is computed with the vector (Laue/Ewald) form and then checked in three ways:
 - **Unit tests.** The physics is checked against hand-computed Bragg angles; there are 124 unit tests in all.
-- **Measured data.** The physics is also checked against a measured powder pattern of real aluminium [8]. The FCC rule allows exactly the nine lines that were measured up to (422), every d-spacing agrees within 0.001 Å, and every 2θ agrees within 0.05°. The table is in the README (`npm run reference`).
+- **Measured data.** The physics is also checked against a measured powder pattern of real aluminium [8]. The FCC rule allows exactly the nine lines that were measured up to (422), every d-spacing agrees within 0.001 Å, and every 2θ agrees within 0.05°. The table is in the [README](https://github.com/sarthak-1111/braggs-room#readme) (`npm run reference`).
 - **Labels for what isn't real.** What's deliberately exaggerated, the atom size and the 1.0° mosaic window, is labelled in the Lens.
+
+## How I built it
+
+I planned the Lens with the **plan-lens** skill from the Learn AR with SPECS skill pack. Its interview checked my idea against AR design practice and against what Lens Studio's preview can show, and produced the [design brief](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/design-brief.md). The design decisions in it are mine; values marked "(default)" were filled in by plan-lens for me to review.
+
+Coding agents then built it with **CLAD** through **Lens Studio and the Lens Studio MCP**. CLAD's `specs-experience-builder` agent built the room, the console (Spectacles UI Kit) and the sounds. CLAD's `live-lens-tester` agent wrote **LEAF** scenarios for each done criterion, and all eight pass in the preview, driving the Lens with simulated pinch-drags and button presses. The physics and game logic were written to my specification and are checked by 44 command-line unit tests, including hand-computed Bragg angles; 80 more check the room's code-built geometry. A fresh clone of the public repo opens in Lens Studio 5.24.1 with no missing assets, and all eight LEAF scenarios pass there too (340 of 340 checks). The full record, including what the agents chose during the build and what I directed, is in the [build report](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/build-report.md).
+
+Pre-existing code: none, apart from the Lens Studio Specs Base Template, Snap's packages (Spectacles Interaction Kit, Spectacles UI Kit, LEAF, Bitmoji 3D) and the vertex-colour material that ships with the CLAD plugin.
+
+**About the video:** the footage is the Lens running in Lens Studio's Interactive Preview, captured frame by frame while a LEAF scenario drove it with real pinch-drags and button presses. The narration is synthesized speech (Bark). The mission round is fixed to FCC, a = 4.05 Å, with a test hook so it matches the narration, and the closing solve is a scripted stand-in, labelled as one.
 
 ## Testing so far
 
-Before testing with real students, I ran **simulated** first-time-user walkthroughs. Three AI agents each played one persona and drove the Lens in Lens Studio's preview, using only what's on screen and the README's controls:
-- a first-year chemistry student;
-- a PhD student who runs a diffractometer;
-- a lecturer following the lesson plan.
+Before testing with real students, I ran **simulated** first-time-user walkthroughs. Three AI agents each played one persona and drove the Lens in Lens Studio's preview, using only what's on screen and the README's controls: a first-year chemistry student, a PhD student who runs a diffractometer, and a lecturer following the lesson plan.
 
-They aren't real users, and they can't show that anyone learns from it. But they found real problems, and the most useful finding was positive: the PhD persona checked every number on screen by hand, and all of them were right to 0.1°.
-
-They found real problems too:
+They aren't real users, and they can't show that anyone learns from it. But the most useful finding was positive: the PhD persona checked every number on screen by hand, and all of them were right to 0.1°. They also found real problems:
 - all three were confused by the off-wall hint;
 - the mission never stated its question, and the verdict never said "correct";
 - my lesson plan asked for a distance the screen didn't show.
 
-I fixed all of them in the Lens and in the lesson plan, and re-shot the video. Details: [`devpost/simulated-walkthrough.md`](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/simulated-walkthrough.md).
-
-## How I built it
-
-I planned the Lens with the **plan-lens** skill from the Learn AR with SPECS skill pack. Its interview checked my idea against AR design practice and against what Lens Studio's preview can show, and produced the design brief in `devpost/design-brief.md`. The design decisions in it are mine; values marked "(default)" were filled in by plan-lens for me to review.
-
-Coding agents then built it with **CLAD** through **Lens Studio and the Lens Studio MCP**. CLAD's `specs-experience-builder` agent built the room, the console (Spectacles UI Kit) and the sounds. CLAD's `live-lens-tester` agent wrote **LEAF** scenarios for each done criterion, and all eight pass in the preview, driving the Lens with simulated pinch-drags and button presses. The physics and game logic were written to my specification and are checked by 44 command-line unit tests, including hand-computed Bragg angles; 80 more check the room's code-built geometry. The full record, including what the agents chose during the build and what I directed, is in `devpost/build-report.md`.
-
-Pre-existing code: none, apart from the Lens Studio Specs Base Template, Snap's packages (Spectacles Interaction Kit, Spectacles UI Kit, LEAF, Bitmoji 3D) and the vertex-colour material that ships with the CLAD plugin.
+I fixed all of them in the Lens and in the lesson plan, and re-shot the video. Details: [simulated walkthrough](https://github.com/sarthak-1111/braggs-room/blob/main/devpost/simulated-walkthrough.md).
 
 ## What I learned
 
-✏️ **PERSONALISE.** This section should be mine. Some prompts, taken from what came up while building:
-- *Shares your view, draws in the world, leaves your body free:* which of these turned out to matter most for diffraction, and which only a real SPECS device could prove (the brief marks the real-wall anchor as "feel unproven").
-- *Physics meets usability:* with a 1° mosaic window at Mo Kα, several reflections are often lit at once. That's real rotation-photograph behaviour, and it changed how the helpers (guide arrow, slowdown) feel. What did I decide about that trade-off?
-- *Positive controls:* turning "absence of a spot" into evidence needed a positive-control rule. Did writing that rule for a Lens change how I'd explain it to students?
-- *Working with plan-lens and CLAD:* what the interview made me decide up front, and what I had to correct after seeing the build.
+- **Correct physics isn't automatically clear physics.** The off-wall hint was physically right: at some orientations, high-angle reflections really are in condition and miss the wall. But it showed next to a lit spot and read as a contradiction. It took three decisions to fix: hide it while a spot is lit on the wall, hide it until a first spot has been found, and finally make it state a fact ("A reflection at 2θ 51.0° is lit, but misses the wall.") instead of giving advice.
+- **Real behaviour can make a busy interface.** With a 1.0° mosaic window at Mo Kα, several reflections light at once at most orientations. That's what a rotating crystal really does, but it means the slowdown and the guide arrow help less than planned. The Lens keeps the honest physics, and the helper windows are tunable.
+- **An absence needs a positive control.** Writing that rule into the Lens made me spell out what I'd tell a student: a missing (100) spot only counts once a (111) or (200) spot proves the setup can see spots at all.
+- **Tests make a design changeable.** Because every done criterion from the plan-lens brief had a LEAF scenario, each fix after the walkthrough could be re-checked in the preview straight away.
 
 ## What's next
 
-✏️ **PERSONALISE.** These are drafts; I keep the ones I actually plan:
 - **Real SPECS.** Try it on a real SPECS against a real wall: the wall anchor, the hand-drag feel and the narrow field of view are untested.
 - **More classroom testing.** Run the lesson plan with a class and compare the before and after answers.
-- **More of the physics:**
-  - body-centred cubic as a third answer;
-  - structure-factor intensities, so spots differ in brightness;
-  - a powder mode with Debye–Scherrer rings on the wall.
-
-## Links
-
-- Code: https://github.com/sarthak-1111/braggs-room
-- Video: https://youtu.be/9aPGQw05psg
-- Lesson plan: https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md
+- **More of the physics:** body-centred cubic as a third answer; structure-factor intensities, so spots differ in brightness; and a powder mode with Debye–Scherrer rings on the wall.
 
 ## References
 
@@ -126,6 +103,12 @@ Pre-existing code: none, apart from the Lens Studio Specs Base Template, Snap's 
 7. L. J. Barbour (2018). EwaldSphere: an interactive approach to teaching the Ewald sphere construction. *J. Appl. Cryst.* 51, 1734–1738. https://doi.org/10.1107/S1600576718012876
 8. H. E. Swanson & E. Tatge (1953). Standard X-ray Diffraction Powder Patterns. *NBS Circular 539*, Vol. I, "Aluminum (Cubic)". https://doi.org/10.6028/NBS.CIRC.539v1
 
+## Links
+
+- Code: https://github.com/sarthak-1111/braggs-room
+- Video: https://youtu.be/9aPGQw05psg
+- Lesson plan: https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md
+
 ## Built with
 
-Lens Studio 5.24.1 · Lens Studio MCP · CLAD (Claude Code plugin) · plan-lens · Spectacles Interaction Kit · Spectacles UI Kit · LEAF · TypeScript
+lens-studio · lens-studio-mcp · clad · claude-code · plan-lens · typescript · spectacles-interaction-kit · spectacles-ui-kit · leaf
