@@ -112,7 +112,7 @@ Pre-existing code: none, apart from the Lens Studio Specs Base Template, Snap's 
 ## Links
 
 - Code: https://github.com/sarthak-1111/braggs-room
-- Video: ✏️ **paste the public YouTube link**
+- Video: https://youtu.be/9aPGQw05psg
 - Lesson plan: https://github.com/sarthak-1111/braggs-room/blob/main/devpost/lesson-plan.md
 
 ## References

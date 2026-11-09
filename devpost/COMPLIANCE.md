@@ -88,7 +88,7 @@ After the deadline, the submission is locked (Rules §5). I save a Devpost draft
 
 - [ ] Shorter than 3:00. Judges stop at 3 minutes, so aim for 2:30 to 2:45.
 - [ ] A screen recording of the Lens working **end to end** in the Lens Studio preview.
-- [ ] Uploaded to **YouTube** and set to **Public**. The link goes in the submission form.
+- [x] Uploaded to **YouTube** and set to **Public** on Nov 9: https://youtu.be/9aPGQw05psg (2:29). The link goes in the submission form.
 - [ ] No copyrighted music, and no third-party logos or trademarks without permission. Use royalty-free or self-made audio.
 - [ ] In English, or with English subtitles or a translation (Rules §4, Language).
 - [ ] Recommended for the Presentation score: what problem it solves, who it's for, why it matters, a quick look at the design brief, CLAD building in Lens Studio, and the AR design ideas I applied.
@@ -109,7 +109,7 @@ After the deadline, the submission is locked (Rules §5). I save a Devpost draft
 
 ## Other rules to keep in mind
 
-- [ ] Registered on Devpost with "Join Hackathon" (Rules §4).
+- [x] Registered on Devpost with "Join Hackathon" (Rules §4).
 - [x] Eligible: Japan isn't excluded, and I'm at or above the age of majority (Rules §3).
 - [ ] Original work that I solely own, with no IP violations (Rules §4 and §7).
 - [ ] No financial or preferential support from Snap or Devpost (Rules §4).
