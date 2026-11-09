@@ -56,7 +56,7 @@ The coding agent made the cut with my existing video setup (Remotion, FFmpeg, Ba
 - The mission section is now one uncut round (below). It replaces the frame-by-frame mission shots and the scripted solve.
 - A line naming the audience is on screen from the first frame and on the closing card.
 
-The first cut (2:29, https://youtu.be/9aPGQw05psg) stays up. The notes below describe the re-cut; where the first cut differed, they say so.
+The first cut (2:29, https://youtu.be/9aPGQw05psg) is now unlisted: the link still works, but only the re-cut shows on YouTube. The notes below describe the re-cut; where the first cut differed, they say so.
 
 - **The opening is shorter than the timeline above.** Line 1 keeps only its first sentence and line 2 drops "It's true.", so the Lens is on screen at 0:04 and (0 1 0) lights with its chime at 0:08, not 0:15. The first cut (2:37) reached the Lens at about 0:11; I wanted the demo inside the first 10 seconds.
 - **One mission round is an uncut real-time screen recording (0:48–1:42, 54 s).** FFmpeg recorded the Preview viewport from the Lens Studio window while the `video-director` LEAF scenario played the round:

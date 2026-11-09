@@ -89,7 +89,7 @@ After the deadline, the submission is locked (Rules §5). I save a Devpost draft
 
 - [x] Shorter than 3:00 (2:35). Judges stop at 3 minutes, so aim for 2:30 to 2:45.
 - [x] A screen recording of the Lens working **end to end** in the Lens Studio preview. Since the Nov 9 re-cut, one mission round, from Start mission to the verdict, is an uncut real-time screen recording (54 s).
-- [x] Uploaded to **YouTube** and set to **Public** on Nov 9: https://youtu.be/oRucnWf3XC8 (2:35), the re-cut with the uncut round. The link is in the submission form. The first cut (https://youtu.be/9aPGQw05psg, 2:29) stays up.
+- [x] Uploaded to **YouTube** and set to **Public** on Nov 9: https://youtu.be/oRucnWf3XC8 (2:35), the re-cut with the uncut round. The link is in the submission form. The first cut (https://youtu.be/9aPGQw05psg, 2:29) is now unlisted, so only the re-cut shows on YouTube.
 - [ ] No copyrighted music, and no third-party logos or trademarks without permission. Use royalty-free or self-made audio.
 - [ ] In English, or with English subtitles or a translation (Rules §4, Language).
 - [ ] Recommended for the Presentation score: what problem it solves, who it's for, why it matters, a quick look at the design brief, CLAD building in Lens Studio, and the AR design ideas I applied.
